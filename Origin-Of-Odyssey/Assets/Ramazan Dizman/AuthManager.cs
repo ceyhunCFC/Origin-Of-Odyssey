@@ -1,16 +1,8 @@
 using Proyecto26;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
-using static System.Net.WebRequestMethods;
 
-public class Login : MonoBehaviour
+public class AuthManager : MonoBehaviour
 {
 
     public InputField accountEmail;
@@ -40,14 +32,11 @@ public class Login : MonoBehaviour
         RestClient.Post<SignResponse>(LoginURL + apiKey, userData).Then(
             response =>
             {
-                Debug.Log("Giriþ baþarýlý!");
                 info.text = "Giriþ baþarýlý!";
                 localId = response.localId;
-                Debug.Log(localId);
-                RestClient.Get<User>(databaseURL + "/" + localId + ".json?auth=" + response.idToken).Then(userResponse =>
+                RestClient.Get<PlayerData>(databaseURL + "/" + localId + ".json?auth=" + response.idToken).Then(userResponse =>
                 {
                     userName = userResponse.userName; 
-                    Debug.Log("Kullanýcý adý: " + userName);
                 }).Catch(error =>
                 {
                     Debug.LogError("Kullanýcý adý alýnýrken hata oluþtu: " + error.Message);
@@ -76,7 +65,6 @@ public class Login : MonoBehaviour
         RestClient.Post<SignResponse>(RegisterURL + apiKey, userData).Then(
             response =>
             {
-                Debug.Log("Kayýt Baþarýlý");
                 info.text = "Kayýt Baþarýlý";
                 localId = response.localId;
                 userName = username;
@@ -91,7 +79,7 @@ public class Login : MonoBehaviour
 
     private void PostToDatabase( string idTokenTemp = "")
     {
-        User user = new User();
+        PlayerData user = new PlayerData();
 
 
         RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idTokenTemp, user);
