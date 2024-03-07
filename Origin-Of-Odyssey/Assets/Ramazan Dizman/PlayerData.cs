@@ -4,9 +4,13 @@ using System;
 public class PlayerData 
 {
     public string userName;
+    public string firstName;
+    public string lastName;
 
     public PlayerData()
     {
         userName = AuthManager.userName;
+        firstName = AuthManager.firstName;
+        lastName = AuthManager.lastName;
     }
 }

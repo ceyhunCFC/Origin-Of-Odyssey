@@ -5,9 +5,8 @@ using UnityEngine.UI;
 public class AuthManager : MonoBehaviour
 {
 
-    public InputField accountEmail;
-    public InputField accountPassword;
-    public InputField accountUserName;
+    public InputField LoginEmail,LoginPassword;
+    public InputField RegisterEmail,RegisterPassword,RegisterUserName,RegisterFirstName,RegisterLastName;
     public Text info;
 
     private string apiKey = "AIzaSyCBurDB1K_PUu_KaD5HqVZqu3gRY1WytPE";    //firabase api
@@ -16,13 +15,13 @@ public class AuthManager : MonoBehaviour
     private string databaseURL = "https://origin-of-odyssey-eee04-default-rtdb.firebaseio.com/Users";
 
     public static string localId;
-    public static string userName;
+    public static string userName,firstName,lastName;
 
     public void AccountLogin()
     {
         info.text = "";
-        string email = accountEmail.text;
-        string password = accountPassword.text;
+        string email = LoginEmail.text;
+        string password = LoginPassword.text;
         LoginAccount(email, password);
     }
 
@@ -32,57 +31,59 @@ public class AuthManager : MonoBehaviour
         RestClient.Post<SignResponse>(LoginURL + apiKey, userData).Then(
             response =>
             {
-                info.text = "Giriþ baþarýlý!";
+                info.text = "Login successful!";
                 localId = response.localId;
                 RestClient.Get<PlayerData>(databaseURL + "/" + localId + ".json?auth=" + response.idToken).Then(userResponse =>
                 {
                     userName = userResponse.userName; 
                 }).Catch(error =>
                 {
-                    Debug.LogError("Kullanýcý adý alýnýrken hata oluþtu: " + error.Message);
+                    Debug.LogError("Error retrieving username: " + error.Message);
                 });
 
 
             }).Catch(error =>
             {
-                Debug.LogError("Giriþ sýrasýnda hata oluþtu: " + error.Message);
-                info.text = "Giriþ sýrasýnda hata oluþtu: " + error.Message;
+                Debug.LogError("An error occurred while logging in: " + error.Message);
+                info.text = "An error occurred while logging in: " + error.Message;
             });
     }
 
     public void AccountRegister()
     {
         info.text = "";
-        string email = accountEmail.text;
-        string password = accountPassword.text;
-        string username=accountUserName.text;
-        RegisterAccount(email, password,username);
+        string email = RegisterEmail.text;
+        string password = RegisterPassword.text;
+        string username= RegisterUserName.text;
+        string firstName = RegisterFirstName.text;
+        string lastName = RegisterLastName.text;
+        RegisterAccount(email, password,username,firstName,lastName);
     }
 
-    private void RegisterAccount(string email, string password,string username)
+    private void RegisterAccount(string email, string password,string username,string firstname,string lastname)
     {
         string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
         RestClient.Post<SignResponse>(RegisterURL + apiKey, userData).Then(
             response =>
             {
-                info.text = "Kayýt Baþarýlý";
+                info.text = "Register Succsesful!";
                 localId = response.localId;
                 userName = username;
+                firstName = firstname;
+                lastName = lastname;
                 PostToDatabase( response.idToken);
 
             }).Catch(error =>
             {
-                Debug.LogError("Kayýt sýrasýnda hata oluþtu: " + error.Message);
-                info.text = "Kayýt sýrasýnda hata oluþtu: " + error.Message;
+                Debug.LogError("An error occurred while registering: " + error.Message);
+                info.text = "An error occurred while registering: " + error.Message;
             });
     }
 
     private void PostToDatabase( string idTokenTemp = "")
     {
         PlayerData user = new PlayerData();
-
-
-        RestClient.Put(databaseURL + "/" + localId + ".json?auth=" + idTokenTemp, user);
+        RestClient.Put(databaseURL + "/" + localId  +"/UserInfo"+".json?auth=" + idTokenTemp, user);
     }
 
 }
