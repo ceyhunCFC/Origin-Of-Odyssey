@@ -7,7 +7,7 @@ public class AuthManager : MonoBehaviour
 
     public InputField LoginEmail,LoginPassword;
     public InputField RegisterEmail,RegisterPassword,RegisterUserName,RegisterFirstName,RegisterLastName;
-    public Text info;
+    public Text loginInfo,registerInfo;
 
     private string apiKey = "AIzaSyCBurDB1K_PUu_KaD5HqVZqu3gRY1WytPE";    //firabase api
     private string RegisterURL= "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=";
@@ -19,7 +19,7 @@ public class AuthManager : MonoBehaviour
 
     public void AccountLogin()
     {
-        info.text = "";
+        loginInfo.text = "";
         string email = LoginEmail.text;
         string password = LoginPassword.text;
         LoginAccount(email, password);
@@ -31,7 +31,7 @@ public class AuthManager : MonoBehaviour
         RestClient.Post<SignResponse>(LoginURL + apiKey, userData).Then(
             response =>
             {
-                info.text = "Login successful!";
+                loginInfo.text = "Login successful!";
                 localId = response.localId;
                 RestClient.Get<PlayerData>(databaseURL + "/" + localId + ".json?auth=" + response.idToken).Then(userResponse =>
                 {
@@ -45,13 +45,13 @@ public class AuthManager : MonoBehaviour
             }).Catch(error =>
             {
                 Debug.LogError("An error occurred while logging in: " + error.Message);
-                info.text = "An error occurred while logging in: " + error.Message;
+                loginInfo.text = "An error occurred while logging in: " + error.Message;
             });
     }
 
     public void AccountRegister()
     {
-        info.text = "";
+        registerInfo.text = "";
         string email = RegisterEmail.text;
         string password = RegisterPassword.text;
         string username= RegisterUserName.text;
@@ -66,7 +66,7 @@ public class AuthManager : MonoBehaviour
         RestClient.Post<SignResponse>(RegisterURL + apiKey, userData).Then(
             response =>
             {
-                info.text = "Register Succsesful!";
+                registerInfo.text = "Register Succsesful!";
                 localId = response.localId;
                 userName = username;
                 firstName = firstname;
@@ -76,7 +76,7 @@ public class AuthManager : MonoBehaviour
             }).Catch(error =>
             {
                 Debug.LogError("An error occurred while registering: " + error.Message);
-                info.text = "An error occurred while registering: " + error.Message;
+                registerInfo.text = "An error occurred while registering: " + error.Message;
             });
     }
 
