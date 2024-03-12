@@ -58,5 +58,22 @@ public class PlayerDeck : MonoBehaviour
             {
                 Debug.LogError("Kartlar kaydedilirken hata oluþtu: " + error.Message);
             });
+        PlayerData playerData = new PlayerData();
+        playerData.playerDeck = ParseJsonArray(jsonData);
+    }
+    string[] ParseJsonArray(string jsonArray)
+    {
+        int startIndex = jsonArray.IndexOf('[') + 1;
+        int endIndex = jsonArray.LastIndexOf(']');
+        string elements = jsonArray.Substring(startIndex, endIndex - startIndex);
+
+        string[] parts = elements.Split(',');
+
+        for (int i = 0; i < parts.Length; i++)
+        {
+            parts[i] = parts[i].Trim('\"');
+        }
+
+        return parts;
     }
 }
