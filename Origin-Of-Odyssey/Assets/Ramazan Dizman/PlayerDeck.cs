@@ -1,6 +1,7 @@
 using Proyecto26;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
 
 public class PlayerDeck : MonoBehaviour
@@ -58,8 +59,8 @@ public class PlayerDeck : MonoBehaviour
             {
                 Debug.LogError("Kartlar kaydedilirken hata oluþtu: " + error.Message);
             });
-        PlayerData playerData = new PlayerData();
-        playerData.playerDeck = ParseJsonArray(jsonData);
+        AuthManager.playerDeckArray=ParseJsonArray(jsonData);
+        SceneManager.LoadScene("Lobby");
     }
     string[] ParseJsonArray(string jsonArray)
     {
