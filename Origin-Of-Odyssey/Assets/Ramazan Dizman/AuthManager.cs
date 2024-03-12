@@ -1,5 +1,6 @@
 using Proyecto26;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ public class AuthManager : MonoBehaviour
 
     public static string localId,idToken;
     public static string userName, firstName, lastName;
+    public static string[] playerDeckArray;
 
     public void AccountLogin()
     {
@@ -34,8 +36,12 @@ public class AuthManager : MonoBehaviour
             response =>
             {
                 loginInfo.text = "Login successful!";
+
+                //Get IdInfo
                 localId = response.localId;
                 idToken=response.idToken;
+
+                //Get UserInfo
                 RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
                 {
                     userName = userResponse.userName;
@@ -45,6 +51,15 @@ public class AuthManager : MonoBehaviour
                 {
                     Debug.LogError("Error retrieving username: " + error.Message);
                 });
+
+                //Get PlayerDeck 
+                RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
+                {
+                    playerDeckArray = ParseJsonArray(PlayerDeck.Text);
+                }).Catch(error =>
+                {
+                    Debug.LogError("Error retrieving playerdeck: " + error.Message);
+                });
                 StartCoroutine(LoadMainMenu());
             }).Catch(error =>
             {
@@ -52,7 +67,6 @@ public class AuthManager : MonoBehaviour
                 loginInfo.text = "An error occurred while logging in: " + error.Message;
             });
     }
-
     IEnumerator LoadMainMenu()
     {
         yield return new WaitForSeconds(3.0f);
@@ -97,4 +111,20 @@ public class AuthManager : MonoBehaviour
         RestClient.Put(databaseURL + "/" + localId  +"/UserInfo"+".json?auth=" + idTokenTemp, user);
     }
 
+    //For json to array
+    string[] ParseJsonArray(string jsonArray)
+    {
+        int startIndex = jsonArray.IndexOf('[') + 1;
+        int endIndex = jsonArray.LastIndexOf(']');
+        string elements = jsonArray.Substring(startIndex, endIndex - startIndex);
+
+        string[] parts = elements.Split(',');
+
+        for (int i = 0; i < parts.Length; i++)
+        {
+            parts[i] = parts[i].Trim('\"');
+        }
+
+        return parts;
+    }
 }
