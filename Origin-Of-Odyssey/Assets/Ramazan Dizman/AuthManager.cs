@@ -11,6 +11,9 @@ public class AuthManager : MonoBehaviour
     public InputField LoginEmail,LoginPassword;
     public InputField RegisterEmail,RegisterPassword,RegisterUserName,RegisterFirstName,RegisterLastName;
     public Text loginInfo,registerInfo;
+    public Toggle robotToggle,robotToggle1,userAgreementToggle;
+    public InputField[] inputFields;
+
 
     private readonly string apiKey = "AIzaSyCBurDB1K_PUu_KaD5HqVZqu3gRY1WytPE";    //firabase api
     private readonly string RegisterURL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=";
@@ -21,8 +24,40 @@ public class AuthManager : MonoBehaviour
     public static string userName, firstName, lastName;
     public static string[] playerDeckArray;
 
+    public void Update()
+    {
+        
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SelectNextInputField();
+        }
+
+    }
+    public void SelectNextInputField()
+    {
+        for (int i = 0; i < inputFields.Length; i++)
+        {
+            if (inputFields[i].isFocused)
+            {
+                int nextIndex = (i + 1) % inputFields.Length;
+                inputFields[nextIndex].Select();
+                return;
+            }
+        }
+        if (inputFields.Length > 0)
+        {
+            inputFields[0].Select();
+        }
+    }
     public void AccountLogin()
     {
+        if (!robotToggle.isOn)
+        {
+            loginInfo.text = "Please verify the CAPTCHA!";
+            loginInfo.color = Color.red;
+            return;
+        }
+
         loginInfo.text = "";
         string email = LoginEmail.text;
         string password = LoginPassword.text;
@@ -75,6 +110,18 @@ public class AuthManager : MonoBehaviour
 
     public void AccountRegister()
     {
+        if (!robotToggle1.isOn)
+        {
+            registerInfo.text = "Please verify the CAPTCHA!";
+            registerInfo.color = Color.red;
+            return;
+        }
+        if (!userAgreementToggle.isOn)
+        {
+            registerInfo.text = "Please accept the user agreement!";
+            registerInfo.color = Color.red;
+            return;
+        }
         registerInfo.text = "";
         string email = RegisterEmail.text;
         string password = RegisterPassword.text;

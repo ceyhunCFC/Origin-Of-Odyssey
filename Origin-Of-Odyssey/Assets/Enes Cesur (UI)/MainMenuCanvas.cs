@@ -6,47 +6,80 @@ using UnityEngine.UI;
 public class MainMenuCanvas : MonoBehaviour
 {
     public GameObject playPanel;
-    public GameObject mainCardsPanel;
+    public GameObject mainCardsCanvas;
     public GameObject roomPanel;
-    public GameObject gameModelsPanel;
-    public GameObject navbarPanel;
-
-    private GameObject lastOpenedPanel;
+    public GameObject GameModelsPanel;
+    public GameObject NavbarPanel;
+    public GameObject CreateRoom;
+    public GameObject InfoRoomPanel;
+    public InputField roomNameInput;
+    public Text warningText;
+    public Text roomNameText;
 
     void Start()
     {
-        lastOpenedPanel = playPanel;
-        OpenPanel(playPanel);
+        playPanel.SetActive(true);
+        NavbarPanel.SetActive(true);
+        mainCardsCanvas.SetActive(false);
+        roomPanel.SetActive(false);
+        GameModelsPanel.SetActive(false);
     }
-
-    public void OpenCardsPanel()
+    public void OpenCardsCanvas()
     {
-        lastOpenedPanel.SetActive(false);
-        OpenPanel(mainCardsPanel);
+        mainCardsCanvas.SetActive(true);
+    }
+    public void CloseCardsCanvas()
+    {
+        mainCardsCanvas.SetActive(false);
     }
 
     public void OpenRoomPanel()
     {
-        lastOpenedPanel.SetActive(false);
-        OpenPanel(roomPanel);
+        roomPanel.SetActive(true);
+        NavbarPanel.SetActive(true);
+        mainCardsCanvas.SetActive(false);
+        playPanel.SetActive(false);
+        GameModelsPanel.SetActive(false);
     }
-
+    public void CloseRoomPanel()
+    {
+        roomPanel.SetActive(false);
+        playPanel.SetActive(true);
+    }
     public void SetupRoom()
     {
-        lastOpenedPanel.SetActive(false);
-        OpenPanel(gameModelsPanel);
+        GameModelsPanel.SetActive(true);
+        NavbarPanel.SetActive(true);
+        playPanel.SetActive(false);
+        mainCardsCanvas.SetActive(false);
+        roomPanel.SetActive(false);
     }
-
-    public void ClosePanel()
+    public void CloseSetupRoom()
     {
-        lastOpenedPanel.SetActive(false);
-        OpenPanel(lastOpenedPanel);
+        GameModelsPanel.SetActive(false);
+        roomPanel.SetActive(true);
     }
-
-    private void OpenPanel(GameObject panel)
+    public void OpenCreateRoom()
     {
-        panel.SetActive(true);
-        navbarPanel.SetActive(true);
-        lastOpenedPanel = panel;
+        CreateRoom.SetActive(true);
+    }
+    public void CloseCreateRoom()
+    {
+        CreateRoom.SetActive(false);
+    }
+    public void OpenInfoRoom()
+    {
+        if (string.IsNullOrEmpty(roomNameInput.text))
+        {
+            warningText.text = "Please Enter a Room Name!";
+            warningText.color = Color.red;
+            return;
+        }
+        roomNameText.text = roomNameInput.text;
+        InfoRoomPanel.SetActive(true);
+    }
+    public void CloseInfoRoom()
+    {
+        InfoRoomPanel.SetActive(false);
     }
 }

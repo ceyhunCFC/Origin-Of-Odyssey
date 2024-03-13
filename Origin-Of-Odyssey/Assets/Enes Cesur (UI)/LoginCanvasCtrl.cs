@@ -9,7 +9,7 @@ public class CanvasCtrl : MonoBehaviour
     public GameObject signUpPage;
     public GameObject darkPanel;
     public Toggle toggle,toggle1;
-    
+    public GameObject PasswordPanel;
 
     private bool isFirstToggleClick = true;
 
@@ -38,32 +38,35 @@ public class CanvasCtrl : MonoBehaviour
     {
         if (isFirstToggleClick)
         {
-           
             darkPanel.SetActive(true);
             isFirstToggleClick = false;
             loginPage.SetActive(false);
-            toggle.interactable = false;
-            
-        }
-        else
-        {
-            
+            if (!toggle.isOn)
+                toggle.interactable = false;
         }
     }
+
     public void ToggleChanged1(bool newValue)
     {
         if (isFirstToggleClick)
         {
-
             darkPanel.SetActive(true);
             isFirstToggleClick = false;
             loginPage.SetActive(false);
-            toggle1.interactable = false;
-
+            if (!toggle1.isOn)
+                toggle1.interactable = false;
         }
-        else
-        {
+    }
+    
+    public void passwordPanel()
+    {
+        PasswordPanel.SetActive(true);
+        loginPage.SetActive(false);
 
-        }
+    }
+    public void closePasswordPanel()
+    {
+        PasswordPanel.SetActive(false);
+        loginPage.SetActive(true);
     }
 }
