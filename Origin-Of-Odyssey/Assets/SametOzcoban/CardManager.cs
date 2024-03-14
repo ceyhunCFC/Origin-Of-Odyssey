@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
 {
-   // Kartları saklayacak olan dizi
-    private RandomCard[] cardsArray = new RandomCard[6]; // Örneğin, 6 kart var
+    // Kartları saklayacak olan dizi
+    private CardStats[] cardsArray = new CardStats[6]; // Örneğin, 6 kart var
 
     // Prefablar
     public GameObject zeusPrefab;
@@ -38,12 +38,12 @@ public class CardManager : MonoBehaviour
     void StartGame()
     {
         // 3 kartı rastgele seçerek yerleştir
-        List<RandomCard> selectedCards = new List<RandomCard>();
+        List<CardStats> selectedCards = new List<CardStats>();
 
         // Rastgele seçilen kartları al
         while (selectedCards.Count < 3)
         {
-            RandomCard randomCard = cardsArray[Random.Range(0, cardsArray.Length)];
+            CardStats randomCard = cardsArray[Random.Range(0, cardsArray.Length)];
             if (!selectedCards.Contains(randomCard))
             {
                 selectedCards.Add(randomCard);
@@ -92,53 +92,6 @@ public class CardManager : MonoBehaviour
                 // Prefabı doğru pozisyonda oluştur
                 Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
             }
-        }
-
-        // Oyunu devam ettirme veya başka işlemler...
-    }
-    
-    public class ZeusCard : RandomCard
-    {
-        public ZeusCard()
-        {
-            _name = "Zeus";
-        }
-    }
-
-    public class GenghisCard : RandomCard
-    {
-        public GenghisCard()
-        {
-            _name = "Genghis";
-        }
-    }
-    public class LeonardoCard : RandomCard
-    {
-        public LeonardoCard()
-        {
-            _name = "Leonardo";
-        }
-    }
-
-    public class OdinCard : RandomCard
-    {
-        public OdinCard()
-        {
-            _name = "Odin";
-        }
-    }
-    public class DustinCard : RandomCard
-    {
-        public DustinCard()
-        {
-            _name = "Dustin";
-        }
-    }
-    public class AnubisCard : RandomCard
-    {
-        public AnubisCard()
-        {
-            _name = "Anibus";
-        }
+        } // Oyunu devam ettirme veya başka işlemler...
     }
 }

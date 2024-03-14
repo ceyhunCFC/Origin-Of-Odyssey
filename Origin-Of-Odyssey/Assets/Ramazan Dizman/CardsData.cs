@@ -1,12 +1,11 @@
-
-public class ZeusCard
-{
-    public string _name="Zeus";
-    public float hpValue = 15f;
-    public float dodgeValue = 4f;
-    public float attackValue = 6f;
-    public float defenceValue = 6f;
-    public float criticalValue = 5f;
+[System.Serializable]
+public abstract class CardStats {
+    public string cardName;
+    public float hpValue;
+    public float dodgeValue;
+    public float attackValue;
+    public float defenceValue;
+    public float criticalValue;
     public int duelsWon;
     public string question;
     public float winRatio;
@@ -15,97 +14,141 @@ public class ZeusCard
     public string description;
     public float manaValue;
     public float time;
-
+    
+    public string GetName()
+    {
+        return cardName;
+    }
 }
 
-public class GenghisCard
+
+[System.Serializable]
+public class ZeusCard : CardStats
 {
-    public string _name="Genghis";
-    public float hpValue = 11f;
-    public float dodgeValue = 4f;
-    public float attackValue = 6f;
-    public float defenceValue = 5f;
-    public float criticalValue = 7f;
-    public int duelsWon;
-    public string question;
-    public float winRatio;
-    public int duelsFought;
-    public int hasBeenBought;
-    public string description;
-    public float manaValue;
-    public float time;
+    public ZeusCard()
+    {
+        cardName = "Zeus";
+        hpValue = 15f;
+        dodgeValue = 4f;
+        attackValue = 6f;
+        defenceValue = 6f;
+        criticalValue = 5f;
+        duelsWon = 0;
+        question = "";
+        winRatio = 0f;
+        duelsFought = 0;
+        hasBeenBought = 0;
+        description = "";
+        manaValue = 0f;
+        time = 0f;
+    }
 }
 
-public class LeonardoCard
+[System.Serializable]
+public class GenghisCard : CardStats
 {
-    public string _name="Leonardo Da Vinci";
-    public float hpValue = 12f;
-    public float dodgeValue = 4f;
-    public float attackValue = 5f;
-    public float defenceValue = 6f;
-    public float criticalValue = 6f;
-    public int duelsWon;
-    public string question;
-    public float winRatio;
-    public int duelsFought;
-    public int hasBeenBought;
-    public string description;
-    public float manaValue;
-    public float time;
+    public GenghisCard()
+    {
+        cardName = "Genghis";
+        hpValue = 11f;
+        dodgeValue = 4f;
+        attackValue = 6f;
+        defenceValue = 5f;
+        criticalValue = 7f;
+        duelsWon = 0;
+        question = "";
+        winRatio = 0f;
+        duelsFought = 0;
+        hasBeenBought = 0;
+        description = "";
+        manaValue = 0f;
+        time = 0f;
+    }
 }
 
-public class OdinCard
+[System.Serializable]
+public class LeonardoCard : CardStats
 {
-    public string _name="Odin";
-    public float hpValue = 14f;
-    public float dodgeValue = 4f;
-    public float attackValue = 6f;
-    public float defenceValue = 7f;
-    public float criticalValue = 5f;
-    public int duelsWon;
-    public string question;
-    public float winRatio;
-    public int duelsFought;
-    public int hasBeenBought;
-    public string description;
-    public float manaValue;
-    public float time;
+    public LeonardoCard()
+    {
+        cardName = "Leonardo Da Vinci";
+        hpValue = 12f;
+        dodgeValue = 4f;
+        attackValue = 5f;
+        defenceValue = 6f;
+        criticalValue = 6f;
+        duelsWon = 0;
+        question = "";
+        winRatio = 0f;
+        duelsFought = 0;
+        hasBeenBought = 0;
+        description = "";
+        manaValue = 0f;
+        time = 0f;
+    }
 }
-
-public class DustinCard
+[System.Serializable]
+public class OdinCard : CardStats
 {
-    public string _name="Dustin";
-    public float hpValue = 11f;
-    public float dodgeValue = 5f;
-    public float attackValue = 5f;
-    public float defenceValue = 7f;
-    public float criticalValue = 6f;
-    public int duelsWon;
-    public string question;
-    public float winRatio;
-    public int duelsFought;
-    public int hasBeenBought;
-    public string description;
-    public float manaValue;
-    public float time;
+    public OdinCard()
+    {
+        cardName = "Odin";
+        hpValue = 14f;
+        dodgeValue = 4f;
+        attackValue = 6f;
+        defenceValue = 7f;
+        criticalValue = 5f;
+        duelsWon = 0;
+        question = "";
+        winRatio = 0f;
+        duelsFought = 0;
+        hasBeenBought = 0;
+        description = "";
+        manaValue = 0f;
+        time = 0f;
+    }
 }
-
-public class AnubisCard
+[System.Serializable]
+public class DustinCard : CardStats
 {
-    public string _name="Anubis";
-    public float hpValue = 10f;
-    public float dodgeValue = 3f;
-    public float attackValue = 7f;
-    public float defenceValue = 6f;
-    public float criticalValue = 6f;
-    public int duelsWon;
-    public string question;
-    public float winRatio;
-    public int duelsFought;
-    public int hasBeenBought;
-    public string description;
-    public float manaValue;
-    public float time;
+    public DustinCard()
+    {
+        cardName = "Dustin";
+        hpValue = 11f;
+        dodgeValue = 5f;
+        attackValue = 5f;
+        defenceValue = 7f;
+        criticalValue = 6f;
+        duelsWon = 0;
+        question = "";
+        winRatio = 0f;
+        duelsFought = 0;
+        hasBeenBought = 0;
+        description = "";
+        manaValue = 0f;
+        time = 0f;
+    }
+}
+[System.Serializable]
+public class AnubisCard : CardStats
+{
+    public AnubisCard()
+    {
+        cardName = "Anubis";
+        hpValue = 10f;
+        dodgeValue = 3f;
+        attackValue = 7f;
+        defenceValue = 6f;
+        criticalValue = 6f;
+        duelsWon = 0;
+        question = "";
+        winRatio = 0f;
+        duelsFought = 0;
+        hasBeenBought = 0;
+        description = "";
+        manaValue = 0f;
+        time = 0f;
+    }
 }
 
 

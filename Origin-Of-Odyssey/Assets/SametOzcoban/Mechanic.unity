@@ -708,12 +708,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acfe1e8ab5b3da54499df77cd134c494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zeusPrefab: {fileID: 8370737067804873360, guid: 5d15d348cd6fe084799b943279cd18ac, type: 3}
-  genghisPrefab: {fileID: 7841308960991500241, guid: 0dd97b94b5ee7984291c8c19f72cb38d, type: 3}
-  leonardoPrefab: {fileID: 7699928883462492957, guid: ef6510df18a5a05408580b746a7a662e, type: 3}
-  odinPrefab: {fileID: 2213226202629217150, guid: 532522841ce609d4fa0a3b730d3f8587, type: 3}
-  dustinPrefab: {fileID: 4586642264572505025, guid: 1e03bddaae3e7b7458aae9f4cdff521f, type: 3}
-  anubisPrefab: {fileID: 9134991283604784996, guid: a14ea53d12e599345b684ff1f84b0125, type: 3}
+  zeusPrefab: {fileID: 917635894340955171, guid: 5d15d348cd6fe084799b943279cd18ac, type: 3}
+  genghisPrefab: {fileID: 8718393763484870909, guid: 0dd97b94b5ee7984291c8c19f72cb38d, type: 3}
+  leonardoPrefab: {fileID: 4017288362733109461, guid: ef6510df18a5a05408580b746a7a662e, type: 3}
+  odinPrefab: {fileID: 8201864757612588203, guid: 532522841ce609d4fa0a3b730d3f8587, type: 3}
+  dustinPrefab: {fileID: 4989456352826137323, guid: 1e03bddaae3e7b7458aae9f4cdff521f, type: 3}
+  anubisPrefab: {fileID: 1564028716923147620, guid: e3316f4b1fe11404c9025be8f7bafb38, type: 3}
   spawnPoint1: {fileID: 1040542375}
   spawnPoint2: {fileID: 1110060913}
   spawnPoint3: {fileID: 1259218991}
