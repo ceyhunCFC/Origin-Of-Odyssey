@@ -4833,6 +4833,7 @@ MonoBehaviour:
   robotToggle: {fileID: 1221596598}
   robotToggle1: {fileID: 2051578782}
   userAgreementToggle: {fileID: 42674885}
+  RemindMeToggle: {fileID: 1730859933}
   inputFields:
   - {fileID: 905580562}
   - {fileID: 93405442}
@@ -4842,6 +4843,7 @@ MonoBehaviour:
   - {fileID: 1876915842}
   - {fileID: 1989356231}
   - {fileID: 377711658}
+  RemindMe: 0
 --- !u!4 &1235562005
 Transform:
   m_ObjectHideFlags: 0
@@ -6298,8 +6300,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1235562004}
         m_TargetAssemblyTypeName: AuthManager, Assembly-CSharp
-        m_MethodName: RemindMeToggle
-        m_Mode: 6
+        m_MethodName: ToggleRemindMe
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

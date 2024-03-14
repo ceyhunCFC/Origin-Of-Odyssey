@@ -82,4 +82,11 @@ public class MainMenuCanvas : MonoBehaviour
     {
         InfoRoomPanel.SetActive(false);
     }
+
+    public void QuitButton()
+    {
+        PlayerPrefs.SetString("Username", null);
+        PlayerPrefs.SetString("Password", null);
+        PlayerPrefs.SetInt("IsLoggedIn", 0);
+    }
 }

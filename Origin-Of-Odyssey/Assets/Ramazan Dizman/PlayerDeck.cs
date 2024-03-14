@@ -10,8 +10,14 @@ public class PlayerDeck : MonoBehaviour
     
     private List<string> cardNames = new List<string>();
 
-    public string localId = AuthManager.localId;
-    public string idToken=AuthManager.idToken;
+    public string localId;
+    public string idToken;
+
+    private void Start()
+    {
+        localId = AuthManager.localId;
+        idToken = AuthManager.idToken;
+    }
 
     public void PostZeusCardButton()
     {
@@ -49,7 +55,7 @@ public class PlayerDeck : MonoBehaviour
     public void SaveButton()
     {
         string jsonData = "[" + string.Join(",", cardNames.ConvertAll(name => "\"" + name + "\"").ToArray()) + "]";
-
+        
         RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" +  idToken, jsonData)
             .Then(response =>
             {
@@ -60,7 +66,7 @@ public class PlayerDeck : MonoBehaviour
                 Debug.LogError("Kartlar kaydedilirken hata oluþtu: " + error.Message);
             });
         AuthManager.playerDeckArray=ParseJsonArray(jsonData);
-        SceneManager.LoadScene("Lobby");
+        //SceneManager.LoadScene("Lobby");
     }
     string[] ParseJsonArray(string jsonArray)
     {
