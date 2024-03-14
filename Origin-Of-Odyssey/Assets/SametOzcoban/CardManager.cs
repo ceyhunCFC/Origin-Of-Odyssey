@@ -38,24 +38,25 @@ public class CardManager : MonoBehaviour
     void StartGame()
     {
         // 3 kartı rastgele seçerek yerleştir
-        List<CardStats> selectedCards = new List<CardStats>();
-
-        // Rastgele seçilen kartları al
-        while (selectedCards.Count < 3)
+        List<int> selectedIndices = new List<int>();
+    
+        // Kartları rastgele seç
+        while (selectedIndices.Count < 3)
         {
-            CardStats randomCard = cardsArray[Random.Range(0, cardsArray.Length)];
-            if (!selectedCards.Contains(randomCard))
+            int randomIndex = Random.Range(0, cardsArray.Length);
+            if (!selectedIndices.Contains(randomIndex))
             {
-                selectedCards.Add(randomCard);
+                selectedIndices.Add(randomIndex);
             }
         }
 
         // Seçilen kartları belirli konumlara yerleştir
-        for (int i = 0; i < selectedCards.Count; i++)
+        for (int i = 0; i < selectedIndices.Count; i++)
         {
+            int index = selectedIndices[i];
             // Kartın ismine göre prefabı al
             GameObject prefab = null;
-            switch (selectedCards[i].GetName())
+            switch (cardsArray[index].cardName)
             {
                 case "Zeus":
                     prefab = zeusPrefab;
@@ -63,7 +64,7 @@ public class CardManager : MonoBehaviour
                 case "Genghis":
                     prefab = genghisPrefab;
                     break;
-                case "Leonardo":
+                case "Leonardo Da Vinci":
                     prefab = leonardoPrefab;
                     break;
                 case "Odin":
@@ -72,7 +73,7 @@ public class CardManager : MonoBehaviour
                 case "Dustin":
                     prefab = dustinPrefab;
                     break;
-                case "Anibus":
+                case "Anubis":
                     prefab = anubisPrefab;
                     break;
             }
@@ -89,9 +90,11 @@ public class CardManager : MonoBehaviour
                 else
                     spawnPoint = spawnPoint3;
 
-                // Prefabı doğru pozisyonda oluştur
-                Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+                if (spawnPoint != null)
+                {
+                    Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+                }
             }
-        } // Oyunu devam ettirme veya başka işlemler...
+        }
     }
 }
