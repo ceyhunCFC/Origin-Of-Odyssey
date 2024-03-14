@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 
 public class PlayerDeck : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class PlayerDeck : MonoBehaviour
 
     public string localId;
     public string idToken;
+
+    public GameObject NotEnoughCard;
 
     private void Start()
     {
@@ -56,16 +59,25 @@ public class PlayerDeck : MonoBehaviour
     {
         string jsonData = "[" + string.Join(",", cardNames.ConvertAll(name => "\"" + name + "\"").ToArray()) + "]";
         
-        RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" +  idToken, jsonData)
+        if(cardNames.Count > 3)
+        {
+            RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken, jsonData)
             .Then(response =>
             {
                 cardNames.Clear();
             })
             .Catch(error =>
             {
-                Debug.LogError("Kartlar kaydedilirken hata oluþtu: " + error.Message);
+                Debug.LogError("Error for save cards " + error.Message);
             });
-        AuthManager.playerDeckArray=ParseJsonArray(jsonData);
+            AuthManager.playerDeckArray = ParseJsonArray(jsonData);
+            NotEnoughCard.SetActive(false);
+        }
+        else
+        {
+            NotEnoughCard.SetActive(true);
+        }
+        
         //SceneManager.LoadScene("Lobby");
     }
     string[] ParseJsonArray(string jsonArray)

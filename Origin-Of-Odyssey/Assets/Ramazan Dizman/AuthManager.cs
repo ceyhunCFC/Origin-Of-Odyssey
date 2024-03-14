@@ -1,6 +1,7 @@
 using Proyecto26;
 using System;
 using System.Collections;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -218,6 +219,18 @@ public class AuthManager : MonoBehaviour
     {
         PlayerData user = new PlayerData();
         RestClient.Put(databaseURL + "/" + localId  +"/UserInfo"+".json?auth=" + idTokenTemp, user);
+
+        //register put 5 card
+        string jsonData = "[\"Aegis\",\"Genghis\",\"Zeus\",\"Odin\",\"Dustin\"]";
+        RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken, jsonData)
+            .Then(response =>
+            {
+                
+            })
+            .Catch(error =>
+            {
+                Debug.LogError("Kartlar kaydedilirken hata oluþtu: " + error.Message);
+            });
     }
 
     public void ToggleRemindMe(bool toggle)
