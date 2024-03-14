@@ -10,6 +10,7 @@ public class AuthManager : MonoBehaviour
 
     public InputField LoginEmail,LoginPassword;
     public InputField RegisterEmail,RegisterPassword,RegisterUserName,RegisterFirstName,RegisterLastName;
+    public InputField ResetPasswordEmail;
     public Text loginInfo,registerInfo;
     public Toggle robotToggle,robotToggle1,userAgreementToggle,RemindMeToggle;
     public InputField[] inputFields;
@@ -222,6 +223,25 @@ public class AuthManager : MonoBehaviour
     public void ToggleRemindMe(bool toggle)
     {
         RemindMe = toggle;
+    }
+
+    public void ResetPasswordButton()
+    {
+        SendPasswordResetEmail(ResetPasswordEmail.text);
+    }
+
+    private void SendPasswordResetEmail(string email)
+    {
+        string resetPasswordData = "{\"requestType\":\"PASSWORD_RESET\",\"email\":\"" + email + "\"}";
+        RestClient.Post(
+            "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=" + apiKey,
+            resetPasswordData).Then(
+            response =>
+            {
+            }).Catch(error =>
+            {
+                Debug.LogError("Reset Password error " + error.Message);
+            });
     }
 
     //For json to array
