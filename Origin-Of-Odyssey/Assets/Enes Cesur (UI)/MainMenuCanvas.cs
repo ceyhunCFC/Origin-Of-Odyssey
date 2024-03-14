@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuCanvas : MonoBehaviour
@@ -35,11 +36,12 @@ public class MainMenuCanvas : MonoBehaviour
 
     public void OpenRoomPanel()
     {
-        roomPanel.SetActive(true);
+        SceneManager.LoadScene("Lobby");
+       /* roomPanel.SetActive(true);
         NavbarPanel.SetActive(true);
         mainCardsCanvas.SetActive(false);
         playPanel.SetActive(false);
-        GameModelsPanel.SetActive(false);
+        GameModelsPanel.SetActive(false);*/
     }
     public void CloseRoomPanel()
     {
