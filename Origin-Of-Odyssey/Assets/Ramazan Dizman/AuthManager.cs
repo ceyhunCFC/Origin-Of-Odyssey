@@ -1,6 +1,6 @@
 using Proyecto26;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,8 +10,9 @@ public class AuthManager : MonoBehaviour
 
     public InputField LoginEmail,LoginPassword;
     public InputField RegisterEmail,RegisterPassword,RegisterUserName,RegisterFirstName,RegisterLastName;
+    public InputField ResetPasswordEmail;
     public Text loginInfo,registerInfo;
-    public Toggle robotToggle,robotToggle1,userAgreementToggle;
+    public Toggle robotToggle,robotToggle1,userAgreementToggle,RemindMeToggle;
     public InputField[] inputFields;
 
 
@@ -24,12 +25,28 @@ public class AuthManager : MonoBehaviour
     public static string userName, firstName, lastName;
     public static string[] playerDeckArray;
 
+    public bool RemindMe;
+
+    
+    private void Start()
+    {
+        if (PlayerPrefs.GetInt("IsLoggedIn") == 1)
+        {
+            AccountLogin();
+        }
+
+    }
+
     public void Update()
     {
         
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             SelectNextInputField();
+        }
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            AccountLogin();
         }
 
     }
@@ -51,16 +68,25 @@ public class AuthManager : MonoBehaviour
     }
     public void AccountLogin()
     {
-        if (!robotToggle.isOn)
+        if(PlayerPrefs.GetInt("IsLoggedIn") == 0)
         {
-            loginInfo.text = "Please verify the CAPTCHA!";
-            loginInfo.color = Color.red;
-            return;
+            if (!robotToggle.isOn)
+            {
+                loginInfo.text = "Please verify the CAPTCHA!";
+                loginInfo.color = Color.red;
+                return;
+            }
         }
-
+         
         loginInfo.text = "";
         string email = LoginEmail.text;
         string password = LoginPassword.text;
+
+        if (PlayerPrefs.GetInt("IsLoggedIn") == 1)
+        {
+            email = PlayerPrefs.GetString("Username");
+            password = PlayerPrefs.GetString("Password");
+        }    
         LoginAccount(email, password);
     }
 
@@ -70,34 +96,66 @@ public class AuthManager : MonoBehaviour
         RestClient.Post<SignResponse>(LoginURL + apiKey, userData).Then(
             response =>
             {
-                loginInfo.text = "Login successful!";
+                
 
-                //Get IdInfo
-                localId = response.localId;
-                idToken=response.idToken;
+                string emailVerification = "{\"idToken\":\"" + response.idToken + "\"}";
+                RestClient.Post(
+                    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=" + apiKey,
+                    emailVerification).Then(
+                    emailResponse =>
+                    {
+                        EmailConfirmationInfo emailConfirmationInfo = JsonUtility.FromJson<EmailConfirmationInfo>(emailResponse.Text);
 
-                //Get UserInfo
-                RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
-                {
-                    userName = userResponse.userName;
-                    firstName = userResponse.firstName;
-                    lastName = userResponse.lastName;
-                }).Catch(error =>
-                {
-                    Debug.LogError("Error retrieving username: " + error.Message);
-                });
+                        if (emailConfirmationInfo.users[0].emailVerified)
+                        {
+                            loginInfo.text = "Login successful!";
 
-                //Get PlayerDeck 
-                RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
-                {
-                    playerDeckArray = ParseJsonArray(PlayerDeck.Text);
-                }).Catch(error =>
-                {
-                    Debug.LogError("Error retrieving playerdeck: " + error.Message);
-                });
-                StartCoroutine(LoadMainMenu());
+                            //Get IdInfo
+                            localId = response.localId;
+                            idToken = response.idToken;
+
+                            //Get UserInfo
+                            RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
+                            {
+                                userName = userResponse.userName;
+                                firstName = userResponse.firstName;
+                                lastName = userResponse.lastName;
+                            }).Catch(error =>
+                            {
+                                Debug.LogError("Error retrieving username: " + error.Message);
+                            });
+                            if (RemindMe == true)
+                            {
+                                PlayerPrefs.SetString("Username", email);
+                                PlayerPrefs.SetString("Password", password);
+                                PlayerPrefs.SetInt("IsLoggedIn", 1);
+                            }
+                            //Get PlayerDeck 
+                            RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
+                            {
+                                playerDeckArray = ParseJsonArray(PlayerDeck.Text);
+                            }).Catch(error =>
+                            {
+                                Debug.LogError("Error retrieving playerdeck: " + error.Message);
+                            });
+                            StartCoroutine(LoadMainMenu());
+                        }
+                        else
+                        {
+                            loginInfo.text = "email not verified";
+                        }
+                    }).Catch(error =>
+                    {
+                        Debug.Log(error.Message);
+                    }); 
+
+
+                
             }).Catch(error =>
             {
+                PlayerPrefs.SetString("Username", null);
+                PlayerPrefs.SetString("Password", null);
+                PlayerPrefs.SetInt("IsLoggedIn", 0);
                 Debug.LogError("An error occurred while logging in: " + error.Message);
                 loginInfo.text = "An error occurred while logging in: " + error.Message;
             });
@@ -143,6 +201,10 @@ public class AuthManager : MonoBehaviour
                 firstName = firstname;
                 lastName = lastname;
                 idToken=response.idToken;
+                string emailVerification = "{\"requestType\":\"VERIFY_EMAIL\",\"idToken\":\"" + response.idToken + "\"}";
+                RestClient.Post(
+                    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/getOobConfirmationCode?key=" + apiKey,
+                    emailVerification);
                 PostToDatabase( response.idToken);
 
             }).Catch(error =>
@@ -156,6 +218,30 @@ public class AuthManager : MonoBehaviour
     {
         PlayerData user = new PlayerData();
         RestClient.Put(databaseURL + "/" + localId  +"/UserInfo"+".json?auth=" + idTokenTemp, user);
+    }
+
+    public void ToggleRemindMe(bool toggle)
+    {
+        RemindMe = toggle;
+    }
+
+    public void ResetPasswordButton()
+    {
+        SendPasswordResetEmail(ResetPasswordEmail.text);
+    }
+
+    private void SendPasswordResetEmail(string email)
+    {
+        string resetPasswordData = "{\"requestType\":\"PASSWORD_RESET\",\"email\":\"" + email + "\"}";
+        RestClient.Post(
+            "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=" + apiKey,
+            resetPasswordData).Then(
+            response =>
+            {
+            }).Catch(error =>
+            {
+                Debug.LogError("Reset Password error " + error.Message);
+            });
     }
 
     //For json to array
@@ -173,5 +259,17 @@ public class AuthManager : MonoBehaviour
         }
 
         return parts;
+    }
+
+    [Serializable]
+    private class EmailConfirmationInfo
+    {
+        public UserInfo[] users;
+    }
+
+    [Serializable]
+    public class UserInfo
+    {
+        public bool emailVerified;
     }
 }
