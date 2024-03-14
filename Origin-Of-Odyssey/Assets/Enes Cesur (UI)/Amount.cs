@@ -1,0 +1,27 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+public class Amount : MonoBehaviour
+{
+    
+    public Text userNameText; 
+    public Text founderNameText;
+    public PlayerData playerData; 
+
+    void Start()
+    {
+        playerData = new PlayerData();
+        UpdateUserNameOnUI();
+    }
+
+    void UpdateUserNameOnUI()
+    {
+        
+        string userName = playerData.userName;
+        userNameText.text =userName;
+        founderNameText.text =userName;
+    }
+}
+
+
