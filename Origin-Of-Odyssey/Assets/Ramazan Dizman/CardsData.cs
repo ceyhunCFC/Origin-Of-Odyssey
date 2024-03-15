@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 public abstract class CardStats {
     public string cardName;
@@ -21,10 +23,83 @@ public abstract class CardStats {
     }
 }
 
+[System.Serializable]
+public class HeroPower
+{
+    public string name;
+    public int mana;
+    public int damage;
+
+    public HeroPower(string _name, int _mana, int _damage)
+    {
+        this.name = _name;
+        this.mana = _mana;
+        this.damage = _damage;
+    }
+}
+
+[System.Serializable]
+public class Minion
+{
+    public string name;
+    public Rarity rarity;
+    public int mana;
+    public int attack;
+    public int health;
+    public Position position;
+
+    public Minion(string _name, Rarity _rarity, int _mana, int _attack, int _health, Position _position)
+    {
+        this.name = _name;
+        this.rarity = _rarity;
+        this.mana = _mana;
+        this.attack = _attack;
+        this.health = _health;
+        this.position = _position;
+    }
+}
+
+[System.Serializable]
+public class StandartCard
+{
+    public string name;
+    public Rarity rarity;
+    public int mana;
+    public int attack;
+    public int health;
+
+    public StandartCard(string _name, Rarity _rarity, int _attack, int _health, int _mana)
+    {
+        this.name = _name;
+        this.rarity = _rarity;
+        this.mana = _mana;
+        this.attack = _attack;
+        this.health = _health;
+    }
+}
+
+public enum Rarity
+{
+    Common,
+    Rare,
+    Epic,
+    Legendary
+}
+
+public enum Position
+{
+    Backline,
+    Frontline,
+    Versatile
+}
+
 
 [System.Serializable]
 public class ZeusCard : CardStats
 {
+    public List<Minion> minions;
+    public HeroPower heroPower;
+
     public ZeusCard()
     {
         cardName = "Zeus";
@@ -41,12 +116,35 @@ public class ZeusCard : CardStats
         description = "";
         manaValue = 0f;
         time = 0f;
+
+        minions = new List<Minion>
+        {
+            new Minion("Centaur Archer", Rarity.Common, 3, 3, 2, Position.Backline),
+            new Minion("Minotaur Warrior", Rarity.Common, 4, 5, 4, Position.Frontline),
+            new Minion("Siren", Rarity.Rare, 5, 3, 4, Position.Backline),
+            new Minion("Nemean Lion", Rarity.Epic, 6, 4, 7, Position.Frontline),
+            new Minion("Hydra", Rarity.Epic, 7, 5, 8, Position.Frontline),
+            new Minion("Pegasus Rider", Rarity.Rare, 4, 3, 3, Position.Versatile),
+            new Minion("Greek Hoplite", Rarity.Common, 2, 2, 3, Position.Frontline),
+            new Minion("Gorgon", Rarity.Epic, 8, 4, 5, Position.Backline),
+            new Minion("Chimera", Rarity.Rare, 5, 6, 5, Position.Frontline),
+            new Minion("Athena", Rarity.Legendary, 9, 6, 6, Position.Backline),
+            new Minion("Heracles", Rarity.Legendary, 8, 4, 4, Position.Frontline),
+            new Minion("Stormcaller", Rarity.Common, 3, 2, 4, Position.Backline),
+            new Minion("Odyssean Navigator", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Oracle's Emissary", Rarity.Rare, 3, 2, 4, Position.Backline),
+            new Minion("Lightning Forger", Rarity.Rare, 5, 3, 3, Position.Backline)
+        };
+
+        heroPower = new HeroPower("Lightning Strike", 2, 1);
     }
 }
 
 [System.Serializable]
 public class GenghisCard : CardStats
 {
+    public List<Minion> minions;
+    public HeroPower heroPower;
     public GenghisCard()
     {
         cardName = "Genghis";
@@ -63,12 +161,35 @@ public class GenghisCard : CardStats
         description = "";
         manaValue = 0f;
         time = 0f;
+
+        minions = new List<Minion>
+        {
+            new Minion("Viking Raider", Rarity.Common, 2, 2, 1, Position.Frontline),
+            new Minion("Runestone Mystic", Rarity.Common, 3, 2, 4, Position.Backline),
+            new Minion("Fenrir's Spawn", Rarity.Common, 4, 3, 3, Position.Frontline),
+            new Minion("Shieldmaiden Defender", Rarity.Common, 2, 2, 2, Position.Frontline),
+            new Minion("Draugr Warrior", Rarity.Common, 5, 4, 5, Position.Frontline),
+            new Minion("Norn Weaver", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Skald Bard", Rarity.Common, 2, 1, 3, Position.Backline),
+            new Minion("Valkyrie's Chosen", Rarity.Common, 4, 3, 4, Position.Backline),
+            new Minion("Mimir's Seer", Rarity.Common, 5, 3, 4, Position.Backline),
+            new Minion("Frost Giant", Rarity.Common, 6, 5, 5, Position.Frontline),
+            new Minion("Einherjar Caller", Rarity.Common, 7, 4, 4, Position.Frontline),
+            new Minion("Dwarven Blacksmith", Rarity.Common, 3, 3, 2, Position.Backline),
+            new Minion("Naglfar", Rarity.Epic, 7, 7, 7, Position.Frontline),
+            new Minion("Heimdallr", Rarity.Common, 8, 5, 5, Position.Frontline),
+            new Minion("Brokk and Sindri", Rarity.Common, 6, 4, 6, Position.Backline)
+        };
+
+        heroPower = new HeroPower("Mongol Messenger", 2, 2);
     }
 }
 
 [System.Serializable]
 public class LeonardoCard : CardStats
 {
+    public List<Minion> minions;
+    public HeroPower heroPower;
     public LeonardoCard()
     {
         cardName = "Leonardo Da Vinci";
@@ -85,11 +206,34 @@ public class LeonardoCard : CardStats
         description = "";
         manaValue = 0f;
         time = 0f;
+
+        minions = new List<Minion>
+        {
+            new Minion("Da Vinci's Glider", Rarity.Common, 1, 1, 1, Position.Backline),
+            new Minion("Automaton Apprentice", Rarity.Common, 2, 1, 3, Position.Backline),
+            new Minion("Automaton Duelist", Rarity.Common, 3, 3, 2, Position.Frontline),
+            new Minion("Gyrocopter", Rarity.Common, 2, 1, 2, Position.Backline),
+            new Minion("Mechanical Lion", Rarity.Common, 4, 3, 3, Position.Frontline),
+            new Minion("Codex Guardian", Rarity.Common, 3, 2, 2, Position.Backline),
+            new Minion("Mirror Shield Automaton", Rarity.Common, 4, 3, 4, Position.Frontline),
+            new Minion("Grand Cannon", Rarity.Common, 5, 4, 3, Position.Backline),
+            new Minion("Tank of the Renaissance", Rarity.Common, 7, 5, 8, Position.Frontline),
+            new Minion("Anatomist of the Unknown", Rarity.Common, 4, 3, 4, Position.Backline),
+            new Minion("Organ Gun", Rarity.Common, 3, 0, 5, Position.Backline),
+            new Minion("Piscean Diver", Rarity.Common, 3, 2, 3, Position.Backline),
+            new Minion("Da Vinci's Helix Engineer", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Vitruvian Firstborn", Rarity.Common, 6, 4, 5, Position.Frontline),
+            new Minion("Eques Automaton", Rarity.Common, 8, 6, 6, Position.Frontline)
+        };
+
+        heroPower = new HeroPower("Tome of Confusion", 2, 2);
     }
 }
 [System.Serializable]
 public class OdinCard : CardStats
 {
+    public List<Minion> minions;
+    public HeroPower heroPower;
     public OdinCard()
     {
         cardName = "Odin";
@@ -106,11 +250,34 @@ public class OdinCard : CardStats
         description = "";
         manaValue = 0f;
         time = 0f;
+
+        minions = new List<Minion>
+        {
+            new Minion("Viking Raider", Rarity.Common, 2, 2, 1, Position.Frontline),
+            new Minion("Runestone Mystic", Rarity.Common, 3, 2, 4, Position.Backline),
+            new Minion("Fenrir's Spawn", Rarity.Common, 4, 3, 3, Position.Frontline),
+            new Minion("Shieldmaiden Defender", Rarity.Common, 2, 2, 2, Position.Frontline),
+            new Minion("Draugr Warrior", Rarity.Common, 5, 4, 5, Position.Frontline),
+            new Minion("Norn Weaver", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Skald Bard", Rarity.Common, 2, 1, 3, Position.Backline),
+            new Minion("Valkyrie's Chosen", Rarity.Common, 4, 3, 4, Position.Backline),
+            new Minion("Mimir's Seer", Rarity.Common, 5, 3, 4, Position.Backline),
+            new Minion("Frost Giant", Rarity.Common, 6, 5, 5, Position.Frontline),
+            new Minion("Einherjar Caller", Rarity.Common, 7, 4, 4, Position.Frontline),
+            new Minion("Dwarven Blacksmith", Rarity.Common, 3, 3, 2, Position.Backline),
+            new Minion("Naglfar", Rarity.Epic, 7, 7, 7, Position.Frontline),
+            new Minion("Heimdallr", Rarity.Common, 8, 5, 5, Position.Frontline),
+            new Minion("Brokk and Sindri", Rarity.Common, 6, 4, 6, Position.Backline)
+        };
+
+        heroPower = new HeroPower("Wisdom of the Allfather", 2, 1);
     }
 }
 [System.Serializable]
 public class DustinCard : CardStats
 {
+    public List<Minion> minions;
+    public HeroPower heroPower;
     public DustinCard()
     {
         cardName = "Dustin";
@@ -127,11 +294,33 @@ public class DustinCard : CardStats
         description = "";
         manaValue = 0f;
         time = 0f;
+
+        minions = new List<Minion>
+        {
+            new Minion("Mutant Behemoth", Rarity.Rare, 6, 6, 8, Position.Frontline),
+            new Minion("Scavenger Raider", Rarity.Common, 3, 3, 2, Position.Frontline),
+            new Minion("Toxic Stalker", Rarity.Rare, 4, 2, 5, Position.Backline),
+            new Minion("Wasteland Sniper", Rarity.Rare, 5, 3, 3, Position.Backline),
+            new Minion("Radiated Hulk", Rarity.Epic, 7, 7, 7, Position.Frontline),
+            new Minion("Engineer of the Ruins", Rarity.Rare, 4, 2, 4, Position.Backline),
+            new Minion("Lone Cyborg", Rarity.Epic, 5, 4, 4, Position.Frontline),
+            new Minion("Desert Nomad", Rarity.Common, 2, 2, 3, Position.Frontline),
+            new Minion("Rogue AI Drone", Rarity.Rare, 3, 1, 1, Position.Backline),
+            new Minion("Mutant Swarm", Rarity.Common, 6, 1, 1, Position.Frontline),
+            new Minion("Dune Raider", Rarity.Rare, 5, 4, 5, Position.Frontline),
+            new Minion("Warlord", Rarity.Epic, 7, 6, 6, Position.Frontline),
+            new Minion("Salvage Colossus", Rarity.Legendary, 8, 8, 8, Position.Frontline),
+            new Minion("Claire", Rarity.Legendary, 10, 8, 8, Position.Frontline)
+        };
+
+        heroPower = new HeroPower("Summon a random mutant", 2, 1);
     }
 }
 [System.Serializable]
 public class AnubisCard : CardStats
 {
+    public List<Minion> minions;
+    public HeroPower heroPower;
     public AnubisCard()
     {
         cardName = "Anubis";
@@ -148,7 +337,111 @@ public class AnubisCard : CardStats
         description = "";
         manaValue = 0f;
         time = 0f;
+
+        minions = new List<Minion>
+        {
+            new Minion("Sandstone Scribe", Rarity.Common, 2, 1, 3, Position.Backline),
+            new Minion("Tomb Protector", Rarity.Common, 3, 2, 4, Position.Frontline),
+            new Minion("Necropolis Acolyte", Rarity.Common, 2, 2, 2, Position.Backline),
+            new Minion("Desert Bowman", Rarity.Common, 3, 3, 2, Position.Backline),
+            new Minion("Sphinx Riddler", Rarity.Common, 4, 4, 5, Position.Backline),
+            new Minion("Osiris’ Bannerman", Rarity.Common, 5, 4, 4, Position.Frontline),
+            new Minion("Sun Charioteer", Rarity.Common, 4, 3, 2, Position.Frontline),
+            new Minion("Crypt Warden", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Falcon-Eyed Hunter", Rarity.Common, 3, 2, 3, Position.Backline),
+            new Minion("Canopic Preserver", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Royal Mummy", Rarity.Common, 6, 5, 5, Position.Frontline),
+            new Minion("Temple Guardian", Rarity.Common, 5, 4, 6, Position.Frontline),
+            new Minion("Chaos Scarab", Rarity.Common, 7, 6, 6, Position.Frontline),
+            new Minion("Bata", Rarity.Common, 8, 5, 5, Position.Frontline),
+            new Minion("Osiris", Rarity.Legendary, 10, 20, 20, Position.Frontline)
+        };
+
+        heroPower = new HeroPower("Summon a 2/2 mummy", 2, 2);
     }
+}
+
+public class StandartCards
+{
+    public List<StandartCard> standartcards;
+
+    public StandartCards()
+    {
+        standartcards = new List<StandartCard>
+        {
+            new StandartCard("Siege Master Urban", Rarity.Legendary, 5, 8, 8),
+            new StandartCard("Sphinx of the Sands", Rarity.Legendary, 6, 9, 7),
+            new StandartCard("Wasteland Giant", Rarity.Legendary, 8, 8, 9),
+            new StandartCard("Chronomancer Cleopatra", Rarity.Legendary, 5, 7, 8),
+            new StandartCard("Frost Wyrm Fafnir", Rarity.Legendary, 8, 10, 10),
+            new StandartCard("Echo of Tomorrow", Rarity.Legendary, 6, 6, 7),
+
+            new StandartCard("Templar Knight", Rarity.Epic, 4, 7, 6),
+            new StandartCard("Cerberus Spawn", Rarity.Epic, 5, 5, 5),
+            new StandartCard("Scrapyard Engineer", Rarity.Epic, 3, 5, 4),
+            new StandartCard("Arcane Scholar", Rarity.Epic, 3, 6, 5),
+            new StandartCard("Enchanted Golem", Rarity.Epic, 6, 6, 6),
+            new StandartCard("Rebel Outcast", Rarity.Epic, 4, 4, 4),
+            new StandartCard("Desert Warlock", Rarity.Epic, 5, 5, 7),
+            new StandartCard("Naiad Protector", Rarity.Epic, 3, 6, 4),
+            new StandartCard("Ruined City Scout", Rarity.Epic, 2, 4, 3),
+            new StandartCard("Gladiator Champion", Rarity.Epic, 7, 5, 8),
+
+            new StandartCard("Horse Archer", Rarity.Rare, 3, 2, 3),
+            new StandartCard("Forest Nymph", Rarity.Rare, 2, 4, 4),
+            new StandartCard("Urban Ranger", Rarity.Rare, 4, 3, 5),
+            new StandartCard("Byzantine Fire Slinger", Rarity.Rare, 3, 3, 4),
+            new StandartCard("Labyrinth Guardian", Rarity.Rare, 5, 6, 6),
+            new StandartCard("Toxic Rainmaker", Rarity.Rare, 2, 4, 3),
+            new StandartCard("Crusader's Bishop", Rarity.Rare, 4, 5, 5),
+            new StandartCard("Shadow Assassin", Rarity.Rare, 3, 3, 4),
+            new StandartCard("Scavenger's Daughter", Rarity.Rare, 2, 2, 2),
+            new StandartCard("Viking Shield-Maiden", Rarity.Rare, 3, 4, 3),
+            new StandartCard("Minotaur Labyrinth Keeper", Rarity.Rare, 4, 6, 5),
+            new StandartCard("Radiated Marauder", Rarity.Rare, 5, 4, 4),
+            new StandartCard("Spartan Hoplite", Rarity.Rare, 2, 5, 3),
+            new StandartCard("Minor Oracle of Delphi", Rarity.Rare, 4, 4, 6),
+            new StandartCard("Rogue Mech-Pilot", Rarity.Rare, 6, 5, 7),
+            new StandartCard("Knight Errant", Rarity.Rare, 4, 3, 4),
+            new StandartCard("Banshee Wailer", Rarity.Rare, 3, 5, 5),
+            new StandartCard("Apex Predator", Rarity.Rare, 5, 6, 6),
+
+            new StandartCard("Legionnaire", Rarity.Common, 2, 3, 2),
+            new StandartCard("Merfolk Scout", Rarity.Common, 1, 2, 1),
+            new StandartCard("Rubble Raider", Rarity.Common, 3, 3, 3),
+            new StandartCard("Saxon Bowman", Rarity.Common, 3, 2, 3),
+            new StandartCard("Desert Conjurer", Rarity.Common, 3, 4, 4),
+            new StandartCard("Norse Axeman", Rarity.Common, 2, 2, 2),
+            new StandartCard("Jade Monk", Rarity.Common, 2, 4, 3),
+            new StandartCard("Plague Carrier", Rarity.Common, 4, 3, 4),
+            new StandartCard("Gaelic Warrior", Rarity.Common, 5, 4, 5),
+            new StandartCard("Oasis Guardian", Rarity.Common, 3, 6, 4),
+            new StandartCard("Street Thug", Rarity.Common, 3, 3, 3),
+            new StandartCard("Catacomb Guardian", Rarity.Common, 1, 4, 2),
+            new StandartCard("Sewer Rat", Rarity.Common, 1, 1, 1),
+            new StandartCard("Battle Mage", Rarity.Common, 2, 3, 3),
+            new StandartCard("Roving Merchant", Rarity.Common, 4, 4, 4),
+            new StandartCard("Dwarven Miner", Rarity.Common, 2, 3, 2),
+            new StandartCard("Elven Tracker", Rarity.Common, 3, 2, 3),
+            new StandartCard("Berserker Thrall", Rarity.Common, 5, 5, 5),
+            new StandartCard("Ancient Librarian", Rarity.Common, 3, 5, 4),
+            new StandartCard("Nomadic Hunter", Rarity.Common, 2, 4, 3),
+            new StandartCard("Apprentice Sorcerer", Rarity.Common, 2, 2, 2),
+            new StandartCard("Scrap Collector", Rarity.Common, 1, 5, 3),
+            new StandartCard("Minor Glacial Elemental", Rarity.Common, 1, 3, 2),
+            new StandartCard("Raiding Raiding Party", Rarity.Common, 5, 5, 5),
+            new StandartCard("Mystic Archer", Rarity.Common, 3, 1, 3),
+            new StandartCard("Wall Builder", Rarity.Common, 0, 4, 2),
+            new StandartCard("Tavern Brawler", Rarity.Common, 4, 4, 4),
+            new StandartCard("Dune Scout", Rarity.Common, 2, 1, 1),
+            new StandartCard("Canal Lurker", Rarity.Common, 3, 3, 3),
+            new StandartCard("Wandering Healer", Rarity.Common, 3, 3, 4),
+            new StandartCard("Frontline Militia", Rarity.Common, 2, 2, 2),
+            new StandartCard("Pyromaniac Wizard", Rarity.Common, 3, 3, 3),
+            new StandartCard("Desert Nomad", Rarity.Common, 5, 5, 5),
+        };
+    }
+
 }
 
 
