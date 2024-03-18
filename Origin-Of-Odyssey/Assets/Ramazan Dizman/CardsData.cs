@@ -78,6 +78,22 @@ public class StandartCard
     }
 }
 
+[System.Serializable]
+public class Spell
+{
+    public string name;
+    public Rarity rarity;
+    public int mana;
+
+    public Spell(string _name, Rarity _rarity, int _mana)
+    {
+        this.name = _name;
+        this.rarity = _rarity;
+        this.mana = _mana;
+    }
+}
+
+
 public enum Rarity
 {
     Common,
@@ -98,6 +114,7 @@ public enum Position
 public class ZeusCard : CardStats
 {
     public List<Minion> minions;
+    public List<Spell> spells;
     public HeroPower heroPower;
 
     public ZeusCard()
@@ -136,6 +153,17 @@ public class ZeusCard : CardStats
             new Minion("Lightning Forger", Rarity.Rare, 5, 3, 3, Position.Backline)
         };
 
+        spells = new List<Spell>
+        {
+            new Spell("Lightning Bolt", Rarity.Common, 1),
+            new Spell("Lightning Storm", Rarity.Rare, 4),
+            new Spell("Olympian Favor", Rarity.Common, 2),
+            new Spell("Aegis Shield", Rarity.Epic, 3),
+            new Spell("Golden Fleece", Rarity.Common, 2),
+            new Spell("Labyrinth Maze", Rarity.Common, 5),
+            new Spell("Divine Ascention", Rarity.Common, 4)
+        };
+
         heroPower = new HeroPower("Lightning Strike", 2, 1);
     }
 }
@@ -144,6 +172,7 @@ public class ZeusCard : CardStats
 public class GenghisCard : CardStats
 {
     public List<Minion> minions;
+    public List<Spell> spells;
     public HeroPower heroPower;
     public GenghisCard()
     {
@@ -181,6 +210,18 @@ public class GenghisCard : CardStats
             new Minion("Brokk and Sindri", Rarity.Common, 6, 4, 6, Position.Backline)
         };
 
+        spells = new List<Spell>
+        {
+            new Spell("Horseback Archery", Rarity.Common, 2),
+            new Spell("Nomadic Tactics", Rarity.Rare, 3),
+            new Spell("Ger Defense", Rarity.Common, 2),
+            new Spell("Steppe Ambush", Rarity.Rare, 3),
+            new Spell("Mongol Fury", Rarity.Common, 4),
+            new Spell("Around the Great Wall", Rarity.Epic, 5),
+            new Spell("Eternal Steppe’s Whisper", Rarity.Rare, 4),
+            new Spell("God’s Bane", Rarity.Epic, 3)
+        };
+
         heroPower = new HeroPower("Mongol Messenger", 2, 2);
     }
 }
@@ -189,6 +230,7 @@ public class GenghisCard : CardStats
 public class LeonardoCard : CardStats
 {
     public List<Minion> minions;
+    public List<Spell> spells;
     public HeroPower heroPower;
     public LeonardoCard()
     {
@@ -226,6 +268,17 @@ public class LeonardoCard : CardStats
             new Minion("Eques Automaton", Rarity.Common, 8, 6, 6, Position.Frontline)
         };
 
+        spells = new List<Spell>
+        {
+            new Spell("Tome of Confusion", Rarity.Common, 2),
+            new Spell("Artistic Inspiration", Rarity.Rare, 4),
+            new Spell("Da Vinci’s Blueprint", Rarity.Common, 3),
+            new Spell("Anatomical Insight", Rarity.Rare, 3),
+            new Spell("Symmetrical Strategy", Rarity.Epic, 6),
+            new Spell("Tabula Aeterna", Rarity.Epic, 6),
+            new Spell("Mona Lisa’s Smile", Rarity.Rare, 4)
+        };
+
         heroPower = new HeroPower("Tome of Confusion", 2, 2);
     }
 }
@@ -233,6 +286,7 @@ public class LeonardoCard : CardStats
 public class OdinCard : CardStats
 {
     public List<Minion> minions;
+    public List<Spell> spells;
     public HeroPower heroPower;
     public OdinCard()
     {
@@ -270,6 +324,17 @@ public class OdinCard : CardStats
             new Minion("Brokk and Sindri", Rarity.Common, 6, 4, 6, Position.Backline)
         };
 
+        spells = new List<Spell>
+        {
+            new Spell("Rune Magic", Rarity.Common, 2),
+            new Spell("Winter's Chill", Rarity.Rare, 3),
+            new Spell("Gjallarhorn Call", Rarity.Epic, 6),
+            new Spell("Mimir's Wisdom", Rarity.Common, 4),
+            new Spell("Viking Raid", Rarity.Common, 5),
+            new Spell("Sleipnir’s Gallop", Rarity.Common, 4),
+            new Spell("The Allfather’s Decree", Rarity.Common, 5)
+        };
+
         heroPower = new HeroPower("Wisdom of the Allfather", 2, 1);
     }
 }
@@ -277,6 +342,7 @@ public class OdinCard : CardStats
 public class DustinCard : CardStats
 {
     public List<Minion> minions;
+    public List<Spell> spells;
     public HeroPower heroPower;
     public DustinCard()
     {
@@ -313,6 +379,18 @@ public class DustinCard : CardStats
             new Minion("Claire", Rarity.Legendary, 10, 8, 8, Position.Frontline)
         };
 
+        spells = new List<Spell>
+        {
+            new Spell("Radioactive Fallout", Rarity.Common, 3),
+            new Spell("Scrap Shield", Rarity.Rare, 2),
+            new Spell("Shockwave/Impulse", Rarity.Epic, 4),
+            new Spell("Survival Instincts", Rarity.Rare, 3),
+            new Spell("Mutagenic Mist", Rarity.Epic, 6),
+            new Spell("Garage Raid", Rarity.Common, 4),
+            new Spell("Mutated Blood Sample", Rarity.Rare, 2),
+            new Spell("X Factor", Rarity.Epic, 5)
+        };
+
         heroPower = new HeroPower("Summon a random mutant", 2, 1);
     }
 }
@@ -320,6 +398,7 @@ public class DustinCard : CardStats
 public class AnubisCard : CardStats
 {
     public List<Minion> minions;
+    public List<Spell> spells;
     public HeroPower heroPower;
     public AnubisCard()
     {
@@ -355,6 +434,17 @@ public class AnubisCard : CardStats
             new Minion("Chaos Scarab", Rarity.Common, 7, 6, 6, Position.Frontline),
             new Minion("Bata", Rarity.Common, 8, 5, 5, Position.Frontline),
             new Minion("Osiris", Rarity.Legendary, 10, 20, 20, Position.Frontline)
+        };
+
+        spells = new List<Spell>
+        {
+            new Spell("Book of the Dead", Rarity.Epic, 6),
+            new Spell("Sun Disk Radiance", Rarity.Common, 3),
+            new Spell("Plague of Locusts", Rarity.Common, 5),
+            new Spell("River's Blessing", Rarity.Common, 4),
+            new Spell("Pyramid's Might", Rarity.Epic, 7),
+            new Spell("Scales of Anubis", Rarity.Common, 4),
+            new Spell("Gates of Duat", Rarity.Epic, 8)
         };
 
         heroPower = new HeroPower("Summon a 2/2 mummy", 2, 2);
