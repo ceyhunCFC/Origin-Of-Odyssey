@@ -1,48 +1,94 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class RayCast : MonoBehaviour
 {
-    public LayerMask layerMask;
-    private GameObject lastHitObject;// Raycasting'in hedefleyeceği katmanlar
+    public static RayCast Instance;
+    private Camera mainCamera;
+    private GameObject selectedCard;
 
-    void Update()
+    public static event Action OnCardSelected;
+    
+    
+    private void Awake()
     {
-        // Fare pozisyonunu al
-        Vector3 mousePosition = Input.mousePosition;
-
-        // Fare pozisyonunu dünya koordinatlarına dönüştür
-        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-
-        // Raycast yaparak 3D nesneleri hedefle
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+        // Eğer daha önce bir örneği yoksa, bu sınıftaki örneği bu instance'a ata
+        if (Instance == null)
         {
-            // Eğer raycast bir nesneye çarparsa
-            GameObject hitObject = hit.collider.gameObject;
-
-            // Daha önce vurulan nesne farklı ise, o nesnenin OnPointerExit metodu çağrılır
-            if (hitObject != lastHitObject && lastHitObject != null)
-            {
-                lastHitObject.GetComponent<CardCanvasController>().OnPointerExit();
-            }
-
-            // Yeni vurulan nesnenin OnPointerEnter metodu çağrılır
-            hitObject.GetComponent<CardCanvasController>().OnPointerEnter();
-
-            // Son vurulan nesne güncellenir
-            lastHitObject = hitObject;
+            Instance = this;
         }
         else
         {
-            // Eğer raycast bir nesneye çarpmazsa
-            // Son vurulan nesnenin OnPointerExit metodu çağrılır
-            if (lastHitObject != null)
+            // Eğer başka bir örneği varsa, bu örneği yok et
+            Destroy(gameObject);
+        }
+    }
+    private void Start()
+    {
+        // Ana kamera referansını al
+        mainCamera = Camera.main;
+    }
+
+    private void Update()
+    {
+        // Fare tıklamasını algıla
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Fare pozisyonunu 3D dünyada bir ışına dönüştür
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            // Işının çarptığı nesneyi bul
+            if (Physics.Raycast(ray, out hit))
             {
-                lastHitObject.GetComponent<CardCanvasController>().OnPointerExit();
-                lastHitObject = null; // Son vurulan nesne sıfırlanır
+                // Eğer çarptığı nesne bir kart ise seç
+                if (hit.collider.CompareTag("Card"))
+                {
+                    // Kartı seçme işlemleri
+                    SelectCard(hit.collider.gameObject);
+                    OnCardSelected?.Invoke();
+                }
+               // // Eğer çarptığı nesne bir buton ise
+               // else if (hit.collider.CompareTag("Button"))
+               // {
+               //     
+               //     Debug.Log("Butona tıkladık");
+               //     HandleButtonClick(hit.collider.gameObject);
+               // }
             }
         }
+    }
+
+    public void SelectCard(GameObject card)
+    {
+        // Seçili kartı değiştir
+        selectedCard = card;
+
+        // Seçili kartın üzerindeki Outline bileşenini al
+        Outline outline = selectedCard.GetComponent<Outline>();
+        if (outline != null)
+        {
+            // Outline'ı etkinleştir veya devre dışı bırak
+            outline.enabled = !outline.enabled;
+        }
+
+        // Seçilen kart ile yapılacak işlemleri gerçekleştirin
+        Debug.Log("Selected card: " + selectedCard.name);
+    }
+    
+    //private void HandleButtonClick(GameObject buttonObject)
+    //{
+    //   CardManager.Instance.ChangeSelectedCard();
+    //    
+    //}
+    
+    // Butona tıklandığında çalışacak olan metot
+    public GameObject GetSelectedCard()
+    {
+        return selectedCard;
     }
 }

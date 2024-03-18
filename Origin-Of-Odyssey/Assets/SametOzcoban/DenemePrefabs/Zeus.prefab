@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 1109372124776193002}
   - component: {fileID: 6809476026372739717}
   - component: {fileID: 1151991435226347013}
-  - component: {fileID: 457644963027051423}
+  - component: {fileID: -1520662292682253577}
   m_Layer: 0
   m_Name: Zeus
-  m_TagString: Untagged
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: bf6d9f6471f4e13468af48a6eb75f18d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,7 +109,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &457644963027051423
+--- !u!114 &-1520662292682253577
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,10 +118,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 917635894340955171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64b079505847e824292daaaf58b88a93, type: 3}
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardUi: {fileID: 8716174455728630258}
+  m_EffectColor: {r: 1, g: 0.7593924, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &2629939600017683445
 GameObject:
   m_ObjectHideFlags: 0

@@ -87,10 +87,10 @@ GameObject:
   - component: {fileID: 3058526414415932962}
   - component: {fileID: 1650155617992745579}
   - component: {fileID: 1177357263266178087}
-  - component: {fileID: 5210355172457354484}
+  - component: {fileID: -2263042390477774321}
   m_Layer: 0
   m_Name: Leonardo
-  m_TagString: Untagged
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -186,7 +186,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5210355172457354484
+--- !u!114 &-2263042390477774321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,10 +195,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4017288362733109461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64b079505847e824292daaaf58b88a93, type: 3}
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardUi: {fileID: 561387785562475106}
+  m_EffectColor: {r: 1, g: 0.7593924, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &5836970109617919672
 GameObject:
   m_ObjectHideFlags: 0

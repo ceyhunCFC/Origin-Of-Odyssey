@@ -1,14 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class CardManager : MonoBehaviour
 {
-    // Kartları saklayacak olan dizi
-    private CardStats[] cardsArray = new CardStats[6]; // Örneğin, 6 kart var
+    public static CardManager Instance; // Singleton örneği
+    private List<GameObject> cardsList = new List<GameObject>(); // Oluşturulan kartları tutacak liste
+    private List<GameObject> selectedCardPrefab = new List<GameObject>();
 
-    // Prefablar
     public GameObject zeusPrefab;
     public GameObject genghisPrefab;
     public GameObject leonardoPrefab;
@@ -16,34 +18,69 @@ public class CardManager : MonoBehaviour
     public GameObject dustinPrefab;
     public GameObject anubisPrefab;
 
-    // Üç farklı pozisyon
     public Transform spawnPoint1;
     public Transform spawnPoint2;
     public Transform spawnPoint3;
 
-    void Start()
-    {
-        // Kartları oluştur
-        cardsArray[0] = new ZeusCard();
-        cardsArray[1] = new GenghisCard();
-        cardsArray[2] = new LeonardoCard();
-        cardsArray[3] = new OdinCard();
-        cardsArray[4] = new DustinCard();
-        cardsArray[5] = new AnubisCard();
+    public Transform gameStarPosition;
+    public Transform gameStarPosition1;
+    public Transform gameStarPosition2;
 
+    public static event Action OnCardSpawned;
+    
+    private void Awake()
+    {
+        // Eğer daha önce bir örneği yoksa, bu sınıftaki örneği bu instance'a ata
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            // Eğer başka bir örneği varsa, bu örneği yok et
+            Destroy(gameObject);
+        }
+    }
+    
+    private void Start()
+    {
         // Oyunu başlat
         StartGame();
     }
 
-    void StartGame()
+    private void StartGame()
     {
-        // 3 kartı rastgele seçerek yerleştir
+        // Kartları oluştur ve listeye ekle
+        AddCard(zeusPrefab);
+        AddCard(genghisPrefab);
+        AddCard(leonardoPrefab);
+        AddCard(odinPrefab);
+        AddCard(dustinPrefab);
+        AddCard(anubisPrefab);
+
+        // Kartları yerleştir
+        PlaceCards();
+    }
+
+    private void Update()
+    {
+        CardPosition();
+    }
+
+    private void AddCard(GameObject prefab)
+    {
+        cardsList.Add(prefab);
+    }
+
+    private void PlaceCards()
+    {
+        // Kartları rastgele seçerek yerleştir
         List<int> selectedIndices = new List<int>();
-    
+
         // Kartları rastgele seç
         while (selectedIndices.Count < 3)
         {
-            int randomIndex = Random.Range(0, cardsArray.Length);
+            int randomIndex = Random.Range(0, cardsList.Count);
             if (!selectedIndices.Contains(randomIndex))
             {
                 selectedIndices.Add(randomIndex);
@@ -54,46 +91,67 @@ public class CardManager : MonoBehaviour
         for (int i = 0; i < selectedIndices.Count; i++)
         {
             int index = selectedIndices[i];
-            // Kartın ismine göre prefabı al
-            GameObject prefab = null;
-            switch (cardsArray[index].cardName)
-            {
-                case "Zeus":
-                    prefab = zeusPrefab;
-                    break;
-                case "Genghis":
-                    prefab = genghisPrefab;
-                    break;
-                case "Leonardo Da Vinci":
-                    prefab = leonardoPrefab;
-                    break;
-                case "Odin":
-                    prefab = odinPrefab;
-                    break;
-                case "Dustin":
-                    prefab = dustinPrefab;
-                    break;
-                case "Anubis":
-                    prefab = anubisPrefab;
-                    break;
-            }
+            GameObject prefab = cardsList[index];
 
-            // Prefabı varsa objeyi oluştur
             if (prefab != null)
             {
-                // Doğru spawnPoint'i seç
-                Transform spawnPoint;
-                if (i == 0)
-                    spawnPoint = spawnPoint1;
-                else if (i == 1)
-                    spawnPoint = spawnPoint2;
-                else
-                    spawnPoint = spawnPoint3;
+                Transform spawnPoint = i == 0 ? spawnPoint1 : (i == 1 ? spawnPoint2 : spawnPoint3);
+                GameObject cardObject = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+                selectedCardPrefab.Add(cardObject);
+                OnCardSpawned?.Invoke();
+            }
+        }
+    
+    }
+    
+    public void ChangeSelectedCard()
+    {
+        Debug.Log("ChangeSelectedCard function called");
 
-                if (spawnPoint != null)
-                {
-                    Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
-                }
+        // Seçili kartın referansını al
+        GameObject selectedCard = RayCast.Instance.GetSelectedCard();
+
+        if (selectedCard != null)
+        {
+            // Rastgele bir kart seç
+            int randomIndex = Random.Range(0, cardsList.Count);
+            GameObject newCardPrefab = cardsList[randomIndex];
+
+            // Seçilen kartın pozisyonunu ve dönüşünü al
+            Vector3 spawnPosition = selectedCard.transform.position;
+            Quaternion spawnRotation = selectedCard.transform.rotation;
+
+            // Seçilen kartı yok et ve yeni kartı oluştur
+            Destroy(selectedCard);
+            selectedCardPrefab.Remove(selectedCard);
+            GameObject newCardObject = Instantiate(newCardPrefab, spawnPosition, spawnRotation);
+            // Yeni kartı seçili kart olarak belirle
+            RayCast.Instance.SelectCard(newCardObject);
+            selectedCardPrefab.Add(newCardObject);
+        }
+        else
+        {
+            Debug.LogWarning("No card selected!");
+        }
+    }
+
+    public void CardPosition()
+    {
+        if (UIManager.isStart)
+        {
+            // Oluşturulan kartların sayısını kontrol et
+            if (selectedCardPrefab.Count != 3)
+            {
+                Debug.LogError("Kartlar henüz oluşturulmamış!");
+                return;
+            }
+
+            // İstediğiniz konumları al ve kartları bu konumlara taşı
+            for (int i = 0; i < selectedCardPrefab.Count; i++)
+            {
+                Transform spawnPoint = i == 0 ? gameStarPosition : (i == 1 ? gameStarPosition1 : gameStarPosition2);
+                selectedCardPrefab[i].transform.position = spawnPoint.position;
+                selectedCardPrefab[i].transform.rotation = spawnPoint.rotation;
             }
         }
     }
