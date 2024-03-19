@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _startGameUI;
 
     public static bool isStart;
+    public static bool isChange;
     public bool isStartPressed;
     public bool isChangePressed;
     private void Update()
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
     {
         changeButton.interactable = true;
         isChangePressed = true;
+        isChange = true;
         CardManager.Instance.ChangeSelectedCard();
         _startGameUI.SetActive(false);
     }

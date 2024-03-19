@@ -48,9 +48,11 @@ public class RayCast : MonoBehaviour
                 // Eğer çarptığı nesne bir kart ise seç
                 if (hit.collider.CompareTag("Card"))
                 {
-                    // Kartı seçme işlemleri
-                    SelectCard(hit.collider.gameObject);
-                    OnCardSelected?.Invoke();
+                    if (!UIManager.isChange)
+                    {
+                        SelectCard(hit.collider.gameObject);
+                        OnCardSelected?.Invoke();
+                    }
                 }
                // // Eğer çarptığı nesne bir buton ise
                // else if (hit.collider.CompareTag("Button"))

@@ -107,31 +107,33 @@ public class CardManager : MonoBehaviour
     public void ChangeSelectedCard()
     {
         Debug.Log("ChangeSelectedCard function called");
-
-        // Seçili kartın referansını al
-        GameObject selectedCard = RayCast.Instance.GetSelectedCard();
-
-        if (selectedCard != null)
+        if (!UIManager.isStart)
         {
-            // Rastgele bir kart seç
-            int randomIndex = Random.Range(0, cardsList.Count);
-            GameObject newCardPrefab = cardsList[randomIndex];
+            // Seçili kartın referansını al
+            GameObject selectedCard = RayCast.Instance.GetSelectedCard();
+        
+            if (selectedCard != null)
+            {
+                // Rastgele bir kart seç
+                int randomIndex = Random.Range(0, cardsList.Count);
+                GameObject newCardPrefab = cardsList[randomIndex];
 
-            // Seçilen kartın pozisyonunu ve dönüşünü al
-            Vector3 spawnPosition = selectedCard.transform.position;
-            Quaternion spawnRotation = selectedCard.transform.rotation;
+                // Seçilen kartın pozisyonunu ve dönüşünü al
+                Vector3 spawnPosition = selectedCard.transform.position;
+                Quaternion spawnRotation = selectedCard.transform.rotation;
 
-            // Seçilen kartı yok et ve yeni kartı oluştur
-            Destroy(selectedCard);
-            selectedCardPrefab.Remove(selectedCard);
-            GameObject newCardObject = Instantiate(newCardPrefab, spawnPosition, spawnRotation);
-            // Yeni kartı seçili kart olarak belirle
-            RayCast.Instance.SelectCard(newCardObject);
-            selectedCardPrefab.Add(newCardObject);
-        }
-        else
-        {
-            Debug.LogWarning("No card selected!");
+                // Seçilen kartı yok et ve yeni kartı oluştur
+                Destroy(selectedCard);
+                selectedCardPrefab.Remove(selectedCard);
+                GameObject newCardObject = Instantiate(newCardPrefab, spawnPosition, spawnRotation);
+                // Yeni kartı seçili kart olarak belirle
+                RayCast.Instance.SelectCard(newCardObject);
+                selectedCardPrefab.Add(newCardObject);
+            }
+            else
+            {
+                Debug.LogWarning("No card selected!");
+            }
         }
     }
 
