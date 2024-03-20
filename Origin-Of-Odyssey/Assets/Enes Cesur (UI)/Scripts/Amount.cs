@@ -6,7 +6,6 @@ public class Amount : MonoBehaviour
 {
     
     public Text userNameText; 
-    public Text founderNameText;
     public PlayerData playerData; 
 
     void Start()
@@ -20,7 +19,7 @@ public class Amount : MonoBehaviour
         
         string userName = playerData.userName;
         userNameText.text =userName;
-        founderNameText.text =userName;
+        
     }
 }
 
