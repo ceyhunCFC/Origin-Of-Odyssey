@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 	GameManager _GameManager;
 	string PlayerID;
 	string Nickname;
-	string Deck;
+	string[] Deck;
 
 	void Start()
 	{
@@ -32,24 +32,18 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
 			PlayerID = PhotonNetwork.LocalPlayer.ActorNumber.ToString();
 			Nickname = AuthManager.userName;
-			Deck = PlayerDeckTotal;
+			Deck = AuthManager.playerDeckArray;
+
+
+			PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), Vector3.zero, Quaternion.identity);
+
+
+
 			_GameManager.SendData(PlayerID, Nickname,Deck);
 
-			CreateController();
+		
 		}
 
 	}
 
-	void CreateController()
-	{
-		
-		PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), Vector3.zero, Quaternion.identity);//, 0, new object[] { PV.ViewID });
-		
-	}
-
-
-	/*public static PlayerManager Find(Player player)
-	{
-		return FindObjectsOfType<PlayerManager>().SingleOrDefault(x => x.PV.Owner == player);
-	}*/
 }

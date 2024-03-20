@@ -69,7 +69,7 @@ public class AuthManager : MonoBehaviour
     }
     public void AccountLogin()
     {
-        if(PlayerPrefs.GetInt("IsLoggedIn") == 0)
+        /*if(PlayerPrefs.GetInt("IsLoggedIn") == 0)
         {
             if (!robotToggle.isOn)
             {
@@ -77,7 +77,7 @@ public class AuthManager : MonoBehaviour
                 loginInfo.color = Color.red;
                 return;
             }
-        }
+        }*/
          
         loginInfo.text = "";
         string email = LoginEmail.text;
@@ -97,61 +97,85 @@ public class AuthManager : MonoBehaviour
         RestClient.Post<SignResponse>(LoginURL + apiKey, userData).Then(
             response =>
             {
-                
+                //Get IdInfo
+                localId = response.localId;
+                idToken = response.idToken;
 
-                string emailVerification = "{\"idToken\":\"" + response.idToken + "\"}";
-                RestClient.Post(
-                    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=" + apiKey,
-                    emailVerification).Then(
-                    emailResponse =>
-                    {
-                        EmailConfirmationInfo emailConfirmationInfo = JsonUtility.FromJson<EmailConfirmationInfo>(emailResponse.Text);
-
-                        if (emailConfirmationInfo.users[0].emailVerified)
-                        {
-                            loginInfo.text = "Login successful!";
-
-                            //Get IdInfo
-                            localId = response.localId;
-                            idToken = response.idToken;
-
-                            //Get UserInfo
-                            RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
-                            {
-                                userName = userResponse.userName;
-                                firstName = userResponse.firstName;
-                                lastName = userResponse.lastName;
-                            }).Catch(error =>
-                            {
-                                Debug.LogError("Error retrieving username: " + error.Message);
-                            });
-                            if (RemindMe == true)
-                            {
-                                PlayerPrefs.SetString("Username", email);
-                                PlayerPrefs.SetString("Password", password);
-                                PlayerPrefs.SetInt("IsLoggedIn", 1);
-                            }
-                            //Get PlayerDeck 
-                            RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
-                            {
-                                playerDeckArray = ParseJsonArray(PlayerDeck.Text);
-                            }).Catch(error =>
-                            {
-                                Debug.LogError("Error retrieving playerdeck: " + error.Message);
-                            });
-                            StartCoroutine(LoadMainMenu());
-                        }
-                        else
-                        {
-                            loginInfo.text = "email not verified";
-                        }
-                    }).Catch(error =>
-                    {
-                        Debug.Log(error.Message);
-                    }); 
+                //Get UserInfo
+                RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
+                {
+                    userName = userResponse.userName;
+                    firstName = userResponse.firstName;
+                    lastName = userResponse.lastName;
+                }).Catch(error =>
+                {
+                    Debug.LogError("Error retrieving username: " + error.Message);
+                });
 
 
-                
+                //Get PlayerDeck 
+                RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
+                {
+                    playerDeckArray = ParseJsonArray(PlayerDeck.Text);
+                }).Catch(error =>
+                {
+                    Debug.LogError("Error retrieving playerdeck: " + error.Message);
+                });
+                StartCoroutine(LoadMainMenu());
+
+                /* string emailVerification = "{\"idToken\":\"" + response.idToken + "\"}";
+                 RestClient.Post(
+                     "https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=" + apiKey,
+                     emailVerification).Then(
+                     emailResponse =>
+                     {
+                         EmailConfirmationInfo emailConfirmationInfo = JsonUtility.FromJson<EmailConfirmationInfo>(emailResponse.Text);
+
+                         if (emailConfirmationInfo.users[0].emailVerified)
+                         {
+                             loginInfo.text = "Login successful!";
+
+                             //Get IdInfo
+                             localId = response.localId;
+                             idToken = response.idToken;
+
+                             //Get UserInfo
+                             RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
+                             {
+                                 userName = userResponse.userName;
+                                 firstName = userResponse.firstName;
+                                 lastName = userResponse.lastName;
+                             }).Catch(error =>
+                             {
+                                 Debug.LogError("Error retrieving username: " + error.Message);
+                             });
+                             if (RemindMe == true)
+                             {
+                                 PlayerPrefs.SetString("Username", email);
+                                 PlayerPrefs.SetString("Password", password);
+                                 PlayerPrefs.SetInt("IsLoggedIn", 1);
+                             }
+                             //Get PlayerDeck 
+                             RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
+                             {
+                                 playerDeckArray = ParseJsonArray(PlayerDeck.Text);
+                             }).Catch(error =>
+                             {
+                                 Debug.LogError("Error retrieving playerdeck: " + error.Message);
+                             });
+                             StartCoroutine(LoadMainMenu());
+                         }
+                         else
+                         {
+                             loginInfo.text = "email not verified";
+                         }
+                     }).Catch(error =>
+                     {
+                         Debug.Log(error.Message);
+                     }); */
+
+
+
             }).Catch(error =>
             {
                 PlayerPrefs.SetString("Username", null);
@@ -229,7 +253,7 @@ public class AuthManager : MonoBehaviour
             })
             .Catch(error =>
             {
-                Debug.LogError("Kartlar kaydedilirken hata oluþtu: " + error.Message);
+                Debug.LogError("Kartlar kaydedilirken hata olu?tu: " + error.Message);
             });
     }
 

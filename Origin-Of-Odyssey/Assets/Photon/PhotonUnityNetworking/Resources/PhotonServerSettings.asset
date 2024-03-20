@@ -42,6 +42,11 @@ MonoBehaviour:
   - RPC_GetKill
   - UpdatePlayerInfo
   - RPC_SendData
+  - RPC_FinishTurn
+  - RPC_MyFirstTurnStart
+  - MyFunctionFromOtherPlayer
+  - FirstFun
+  - BeginerFunction
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
