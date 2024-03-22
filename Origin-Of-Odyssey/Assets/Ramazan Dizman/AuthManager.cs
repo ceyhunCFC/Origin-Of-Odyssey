@@ -1,6 +1,7 @@
 using Proyecto26;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -242,19 +243,53 @@ public class AuthManager : MonoBehaviour
     private void PostToDatabase( string idTokenTemp = "")
     {
         PlayerData user = new PlayerData();
-        RestClient.Put(databaseURL + "/" + localId  +"/UserInfo"+".json?auth=" + idTokenTemp, user);
+        RestClient.Put(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + idTokenTemp, user)
+            .Then(userýnfo =>
+            {
 
-        //register put 5 card
-        string jsonData = "[\"Aegis\",\"Genghis\",\"Zeus\",\"Odin\",\"Dustin\"]";
-        RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken, jsonData)
-            .Then(response =>
+            }).Catch(error =>
             {
-                
-            })
-            .Catch(error =>
-            {
-                Debug.LogError("Kartlar kaydedilirken hata olu?tu: " + error.Message);
+                Debug.LogError("An error saved to userýnfo");
             });
+
+        List<string> cardNames = new List<string>();
+        ZeusCard zeusCard = new ZeusCard();
+        StandartCards standartCards = new StandartCards();
+
+        cardNames.Add(zeusCard.cardName);            //zeusname add
+        foreach (Minion minion in zeusCard.minions)
+        {
+            cardNames.Add(minion.name);             //zeus minions add
+        }
+        foreach (Spell spell in zeusCard.spells)
+        {
+            cardNames.Add(spell.name);             //zeus spells add
+        }
+        int remainingCardsCount = 40 - cardNames.Count;
+
+        foreach (StandartCard standartCard in standartCards.standartcards)
+        {
+            if (remainingCardsCount <= 0)
+            {
+                break;
+            }
+            if (!cardNames.Contains(standartCard.name))
+            {
+                cardNames.Add(standartCard.name);    //40-zeuscards and add standartcards
+                remainingCardsCount--;
+            }
+        }
+        string jsonData = "[" + string.Join(",", cardNames.ConvertAll(name => "\"" + name + "\"").ToArray()) + "]";
+
+        RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken, jsonData)
+           .Then(response =>
+           {
+
+           })
+           .Catch(error =>
+           {
+               Debug.LogError("An error saved to cards data: " + error.Message);
+           });
     }
 
     public void ToggleRemindMe(bool toggle)
