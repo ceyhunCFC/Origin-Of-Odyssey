@@ -17,7 +17,7 @@ public class CardCtrl : MonoBehaviour
     public Button GenghisBtn;
 
     private Dictionary<string, List<Minion>> cardSets = new Dictionary<string, List<Minion>>();
-
+    private Dictionary<string, List<Spell>> spellSets = new Dictionary<string, List<Spell>>();
     void Start()
     {
         InitializeCardSets();
@@ -34,6 +34,13 @@ public class CardCtrl : MonoBehaviour
         cardSets.Add("Genghis", new GenghisCard().minions);
         cardSets.Add("DaVinci", new LeonardoCard().minions);
         cardSets.Add("Dustin", new DustinCard().minions);
+        spellSets.Add("Zeus", new ZeusCard().spells);
+        spellSets.Add("Odin", new OdinCard().spells);
+        spellSets.Add("Anubis", new AnubisCard().spells);
+        spellSets.Add("Genghis", new GenghisCard().spells);
+        spellSets.Add("DaVinci", new LeonardoCard().spells);
+        spellSets.Add("Dustin", new DustinCard().spells);
+
     }
 
 
@@ -56,8 +63,26 @@ public class CardCtrl : MonoBehaviour
                 cardDisplay.cardAttackText.text = minion.attack.ToString();
                 cardDisplay.cardHealthText.text = minion.health.ToString();
                 cardDisplay.cardManaText.text = minion.mana.ToString();
+                cardDisplay.cardType = cardSetName;
             }
         }
+        if (spellSets.ContainsKey(cardSetName))
+        {
+            List<Spell> spells = spellSets[cardSetName];
+            foreach (Spell spell in spells)
+            {
+                GameObject newCard = Instantiate(cardPrefab, parentTransform);
+                CardDisplay cardDisplay = newCard.GetComponent<CardDisplay>();
+
+                cardDisplay.cardNameText.text = spell.name;
+                cardDisplay.cardRarityText.text = spell.rarity.ToString();
+                cardDisplay.cardAttackText.text = "";
+                cardDisplay.cardHealthText.text = "";
+                cardDisplay.cardManaText.text = spell.mana.ToString();
+                cardDisplay.cardType = cardSetName;
+            }
+        }
+
         else
         {
             Debug.LogError("Card set not found: " + cardSetName);
@@ -80,6 +105,8 @@ public class CardCtrl : MonoBehaviour
         StandartCard();
         ResetButtonColors();
         ZeusBtn.image.color = Color.blue;
+        
+
     }
 
     public void Odin()
@@ -88,6 +115,7 @@ public class CardCtrl : MonoBehaviour
         StandartCard();
         ResetButtonColors();
         OdinsBtn.image.color = Color.blue;
+        
     }
 
     public void Anubis()
@@ -96,6 +124,7 @@ public class CardCtrl : MonoBehaviour
         StandartCard();
         ResetButtonColors();
         AnubisBtn.image.color = Color.blue;
+        
     }
 
     public void Genghis()
@@ -104,6 +133,8 @@ public class CardCtrl : MonoBehaviour
         StandartCard();
         ResetButtonColors();
         GenghisBtn.image.color = Color.blue;
+       
+       
     }
 
     public void DaVinci()
@@ -112,6 +143,8 @@ public class CardCtrl : MonoBehaviour
         StandartCard();
         ResetButtonColors();
         DaVinciBtn.image.color = Color.blue;
+       
+       
     }
 
     public void Dustin()
@@ -120,6 +153,7 @@ public class CardCtrl : MonoBehaviour
         StandartCard();
         ResetButtonColors();
         DustinBtn.image.color = Color.blue;
+      
     }
 
     public void StandartCard()
@@ -141,6 +175,7 @@ public class CardCtrl : MonoBehaviour
             cardDisplay.cardAttackText.text = card.attack.ToString();
             cardDisplay.cardHealthText.text = card.health.ToString();
             cardDisplay.cardManaText.text = card.mana.ToString();
+            cardDisplay.cardType = "Standart";
         }
     }
 

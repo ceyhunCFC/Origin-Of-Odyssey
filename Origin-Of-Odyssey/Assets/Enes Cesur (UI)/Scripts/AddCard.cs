@@ -5,33 +5,65 @@ using UnityEngine.UI;
 
 public class AddCard : MonoBehaviour
 {
-    public GameObject prefab; 
-
+    public GameObject prefab;
+    public Text warningMessage;
     public void OnButtonPress()
     {
-       
-        Button clickedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-        if (clickedButton != null)
+        CardDisplay cardDisplay = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<CardDisplay>();
+
+        if (cardDisplay != null)
         {
-            Text buttonText = clickedButton.GetComponentInChildren<Text>();
-            if (buttonText != null)
+            GameObject panel = GameObject.FindWithTag("CardContainerTag");
+
+            if (panel != null)
             {
-                GameObject panel = GameObject.FindWithTag("CardContanierTag"); 
-                if (panel != null)
+                bool shouldAddCard = true;
+
+                
+                foreach (Transform child in panel.transform)
                 {
-                   
-                    GameObject newButton = Instantiate(prefab, panel.transform);
+                    SelectedCard existingCard = child.GetComponent<SelectedCard>();
 
                     
-                    newButton.transform.localPosition = new Vector3(0, 0, 0);
-
-                    Text newButtonText = newButton.GetComponentInChildren<Text>();
-                    if (newButtonText != null)
+                    if (existingCard != null && existingCard.NameText.text == cardDisplay.cardNameText.text)
                     {
-                        newButtonText.text = buttonText.text;
+                        shouldAddCard = false;
+                        break;
+                    }
+
+                    
+                    if ((cardDisplay.cardType == "Zeus" || cardDisplay.cardType == "Odin"|| cardDisplay.cardType == "Anubis" || cardDisplay.cardType == "DaVinci"|| cardDisplay.cardType == "Dustin"|| cardDisplay.cardType == "Genghis") &&
+                        (existingCard != null && existingCard.cardType != cardDisplay.cardType && existingCard.cardType != "Standart"))
+                    {
+                        shouldAddCard = false;
+                        break;
                     }
                 }
+
+                if (shouldAddCard)
+                {
+                    if (panel.transform.childCount >= 39)
+                    {         
+                        return;
+                    }
+
+                    GameObject yeniButon = Instantiate(prefab, panel.transform);
+                    yeniButon.transform.localPosition = new Vector3(0, 0, 0);
+
+                    SelectedCard selectedCard = yeniButon.GetComponent<SelectedCard>();
+
+                    if (selectedCard != null)
+                    {
+                        selectedCard.NameText.text = cardDisplay.cardNameText.text;
+                        selectedCard.ManaText.text = cardDisplay.cardManaText.text;
+                        selectedCard.cardType = cardDisplay.cardType;
+                    }
+                }
+                
             }
         }
     }
+
+
+
 }

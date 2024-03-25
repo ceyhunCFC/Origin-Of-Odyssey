@@ -6,7 +6,7 @@ TagManager:
   tags:
   - Card
   - Button
-  - CardContanierTag
+  - CardContainerTag
   layers:
   - Default
   - TransparentFX

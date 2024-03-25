@@ -393,6 +393,7 @@ MonoBehaviour:
   cardAttackText: {fileID: 6626633354723886884}
   cardHealthText: {fileID: 1050738132649436499}
   cardManaText: {fileID: 6229516087491245274}
+  cardType: 
 --- !u!114 &8041855048294444751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,6 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 4673436684334672120, guid: 7853b4efc6bf8224a897a774a540bf98, type: 3}
+  SelectedPrefab: {fileID: 4673436684334672120, guid: 7853b4efc6bf8224a897a774a540bf98, type: 3}
 --- !u!1 &7849769962776468555
 GameObject:
   m_ObjectHideFlags: 0

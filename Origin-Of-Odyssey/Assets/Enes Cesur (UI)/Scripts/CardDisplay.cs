@@ -9,4 +9,5 @@ public class CardDisplay : MonoBehaviour
     public Text cardAttackText;
     public Text cardHealthText;
     public Text cardManaText;
+    public string cardType;
 }
