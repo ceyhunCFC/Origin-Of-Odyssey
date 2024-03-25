@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     GameManager _GameManager;
     public GameObject CardPrefab; // üçlü kart 
     public GameObject CardPrefabSolo; // Tek kart
-    [SerializeField] GameObject[] spawnPosition;
+    //[SerializeField] GameObject[] spawnPosition;
 
     string OwnName = "";
     string[] OwnDeck;
@@ -107,19 +107,19 @@ public class PlayerController : MonoBehaviour
 
         if (isFirstTurn==true) // ilk turun fon.
         {
-           // GameObject card = Instantiate(CardPrefab);
-           // card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-           // card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-           // card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-           // card.GetComponent<FirstCardPrefab>().SetInformation();
+            GameObject card = Instantiate(CardPrefab);
+            card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+            card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+            card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+            card.GetComponent<FirstCardPrefab>().SetInformation();
 
             for (int i = 0; i < 3; i++)
             {
-                GameObject card = Instantiate(CardPrefabSolo, spawnPosition[i].transform.position, Quaternion.identity);
-                card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                card.GetComponent<FirstCardPrefab>().SetInformation();
+                //GameObject card = Instantiate(CardPrefabSolo, spawnPosition[i].transform.position, Quaternion.identity);
+                //card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+                //card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+                //card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+                //card.GetComponent<FirstCardPrefab>().SetInformation();
             }
 
             isFirstTurn = false;
