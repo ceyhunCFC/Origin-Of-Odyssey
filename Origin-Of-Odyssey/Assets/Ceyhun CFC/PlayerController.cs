@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     GameManager _GameManager;
     public GameObject CardPrefab; // üçlü kart 
     public GameObject CardPrefabSolo; // Tek kart
-    //[SerializeField] GameObject[] spawnPosition;
+    
+
 
     string OwnName = "";
     string[] OwnDeck;
@@ -111,16 +112,15 @@ public class PlayerController : MonoBehaviour
             card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
             card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
             card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-            card.GetComponent<FirstCardPrefab>().SetInformation();
-
-            for (int i = 0; i < 3; i++)
-            {
-                //GameObject card = Instantiate(CardPrefabSolo, spawnPosition[i].transform.position, Quaternion.identity);
-                //card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                //card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                //card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                //card.GetComponent<FirstCardPrefab>().SetInformation();
-            }
+            card.GetComponent<FirstCardPrefab>().SetInformation(); 
+           // for (int i = 0; i < 3; i++)
+           // {
+           //     GameObject card = Instantiate(CardPrefabSolo, new Vector3(instantiateXPosition + (horizontalSpacing * i), 0, 0), Quaternion.identity);
+           //    card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+           //    card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+           //    card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
+           //    card.GetComponent<FirstCardPrefab>().SetInformation();
+           // }
 
             isFirstTurn = false;
         }
@@ -300,6 +300,17 @@ public class PlayerController : MonoBehaviour
                     card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
                     card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
                     card.GetComponent<FirstCardPrefab>().SetInformation();
+                   
+                  //for (int i = 0; i < 3; i++)
+                  //{
+                  //    
+                  //    GameObject card = Instantiate(CardPrefabSolo);
+                  //    card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(0, OwnDeck.Length)];
+                  //    card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(0, OwnDeck.Length)];
+                  //    card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(0, OwnDeck.Length)];
+                  //    card.GetComponent<FirstCardPrefab>().SetInformation();
+                  //    
+                  //}
                     isFirstTurn = false;
                 }
             }
