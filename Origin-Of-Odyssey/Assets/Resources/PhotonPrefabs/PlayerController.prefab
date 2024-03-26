@@ -700,8 +700,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardPrefab: {fileID: 6098573348287867525, guid: 561816fecb8104f4abfaa44f5ec9054f, type: 3}
   CardPrefabSolo: {fileID: 1798911962605047886, guid: 515ee43589829493b9d191026fda22ba, type: 3}
-  horizontalSpacing: 2
-  instantiateXPosition: 0
   OwnNameText: {fileID: 8488312309530775258}
   OwnDeckText: {fileID: 7351365811314301272}
   OwnMainCardText: {fileID: 7190567712448978602}
