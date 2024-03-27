@@ -109,18 +109,14 @@ public class PlayerController : MonoBehaviour
 
         if (isFirstTurn==true) // ilk turun fon.
         {
-           //GameObject card = Instantiate(CardPrefab);
-           //card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-           //card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-           //card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-           //card.GetComponent<FirstCardPrefab>().SetInformation(); 
             for (int i = 0; i < 3; i++)
             {
-                GameObject card = Instantiate(CardPrefabSolo, new Vector3(i * (gapBetweenCards), 1.42f, -1.92f), Quaternion.Euler(0, 0, 180));
+                GameObject card = Instantiate(CardPrefabSolo);
+                float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                card.transform.position = new Vector3(xPos, CardPrefabSolo.transform.position.y, CardPrefabSolo.transform.position.z); // Kartın pozisyonunu ayarlıyoruz
                 card.GetComponent<CardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
                 card.GetComponent<CardPrefab>().SetInformation();
             }
-
             isFirstTurn = false;
         }
         else
@@ -294,19 +290,15 @@ public class PlayerController : MonoBehaviour
             {
                 if (PV.Owner.IsMasterClient)
                 {
-                    //GameObject card = Instantiate(CardPrefab);
-                    //card.GetComponent<FirstCardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                    //card.GetComponent<FirstCardPrefab>().Card2 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                    //card.GetComponent<FirstCardPrefab>().Card3 = OwnDeck[Random.Range(1, OwnDeck.Length)];
-                    //card.GetComponent<FirstCardPrefab>().SetInformation();
-                   
                   for (int i = 0; i < 3; i++)
                   {
-                      GameObject card = Instantiate(CardPrefabSolo, new Vector3(i * (gapBetweenCards), 1.42f, -1.92f), Quaternion.Euler(0, 0, 180));
+                      GameObject card = Instantiate(CardPrefabSolo);
+                      float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                      card.transform.position = new Vector3(xPos, 1.46f, -1.92f); // Kartın pozisyonunu ayarlıyoruz
                       card.GetComponent<CardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
                       card.GetComponent<CardPrefab>().SetInformation();
                   }
-                    isFirstTurn = false;
+                  isFirstTurn = false;
                 }
             }
         }
