@@ -11,55 +11,67 @@ public class PlayerDeck : MonoBehaviour
     
     private List<string> cardNames = new List<string>();
 
+    private string[] playerDeck;
+
     public string localId;
     public string idToken;
 
     public GameObject NotEnoughCard;
+    public GameObject CardPrefab,cardsPanel;
 
-    private void Start()
+    private void Awake()
     {
         localId = AuthManager.localId;
         idToken = AuthManager.idToken;
     }
 
-    public void PostZeusCardButton()
+    public void GetCardsData()
     {
-        AddCardName("Zeus");
-    }
-
-    public void PostOdinCardButton()
-    {
-        AddCardName("Odin"); 
-    }
-
-    public void PostGenghisCardButton()
-    {
-        AddCardName("Genghis"); 
-    }
-
-    public void PostDustinCardButton()
-    {
-        AddCardName("Dustin"); 
-    }
-
-    public void PostAegisCardButton()
-    {
-        AddCardName("Aegis"); 
-    }
-
-    private void AddCardName(string cardName)
-    {
-        if (!cardNames.Contains(cardName))
+        RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken).Then(PlayerDeck =>
         {
-            cardNames.Add(cardName);
-        }
-    }
+            playerDeck = ParseJsonArray(PlayerDeck.Text);
+            for (int i = 0; i < playerDeck.Length; i++)
+            {
+                string cardName = playerDeck[i];
+                GameObject newButton = Instantiate(CardPrefab, cardsPanel.transform);
 
+                Text[] texts = newButton.GetComponentsInChildren<Text>();
+
+                texts[0].text = cardName;
+                if(i>0)
+                {
+                    int mana = GetManaForCard(cardName);
+                    if (mana != -1)
+                    {
+
+                        texts[1].text = mana.ToString();
+                    }
+                }
+                
+            }
+        }).Catch(error =>
+        {
+            Debug.LogError("Error retrieving playerdeck: " + error.Message);
+        });
+        
+    }
     public void SaveButton()
     {
+        if (cardsPanel != null)
+        {
+            foreach (Transform card in cardsPanel.transform)
+            {
+                Text cardText = card.GetComponentInChildren<Text>();
+                if (cardText != null)
+                {
+                    cardNames.Add(cardText.text);
+                }
+            }
+        }
+
         string jsonData = "[" + string.Join(",", cardNames.ConvertAll(name => "\"" + name + "\"").ToArray()) + "]";
-        
-        if(cardNames.Count > 3)
+
+        if (cardNames.Count == 40)
         {
             RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken, jsonData)
             .Then(response =>
@@ -76,10 +88,141 @@ public class PlayerDeck : MonoBehaviour
         else
         {
             NotEnoughCard.SetActive(true);
+            cardNames.Clear();
         }
-        
-        //SceneManager.LoadScene("Lobby");
     }
+
+    private int GetManaForCard(string cardName)
+    {
+        int mana = -1;
+
+        ZeusCard zeusCard = new ZeusCard();
+        foreach (Minion minion in zeusCard.minions)
+        {
+            if (cardName == minion.name)
+            {
+                mana = minion.mana;
+                break;
+            }
+        }
+        foreach (Spell spell in zeusCard.spells)
+        {
+            if (cardName == spell.name)
+            {
+                mana = spell.mana;
+                break;
+            }
+        }
+
+        OdinCard odinCard = new OdinCard();
+        foreach (Minion minion in odinCard.minions)
+        {
+            if (cardName == minion.name)
+            {
+                mana = minion.mana;
+                break;
+            }
+        }
+        foreach (Spell spell in odinCard.spells)
+        {
+            if (cardName == spell.name)
+            {
+                mana = spell.mana;
+                break;
+            }
+        }
+
+        AnubisCard anubisCard = new AnubisCard();
+        foreach (Minion minion in anubisCard.minions)
+        {
+            if (cardName == minion.name)
+            {
+                mana = minion.mana;
+                break;
+            }
+        }
+        foreach (Spell spell in anubisCard.spells)
+        {
+            if (cardName == spell.name)
+            {
+                mana = spell.mana;
+                break;
+            }
+        }
+
+        GenghisCard genghisCard = new GenghisCard();
+        foreach (Minion minion in genghisCard.minions)
+        {
+            if (cardName == minion.name)
+            {
+                mana = minion.mana;
+                break;
+            }
+        }
+        foreach (Spell spell in genghisCard.spells)
+        {
+            if (cardName == spell.name)
+            {
+                mana = spell.mana;
+                break;
+            }
+        }
+
+        LeonardoCard leonardoCard = new LeonardoCard();
+        foreach (Minion minion in leonardoCard.minions)
+        {
+            if (cardName == minion.name)
+            {
+                mana = minion.mana;
+                break;
+            }
+        }
+        foreach (Spell spell in leonardoCard.spells)
+        {
+            if (cardName == spell.name)
+            {
+                mana = spell.mana;
+                break;
+            }
+        }
+
+        DustinCard dustinCard = new DustinCard();
+        foreach (Minion minion in dustinCard.minions)
+        {
+            if (cardName == minion.name)
+            {
+                mana = minion.mana;
+                break;
+            }
+        }
+        foreach (Spell spell in dustinCard.spells)
+        {
+            if (cardName == spell.name)
+            {
+                mana = spell.mana;
+                break;
+            }
+        }
+
+        StandartCards standartCards = new StandartCards();
+        foreach (StandartCard card in standartCards.standartcards)
+        {
+            if (cardName == card.name)
+            {
+                mana = card.mana;
+                break;
+            }
+        }
+
+        if (mana == -1)
+        {
+            Debug.LogError("Mana value not found for card: " + cardName);
+        }
+
+        return mana;
+    }
+
+
     string[] ParseJsonArray(string jsonArray)
     {
         int startIndex = jsonArray.IndexOf('[') + 1;
