@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject card = Instantiate(CardPrefabSolo);
                 float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
-                card.transform.position = new Vector3(xPos, CardPrefabSolo.transform.position.y, CardPrefabSolo.transform.position.z); // Kartın pozisyonunu ayarlıyoruz
+                card.transform.position = new Vector3(xPos, -2.85f, CardPrefabSolo.transform.position.z); // Kartın pozisyonunu ayarlıyoruz
                 card.GetComponent<CardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
                 card.GetComponent<CardPrefab>().SetInformation();
             }
@@ -294,7 +294,7 @@ public class PlayerController : MonoBehaviour
                   {
                       GameObject card = Instantiate(CardPrefabSolo);
                       float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
-                      card.transform.position = new Vector3(xPos, 1.46f, -1.92f); // Kartın pozisyonunu ayarlıyoruz
+                      card.transform.position = new Vector3(xPos, -2.85f, -1.92f); // Kartın pozisyonunu ayarlıyoruz
                       card.GetComponent<CardPrefab>().Card1 = OwnDeck[Random.Range(1, OwnDeck.Length)];
                       card.GetComponent<CardPrefab>().SetInformation();
                   }

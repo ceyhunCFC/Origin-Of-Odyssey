@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 
 public class CardManager : MonoBehaviour
 {
+    /*
     public static CardManager Instance; // Singleton örneği
     public GameObject[] cards; // Oluşturulan kartlar
     public GameObject changeButton; // Değiştir butonu
@@ -50,6 +51,8 @@ public class CardManager : MonoBehaviour
         }
     }
 
+
+
     void SelectCard(GameObject clickedCard)
     {
         selectedCard = clickedCard;
@@ -80,5 +83,5 @@ public class CardManager : MonoBehaviour
            // // Kartın bilgilerini güncelliyoruz
            // selectedCard.GetComponent<CardPrefab>().SetInformation();
         }
-    }
+    }*/
 }
