@@ -244,12 +244,12 @@ public class AuthManager : MonoBehaviour
     {
         PlayerData user = new PlayerData();
         RestClient.Put(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + idTokenTemp, user)
-            .Then(userýnfo =>
+            .Then(userinfo =>
             {
 
             }).Catch(error =>
             {
-                Debug.LogError("An error saved to userýnfo");
+                Debug.LogError("An error saved to userinfo");
             });
 
         List<string> cardNames = new List<string>();
