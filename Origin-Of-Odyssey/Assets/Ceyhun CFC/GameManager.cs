@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             OtherPlayerName = Nickname;
             OtherDeck = Deck;
-            OtherrMainCard = "GenghisCard";
+            OtherrMainCard = "ZeusCard";
 
 
             //  OtherPlayerNameText.text = OtherPlayerName;
