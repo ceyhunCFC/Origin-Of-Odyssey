@@ -1,5 +1,84 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &52796896851687840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7864018154572164072}
+  - component: {fileID: 9082491277904822442}
+  - component: {fileID: 5626237058087336586}
+  m_Layer: 5
+  m_Name: ManaCount_txt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7864018154572164072
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52796896851687840}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2287042558417088022}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -350, y: 278}
+  m_SizeDelta: {x: 600, y: 70}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &9082491277904822442
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52796896851687840}
+  m_CullTransparentMesh: 1
+--- !u!114 &5626237058087336586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52796896851687840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 26
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 5
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: '[OWN MANA]'
 --- !u!1 &1402174814802744113
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,7 +777,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9de476437ecc4f3ca459d17cecd5f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardPrefab: {fileID: 6098573348287867525, guid: 561816fecb8104f4abfaa44f5ec9054f, type: 3}
   CardPrefabSolo: {fileID: 1798911962605047886, guid: 515ee43589829493b9d191026fda22ba, type: 3}
   OwnNameText: {fileID: 8488312309530775258}
   OwnDeckText: {fileID: 7351365811314301272}
@@ -706,6 +784,7 @@ MonoBehaviour:
   CompetitorNameText: {fileID: 5418195816077874876}
   CompetitorDeckText: {fileID: 6856960182478290903}
   CompetitorMainCardText: {fileID: 6906855327874235693}
+  ManaCountText: {fileID: 5626237058087336586}
 --- !u!1 &6370487949359042393
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,6 +898,7 @@ RectTransform:
   - {fileID: 6300168617205174971}
   - {fileID: 8244927405932867328}
   - {fileID: 479686275723747505}
+  - {fileID: 7864018154572164072}
   - {fileID: 8059464427925713224}
   - {fileID: 1171648944976780675}
   - {fileID: 7857612294952228427}

@@ -9,7 +9,7 @@ public class CardInformation : MonoBehaviour
     public string CardDes;
     public string CardHealth;
     public string CardDamage;
-    public string CardMana;
+    public int CardMana;
 
     public Text CardNameText;
     public Text CardDesText;
@@ -24,7 +24,7 @@ public class CardInformation : MonoBehaviour
         CardDesText.text = CardDes;
         CardHealthText.text = CardHealth;
         CardDamageText.text = CardDamage;
-        CardManaText.text = CardMana;
+        CardManaText.text = CardMana.ToString();
     }
 
 }

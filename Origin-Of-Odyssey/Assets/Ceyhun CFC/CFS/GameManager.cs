@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager Instance;
     public bool Turn = false; // FALSE IS MASTER TURN - TRUE IS OTHER TURN
+    public int ManaCount = 1;
 
     public string MasterPlayerName = "";
     public string OtherPlayerName = "";
@@ -30,7 +31,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-
         if (Instance == null)
             Instance = this;
         else
@@ -38,6 +38,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         DontDestroyOnLoad(gameObject);
         PV = GetComponent<PhotonView>();
+    }
+
+    public void AddMana()
+    {
+        PV.RPC("RPC_AddMana", RpcTarget.AllBufferedViaServer);
+    }
+
+    [PunRPC]
+    void RPC_AddMana()
+    {
+        if (ManaCount<=9)
+        {
+            ManaCount++;
+        }
+        
     }
 
     public void FinishTurn(bool turn)
@@ -75,7 +90,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             OtherPlayerName = Nickname;
             OtherDeck = Deck;
-            OtherrMainCard = "GenghisCard";
+            OtherrMainCard = "ZeusCard";
 
 
             //  OtherPlayerNameText.text = OtherPlayerName;

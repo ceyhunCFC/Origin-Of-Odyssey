@@ -8,6 +8,8 @@ TagManager:
   - Button
   - CardContainerTag
   - ButtonCanvas
+  - AreaBox
+  - UsedCard
   layers:
   - Default
   - TransparentFX

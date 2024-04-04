@@ -110,7 +110,7 @@ Transform:
   m_GameObject: {fileID: 1798911962605047886}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.38268343, z: 0.92387956, w: 0}
-  m_LocalPosition: {x: 0, y: 1.46, z: -1.92}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 1, z: 0.04}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -179,10 +179,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -206,7 +206,7 @@ MonoBehaviour:
   CardDes: 
   CardHealth: 
   CardDamage: 
-  CardMana: 
+  CardMana: 0
   CardNameText: {fileID: 3503785215774116764}
   CardDesText: {fileID: 2436654656967440558}
   CardHealthText: {fileID: 2879304106318651243}
@@ -231,7 +231,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1798911962605047886}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 786223a5358724aae989cfcd7f61f978, type: 3}
   m_Name: 
