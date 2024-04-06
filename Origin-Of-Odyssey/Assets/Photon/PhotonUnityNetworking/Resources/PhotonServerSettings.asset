@@ -50,6 +50,13 @@ MonoBehaviour:
   - RPC_ChangeCardCounts
   - CreateCompetitorCardCount
   - RPC_AddMana
+  - RPC_ChangeMasterDeckCounts
+  - RPC_ChangeOtherDeckCounts
+  - DeleteCompatitorDeckCard
+  - CreateCompatitorDeckCard
+  - RPC_MasterDamanage
+  - RPC_OtherDamanage
+  - RefreshPlayersInformation
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

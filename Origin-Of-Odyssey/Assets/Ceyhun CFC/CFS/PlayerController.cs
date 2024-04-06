@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
 {
     PhotonView PV;
     GameManager _GameManager;
+    GameObject CompetitorPV = null;
+
     public GameObject CardPrefabSolo; // Tek kart
     
 
@@ -17,22 +19,27 @@ public class PlayerController : MonoBehaviour
     string OwnName = "";
     string[] OwnDeck;
     string OwnMainCard = "";
+    int OwnHealth = 0;
 
 
     string CompetitorName = "";
     string[] CompetitorDeck;
     string CompetitorMainCard = "";
-
+    int CompetitorHealth = 0;
 
     public Text OwnNameText;
     public Text OwnDeckText;
     public Text OwnMainCardText;
+    public Text OwnHealthText;
+
+
     public Text CompetitorNameText;
     public Text CompetitorDeckText;
     public Text CompetitorMainCardText;
-    public Text ManaCountText;
+    public Text CompetitorHealthText;
 
-    bool isFirstTurn = true;
+    public Text ManaCountText;
+    
     int DeckCardCount = 0;
     int Mana = 3;
 
@@ -52,77 +59,148 @@ public class PlayerController : MonoBehaviour
         GetDataForUI();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-          
-            if (selectedCard!=null) // CARDIN MASAYA EKLENMESİ VE KULLANILMASI
-            {
-                // Fare konumunda bir ışın oluştur
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
+        if (!PV.IsMine)
+            return;
 
-                // Işının çarptığı nesneyi kontrol et
-                if (Physics.Raycast(ray, out hit))
+
+        if (Input.GetMouseButtonDown(0) && PV.Owner.IsMasterClient && _GameManager.Turn==false)
+        {
+            SelectAndUseCard();
+          
+        }
+        else if (Input.GetMouseButtonDown(0) && !PV.Owner.IsMasterClient && _GameManager.Turn == true)
+        {
+            SelectAndUseCard();
+           
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            Debug.LogError("IT IS NOT YOUR TURN!");
+        }
+
+
+    }
+
+    void SelectAndUseCard()
+    {
+        if (selectedCard != null) // CARDIN MASAYA EKLENMESİ VE KULLANILMASI
+        {
+            // Fare konumunda bir ışın oluştur
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            // Işının çarptığı nesneyi kontrol et
+            if (Physics.Raycast(ray, out hit))
+            {
+                selectedCard.GetComponent<Renderer>().material.color = Color.white;
+
+                if (hit.collider.gameObject.tag == "AreaBox")
+                {
+                    Transform transformBox = hit.collider.gameObject.transform;
+                    selectedCard.transform.SetParent(transformBox);
+
+                    selectedCard.transform.localScale = Vector3.one;
+                    selectedCard.transform.localEulerAngles = new Vector3(90, 0, 180);
+                    selectedCard.transform.localPosition = Vector3.zero;
+
+
+                    Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
+                    ManaCountText.text = Mana.ToString();
+
+
+                    selectedCard.GetComponent<Renderer>().material.color = Color.white;
+                    selectedCard.GetComponent<CardController>().UsedCard(selectedCard.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+
+
+
+                    selectedCard.tag = "UsedCard";
+                    DeckCardCount--;
+
+                    StackDeck();
+                    selectedCard = null;
+
+                   
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                }
+                else
                 {
                     selectedCard.GetComponent<Renderer>().material.color = Color.white;
-
-                    if (hit.collider.gameObject.tag == "AreaBox")
-                    {
-                        Transform transformBox = hit.collider.gameObject.transform;
-                        selectedCard.transform.SetParent(transformBox);
-
-                        selectedCard.transform.localScale = Vector3.one;
-                        selectedCard.transform.localEulerAngles = new Vector3(90, 0, 180);
-                        selectedCard.transform.localPosition = Vector3.zero;
-                        Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
-                        ManaCountText.text = Mana.ToString();
-                        selectedCard.GetComponent<Renderer>().material.color = Color.white;
-                        selectedCard.tag = "UsedCard";
-                        DeckCardCount--;
-                        StackDeck();
-                        selectedCard = null;
-
-                    }
-                    else
-                    {
-                        selectedCard.GetComponent<Renderer>().material.color = Color.white;
-                        selectedCard = null;
-                    }
-                }
-            }
-            else // KULLANILACAK KARTIN SEÇİLMESİ
-            {
-
-                // Fare konumunda bir ışın oluştur
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                // Işının çarptığı nesneyi kontrol et
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.collider.gameObject.tag == "Card")
-                    {
-                      
-                        if (hit.collider.gameObject.GetComponent<CardInformation>().CardMana <= Mana)
-                        {
-                            selectedCard = hit.collider.gameObject;
-                            selectedCard.GetComponent<Renderer>().material.color = Color.green;
-                        }
-                    
-                    }
-                   
+                    selectedCard = null;
                 }
             }
         }
+        else // KULLANILACAK KARTIN SEÇİLMESİ
+        {
+
+            // Fare konumunda bir ışın oluştur
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            // Işının çarptığı nesneyi kontrol et
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.gameObject.tag == "Card")
+                {
+
+                    if (hit.collider.gameObject.GetComponent<CardInformation>().CardMana <= Mana)
+                    {
+                        selectedCard = hit.collider.gameObject;
+                        selectedCard.GetComponent<Renderer>().material.color = Color.green;
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    [PunRPC]
+    public void RefreshPlayersInformation()
+    {
+        StartCoroutine(Refreshcard());
+    }
+
+    IEnumerator Refreshcard()
+    {
+        yield return new WaitForSeconds(1);
+
+        if (PV.IsMine)
+        {
+            if (PV.Owner.IsMasterClient)
+            {
+                OwnHealth = _GameManager.MasterHealth;
+                CompetitorHealth = _GameManager.OtherHealth;
+
+                OwnHealthText.text = OwnHealth.ToString();
+                CompetitorHealthText.text = CompetitorHealth.ToString();
+            }
+            else
+            {
+                OwnHealth = _GameManager.OtherHealth;
+                CompetitorHealth = _GameManager.MasterHealth;
+
+                OwnHealthText.text = OwnHealth.ToString();
+                CompetitorHealthText.text = CompetitorHealth.ToString();
+            }
+        }
+
     }
 
     public void FinishButton()
     {
         // Find all GameObjects with the specified name
         GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
-        GameObject CompetitorPV = null;
+        CompetitorPV = null;
 
         foreach (GameObject obj in objects)
         {
@@ -144,6 +222,11 @@ public class PlayerController : MonoBehaviour
                 {
                     _GameManager.FinishTurn(true);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("BeginerFunction", RpcTarget.All);
+
+                }
+                else
+                {
+                    Debug.LogError("IT IS NOT YOUR TURN!");
                 }
 
             }
@@ -155,6 +238,10 @@ public class PlayerController : MonoBehaviour
                     _GameManager.AddMana();
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("BeginerFunction", RpcTarget.All);
                 }
+                else
+                {
+                    Debug.LogError("IT IS NOT YOUR TURN!");
+                }
 
             }
         }
@@ -162,28 +249,48 @@ public class PlayerController : MonoBehaviour
      
     }
 
-
     [PunRPC]
-    public void BeginerFunction() // Tur bize geçtiğinde çalışan fonksion
+    public void DeleteCompatitorDeckCard()
     {
 
         if (!PV.IsMine)
             return;
-        
-            if (isFirstTurn == true) // ilk turun fon.
+
+        Destroy(GameObject.Find("CompetitorDeck").transform.GetChild(GameObject.Find("CompetitorDeck").transform.childCount - 1).gameObject);
+
+        for (int i = 0; i < GameObject.Find("CompetitorDeck").transform.childCount; i++)
+        {
+            float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+
+            GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+        }
+
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.31f, 4.52f);
+
+    }
+
+
+    [PunRPC]
+    public void BeginerFunction() // Tur bize geçtiğinde çalışan fonksion
+    {
+       
+        if (PV.IsMine)
+        {
+           
+            if (_GameManager.TurnCount < 2 ) // ilk turun fon.
             {
                 for (int i = 0; i < 3; i++)
                 {
                     GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
-
                     float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                     card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
                     CreateCard(card);
                     StackDeck();
+                    StackCompetitorDeck();
                     DeckCardCount++;
                 }
 
-                isFirstTurn = false;
+               
             }
             else // DIĞER TURLAR
             {
@@ -193,11 +300,41 @@ public class PlayerController : MonoBehaviour
                 CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
                 CreateCard(CardCurrent);
                 StackDeck();
+                StackCompetitorDeck();
                 DeckCardCount++;
             }
 
-        
-      
+        }
+        else
+        {
+            if (_GameManager.TurnCount < 1) // ilk turun fon.
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("CompetitorDeck").transform);
+
+                    float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                    card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                    CreateCard(card);
+                    StackDeck();
+                    StackCompetitorDeck();
+                    DeckCardCount++;
+                }
+
+              
+            }
+            else // DIĞER TURLAR
+            {
+                GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("CompetitorDeck").transform);
+
+                float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                CreateCard(CardCurrent);
+                StackDeck();
+                StackCompetitorDeck();
+                DeckCardCount++;
+            }
+        }
        
 
         Mana = _GameManager.ManaCount;
@@ -224,7 +361,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardName = zeusCard.minions[targetIndex].name;
                         CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.minions[targetIndex].name + " POWWERRRRR!!!";
                         CardCurrent.GetComponent<CardInformation>().CardHealth = zeusCard.minions[targetIndex].health.ToString();
-                        CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.minions[targetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -239,7 +376,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardName = zeusCard.spells[targetIndex].name;
                         CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.spells[targetIndex].name + " POWWERRRRR!!!";
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
-                        CardCurrent.GetComponent<CardInformation>().CardDamage = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.spells[targetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -300,6 +437,20 @@ public class PlayerController : MonoBehaviour
         }
 
         GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.31f, -2.47f);
+
+    }
+
+    void StackCompetitorDeck()
+    {
+
+        for (int i = 0; i < GameObject.Find("CompetitorDeck").transform.childCount; i++)
+        {
+            float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+
+            GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+        }
+
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 0.31f, 4.52f);
 
     }
 
@@ -395,11 +546,11 @@ public class PlayerController : MonoBehaviour
                       card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
                       CreateCard(card);
                       StackDeck();
+                      StackCompetitorDeck();
                       DeckCardCount++;
 
                         
                   }
-                    isFirstTurn = false;
 
                 }
                 else
@@ -410,8 +561,11 @@ public class PlayerController : MonoBehaviour
 
                         float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                         card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
-                       
-
+                        CreateCard(card);
+                        StackDeck();
+                        StackCompetitorDeck();
+                        DeckCardCount++;
+                        
 
                     }
                 }

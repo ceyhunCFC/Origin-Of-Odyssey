@@ -186,6 +186,7 @@ public class AuthManager : MonoBehaviour
                 loginInfo.text = "An error occurred while logging in: " + error.Message;
             });
     }
+
     IEnumerator LoadMainMenu()
     {
         yield return new WaitForSeconds(3.0f);
