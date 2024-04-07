@@ -193,21 +193,21 @@ public class GenghisCard : CardStats
 
         minions = new List<Minion>
         {
-            new Minion("Viking Raider", Rarity.Common, 2, 2, 1, Position.Frontline),
-            new Minion("Runestone Mystic", Rarity.Common, 3, 2, 4, Position.Backline),
-            new Minion("Fenrir's Spawn", Rarity.Common, 4, 3, 3, Position.Frontline),
-            new Minion("Shieldmaiden Defender", Rarity.Common, 2, 2, 2, Position.Frontline),
-            new Minion("Draugr Warrior", Rarity.Common, 5, 4, 5, Position.Frontline),
-            new Minion("Norn Weaver", Rarity.Common, 4, 3, 3, Position.Backline),
-            new Minion("Skald Bard", Rarity.Common, 2, 1, 3, Position.Backline),
-            new Minion("Valkyrie's Chosen", Rarity.Common, 4, 3, 4, Position.Backline),
-            new Minion("Mimir's Seer", Rarity.Common, 5, 3, 4, Position.Backline),
-            new Minion("Frost Giant", Rarity.Common, 6, 5, 5, Position.Frontline),
-            new Minion("Einherjar Caller", Rarity.Common, 7, 4, 4, Position.Frontline),
-            new Minion("Dwarven Blacksmith", Rarity.Common, 3, 3, 2, Position.Backline),
-            new Minion("Naglfar", Rarity.Epic, 7, 7, 7, Position.Frontline),
-            new Minion("Heimdallr", Rarity.Common, 8, 5, 5, Position.Frontline),
-            new Minion("Brokk and Sindri", Rarity.Common, 6, 4, 6, Position.Backline)
+            new Minion("Mongol Messenger", Rarity.Common, 2, 2, 1, Position.Frontline),
+            new Minion("Khan’s Envoy", Rarity.Rare, 3, 2, 4, Position.Backline),
+            new Minion("Mongol Archer", Rarity.Common, 4, 3, 3, Position.Frontline),
+            new Minion("Steppe Warlord", Rarity.Rare, 2, 2, 2, Position.Frontline),
+            new Minion("Nomadic Scout", Rarity.Common, 5, 4, 5, Position.Frontline),
+            new Minion("Keshik Cavalry", Rarity.Rare, 4, 3, 3, Position.Backline),
+            new Minion("Mongol Shaman", Rarity.Common, 2, 1, 3, Position.Backline),
+            new Minion("Eagle Hunter", Rarity.Rare, 4, 3, 4, Position.Backline),
+            new Minion("Yurt Builder", Rarity.Common, 5, 3, 4, Position.Backline),
+            new Minion("Mongol Lancer", Rarity.Rare, 6, 5, 5, Position.Frontline),
+            new Minion("Horse Breeder", Rarity.Common, 7, 4, 4, Position.Frontline),
+            new Minion("Flaming Camel", Rarity.Rare, 3, 3, 2, Position.Backline),
+            new Minion("Kublai Khan", Rarity.Legendary, 7, 7, 7, Position.Frontline),
+            new Minion("General Subutai", Rarity.Legendary, 8, 5, 5, Position.Frontline),
+            new Minion("Marco Polo", Rarity.Legendary, 6, 4, 6, Position.Backline)
         };
 
         spells = new List<Spell>
@@ -253,19 +253,19 @@ public class LeonardoCard : CardStats
         {
             new Minion("Da Vinci's Glider", Rarity.Common, 1, 1, 1, Position.Backline),
             new Minion("Automaton Apprentice", Rarity.Common, 2, 1, 3, Position.Backline),
-            new Minion("Automaton Duelist", Rarity.Common, 3, 3, 2, Position.Frontline),
+            new Minion("Automaton Duelist", Rarity.Rare, 3, 3, 2, Position.Frontline),
             new Minion("Gyrocopter", Rarity.Common, 2, 1, 2, Position.Backline),
-            new Minion("Mechanical Lion", Rarity.Common, 4, 3, 3, Position.Frontline),
-            new Minion("Codex Guardian", Rarity.Common, 3, 2, 2, Position.Backline),
-            new Minion("Mirror Shield Automaton", Rarity.Common, 4, 3, 4, Position.Frontline),
-            new Minion("Grand Cannon", Rarity.Common, 5, 4, 3, Position.Backline),
-            new Minion("Tank of the Renaissance", Rarity.Common, 7, 5, 8, Position.Frontline),
-            new Minion("Anatomist of the Unknown", Rarity.Common, 4, 3, 4, Position.Backline),
+            new Minion("Mechanical Lion", Rarity.Rare, 4, 3, 3, Position.Frontline),
+            new Minion("Codex Guardian", Rarity.Rare, 3, 2, 2, Position.Backline),
+            new Minion("Mirror Shield Automaton", Rarity.Epic, 4, 3, 4, Position.Frontline),
+            new Minion("Grand Cannon", Rarity.Epic, 5, 4, 3, Position.Backline),
+            new Minion("Tank of the Renaissance", Rarity.Legendary, 7, 5, 8, Position.Frontline),
+            new Minion("Anatomist of the Unknown", Rarity.Epic, 4, 3, 4, Position.Backline),
             new Minion("Organ Gun", Rarity.Common, 3, 0, 5, Position.Backline),
             new Minion("Piscean Diver", Rarity.Common, 3, 2, 3, Position.Backline),
-            new Minion("Da Vinci's Helix Engineer", Rarity.Common, 4, 3, 3, Position.Backline),
-            new Minion("Vitruvian Firstborn", Rarity.Common, 6, 4, 5, Position.Frontline),
-            new Minion("Eques Automaton", Rarity.Common, 8, 6, 6, Position.Frontline)
+            new Minion("Da Vinci's Helix Engineer", Rarity.Rare, 4, 3, 3, Position.Backline),
+            new Minion("Vitruvian Firstborn", Rarity.Epic, 6, 4, 5, Position.Frontline),
+            new Minion("Eques Automaton", Rarity.Legendary, 8, 6, 6, Position.Frontline)
         };
 
         spells = new List<Spell>
@@ -312,27 +312,27 @@ public class OdinCard : CardStats
             new Minion("Fenrir's Spawn", Rarity.Common, 4, 3, 3, Position.Frontline),
             new Minion("Shieldmaiden Defender", Rarity.Common, 2, 2, 2, Position.Frontline),
             new Minion("Draugr Warrior", Rarity.Common, 5, 4, 5, Position.Frontline),
-            new Minion("Norn Weaver", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Norn Weaver", Rarity.Rare, 4, 3, 3, Position.Backline),
             new Minion("Skald Bard", Rarity.Common, 2, 1, 3, Position.Backline),
-            new Minion("Valkyrie's Chosen", Rarity.Common, 4, 3, 4, Position.Backline),
-            new Minion("Mimir's Seer", Rarity.Common, 5, 3, 4, Position.Backline),
-            new Minion("Frost Giant", Rarity.Common, 6, 5, 5, Position.Frontline),
-            new Minion("Einherjar Caller", Rarity.Common, 7, 4, 4, Position.Frontline),
+            new Minion("Valkyrie's Chosen", Rarity.Rare, 4, 3, 4, Position.Backline),
+            new Minion("Mimir's Seer", Rarity.Rare, 5, 3, 4, Position.Backline),
+            new Minion("Frost Giant", Rarity.Rare, 6, 5, 5, Position.Frontline),
+            new Minion("Einherjar Caller", Rarity.Rare, 7, 4, 4, Position.Frontline),
             new Minion("Dwarven Blacksmith", Rarity.Common, 3, 3, 2, Position.Backline),
             new Minion("Naglfar", Rarity.Epic, 7, 7, 7, Position.Frontline),
-            new Minion("Heimdallr", Rarity.Common, 8, 5, 5, Position.Frontline),
-            new Minion("Brokk and Sindri", Rarity.Common, 6, 4, 6, Position.Backline)
+            new Minion("Heimdallr", Rarity.Legendary, 8, 5, 5, Position.Frontline),
+            new Minion("Brokk and Sindri", Rarity.Legendary, 6, 4, 6, Position.Backline)
         };
 
         spells = new List<Spell>
         {
-            new Spell("Rune Magic", Rarity.Common, 2),
+            new Spell("Rune Magic", Rarity.Rare, 2),
             new Spell("Winter's Chill", Rarity.Rare, 3),
             new Spell("Gjallarhorn Call", Rarity.Epic, 6),
-            new Spell("Mimir's Wisdom", Rarity.Common, 4),
-            new Spell("Viking Raid", Rarity.Common, 5),
-            new Spell("Sleipnir’s Gallop", Rarity.Common, 4),
-            new Spell("The Allfather’s Decree", Rarity.Common, 5)
+            new Spell("Mimir's Wisdom", Rarity.Epic, 4),
+            new Spell("Viking Raid", Rarity.Epic, 5),
+            new Spell("Sleipnir’s Gallop", Rarity.Epic, 4),
+            new Spell("The Allfather’s Decree", Rarity.Epic, 5)
         };
 
         heroPower = new HeroPower("Wisdom of the Allfather", 2, 1);
@@ -383,11 +383,11 @@ public class DustinCard : CardStats
         {
             new Spell("Radioactive Fallout", Rarity.Common, 3),
             new Spell("Scrap Shield", Rarity.Rare, 2),
-            new Spell("Shockwave/Impulse", Rarity.Epic, 4),
+            new Spell("Shockwave Impulse", Rarity.Common, 4),
             new Spell("Survival Instincts", Rarity.Rare, 3),
             new Spell("Mutagenic Mist", Rarity.Epic, 6),
             new Spell("Garage Raid", Rarity.Common, 4),
-            new Spell("Mutated Blood Sample", Rarity.Rare, 2),
+            new Spell("Mutated Blood Sample", Rarity.Common, 2),
             new Spell("X Factor", Rarity.Epic, 5)
         };
 
@@ -424,26 +424,26 @@ public class AnubisCard : CardStats
             new Minion("Necropolis Acolyte", Rarity.Common, 2, 2, 2, Position.Backline),
             new Minion("Desert Bowman", Rarity.Common, 3, 3, 2, Position.Backline),
             new Minion("Sphinx Riddler", Rarity.Common, 4, 4, 5, Position.Backline),
-            new Minion("Osiris’ Bannerman", Rarity.Common, 5, 4, 4, Position.Frontline),
+            new Minion("Osiris’ Bannerman", Rarity.Rare, 5, 4, 4, Position.Frontline),
             new Minion("Sun Charioteer", Rarity.Common, 4, 3, 2, Position.Frontline),
-            new Minion("Crypt Warden", Rarity.Common, 4, 3, 3, Position.Backline),
+            new Minion("Crypt Warden", Rarity.Rare, 4, 3, 3, Position.Backline),
             new Minion("Falcon-Eyed Hunter", Rarity.Common, 3, 2, 3, Position.Backline),
-            new Minion("Canopic Preserver", Rarity.Common, 4, 3, 3, Position.Backline),
-            new Minion("Royal Mummy", Rarity.Common, 6, 5, 5, Position.Frontline),
-            new Minion("Temple Guardian", Rarity.Common, 5, 4, 6, Position.Frontline),
-            new Minion("Chaos Scarab", Rarity.Common, 7, 6, 6, Position.Frontline),
-            new Minion("Bata", Rarity.Common, 8, 5, 5, Position.Frontline),
+            new Minion("Canopic Preserver", Rarity.Rare, 4, 3, 3, Position.Backline),
+            new Minion("Royal Mummy", Rarity.Rare, 6, 5, 5, Position.Frontline),
+            new Minion("Temple Guardian", Rarity.Rare, 5, 4, 6, Position.Frontline),
+            new Minion("Chaos Scarab", Rarity.Epic, 7, 6, 6, Position.Frontline),
+            new Minion("Bata", Rarity.Legendary, 8, 5, 5, Position.Frontline),
             new Minion("Osiris", Rarity.Legendary, 10, 20, 20, Position.Frontline)
         };
 
         spells = new List<Spell>
         {
-            new Spell("Book of the Dead", Rarity.Epic, 6),
-            new Spell("Sun Disk Radiance", Rarity.Common, 3),
-            new Spell("Plague of Locusts", Rarity.Common, 5),
-            new Spell("River's Blessing", Rarity.Common, 4),
+            new Spell("Book of the Dead", Rarity.Rare, 6),
+            new Spell("Sun Disk Radiance", Rarity.Epic, 3),
+            new Spell("Plague of Locusts", Rarity.Epic, 5),
+            new Spell("River's Blessing", Rarity.Rare, 4),
             new Spell("Pyramid's Might", Rarity.Epic, 7),
-            new Spell("Scales of Anubis", Rarity.Common, 4),
+            new Spell("Scales of Anubis", Rarity.Epic, 4),
             new Spell("Gates of Duat", Rarity.Epic, 8)
         };
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class SelectedCard : MonoBehaviour
     public Text NameText;
     public Text ManaText;
     public string cardType;
+   
+
     void Start()
     {
         
@@ -21,8 +24,24 @@ public class SelectedCard : MonoBehaviour
 
     public void DeleteCard()
     {
-        Destroy(gameObject);
+       
+        string[] protectedCards = { "Zeus", "Odin", "Anubis", "Genghis", "Dustin", "DaVinci" };
+
+        if (NameText != null)
+        {
+            
+            string cardName = NameText.text;
+
+           
+            if (!Array.Exists(protectedCards, name => name == cardName))
+            {
+                Destroy(gameObject);
+            }
+            
+        }
+       
     }
+
 
     public void DeleteAllSelectedCards()
     {
@@ -30,14 +49,29 @@ public class SelectedCard : MonoBehaviour
 
         if (panel != null)
         {
-            
             foreach (Transform child in panel.transform)
             {
                 SelectedCard selectedCard = child.GetComponent<SelectedCard>();
 
                 if (selectedCard != null)
                 {
-                    Destroy(child.gameObject);
+                    
+                    Text nameText = selectedCard.NameText;
+                    if (nameText != null)
+                    {
+                        
+                        string cardName = nameText.text;
+
+                       
+                        string[] protectedCards = { "Zeus", "Odin", "Anubis", "Genghis", "Dustin", "DaVinci" };
+
+                        
+                        if (!Array.Exists(protectedCards, name => name == cardName))
+                        {
+                            Destroy(child.gameObject);
+                        }
+                        
+                    }
                 }
             }
         }

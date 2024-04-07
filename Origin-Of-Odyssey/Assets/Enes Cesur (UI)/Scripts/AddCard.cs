@@ -42,8 +42,9 @@ public class AddCard : MonoBehaviour
 
                 if (shouldAddCard)
                 {
-                    if (panel.transform.childCount >= 39)
-                    {         
+                    if (panel.transform.childCount >= 40)
+                    {
+         
                         return;
                     }
 

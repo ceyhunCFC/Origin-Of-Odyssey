@@ -10,4 +10,6 @@ public class CardDisplay : MonoBehaviour
     public Text cardHealthText;
     public Text cardManaText;
     public string cardType;
+    public Image cardImage;
+    public Image cardBorderImage;
 }
