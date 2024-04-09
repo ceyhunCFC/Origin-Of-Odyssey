@@ -30,7 +30,7 @@ public class PlayerDeck : MonoBehaviour
         RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken).Then(PlayerDeck =>
         {
             playerDeck = ParseJsonArray(PlayerDeck.Text);
-            for (int i = 0; i < playerDeck.Length; i++)
+            for (int i = 1; i < playerDeck.Length; i++)
             {
                 string cardName = playerDeck[i];
                 GameObject newButton = Instantiate(CardPrefab, cardsPanel.transform);

@@ -24,11 +24,35 @@ public class CardCtrl : MonoBehaviour
     public GameObject warningPanel;
     public Button confirmButton;
     public Button rejectButton;
-    void Start()
+    private void Awake()
     {
         InitializeCardSets();
         StandartCard();
-        ConfirmZeus();
+    }
+    public void ControlMainCard()
+    {
+        string playerName = AuthManager.playerDeckArray[0];
+        switch (playerName)
+        {
+            case "Zeus":
+                ConfirmZeus();
+                break;
+            case "Odin":
+                ConfirmOdin();
+                break;
+            case "Anubis":
+                ConfirmAnubis();
+                break;
+            case "Genghis":
+                ConfirmGenghis();
+                break;
+            case "DaVinci":
+                ConfirmDaVinci();
+                break;
+            case "Dustin":
+                ConfirmDustin();
+                break;
+        }
     }
     public void UpdateText(string newText)
     {
