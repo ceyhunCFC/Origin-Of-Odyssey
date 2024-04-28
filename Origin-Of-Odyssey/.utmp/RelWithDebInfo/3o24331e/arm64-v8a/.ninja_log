@@ -1,0 +1,11 @@
+# ninja log v5
+68	583	7359232404975320	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	3902e88786342b20
+585	835	7359232406857111	C:/Users/enesc/Desktop/Origin-Of-Odyssey/Origin-Of-Odyssey/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3o24331e/obj/arm64-v8a/libswappywrapper.so	80669d2b34175a8a
+31	1475	7359232413914531	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	28e8616006f2f311
+47	1516	7359232414390367	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	64dd2f9c86690f8b
+8	1539	7359232414632429	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	d39c5aaf3ffaa7bf
+57	1648	7359232415691461	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	963899a9747d0446
+1	1682	7359232416034797	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	7df3c759cd0cffff
+23	1908	7359232418332497	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	df4c72683269dd7a
+15	2012	7359232419339705	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	2f2aafb598b4528a
+2012	2168	7359232420454068	C:/Users/enesc/Desktop/Origin-Of-Odyssey/Origin-Of-Odyssey/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3o24331e/obj/arm64-v8a/libgame.so	a883216576f435c9

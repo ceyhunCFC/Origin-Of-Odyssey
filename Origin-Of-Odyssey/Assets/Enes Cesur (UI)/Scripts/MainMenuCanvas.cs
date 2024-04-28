@@ -8,12 +8,10 @@ public class MainMenuCanvas : MonoBehaviour
 {
     public GameObject playPanel;
     public GameObject mainCardsCanvas;
-    public GameObject NavbarPanel;
 
     void Start()
     {
         playPanel.SetActive(true);
-        NavbarPanel.SetActive(true);
         mainCardsCanvas.SetActive(false);
     }
     public void OpenCardsCanvas()
