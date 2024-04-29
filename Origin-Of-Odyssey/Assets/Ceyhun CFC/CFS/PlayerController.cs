@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using System.IO;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -249,6 +250,7 @@ public class PlayerController : MonoBehaviour
 
         }
     }
+
     void DragCard()
     {
         Vector3 mousePosition = Input.mousePosition;
@@ -268,6 +270,10 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.gameObject.tag == "AreaBox")
             {
                 Transform objectBelow = hit.transform;
+
+                int Boxindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.transform.gameObject);
+
+                
 
                 foreach (Transform child in objectBelow)
                 {
@@ -304,9 +310,10 @@ public class PlayerController : MonoBehaviour
 
                 if (PV.IsMine)
                 {
+                    print(Boxindex);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
-
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex);
                     PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                 }
 
@@ -322,6 +329,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    
     IEnumerator MoveAndRotateCard(GameObject card, Vector3 targetPosition,  float duration)
     {
         Vector3 startPosition = card.transform.position;
@@ -429,6 +437,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    [PunRPC]
+    public void CreateUsedCard(int boxindex)
+    {
+
+        if (PV.IsMine)
+        {
+            GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform);
+            CreateCard(CardCurrent);
+
+        }
+    }
+
+
     [PunRPC]
     public void RefreshPlayersInformation()
     {
@@ -530,7 +552,7 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.31f, 4.52f);
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 0, 3f);
 
     }
 
@@ -613,7 +635,7 @@ public class PlayerController : MonoBehaviour
         {
             case "ZeusCard":
                 ZeusCard zeusCard = new ZeusCard();
-                int CardIndex = Random.Range(1, OwnDeck.Length);
+                int CardIndex = UnityEngine.Random.Range(1, OwnDeck.Length);
                 string targetCardName = OwnDeck[CardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
 
                 int targetIndex = -1;
@@ -701,7 +723,7 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.31f, -2.47f);
+        GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 2.5f, -3.8f);
 
     }
 
@@ -715,7 +737,7 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 0.31f, 4.52f);
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 0, 3);
 
     }
 
