@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
     int Mana = 3;
 
     GameObject selectedCard;
+    GameObject lastHoveredCard = null;
+
+    private Vector3 initialCardPosition;
 
     void Start()
     {
@@ -65,7 +68,7 @@ public class PlayerController : MonoBehaviour
             return;
 
 
-        if (Input.GetMouseButtonDown(0) && PV.Owner.IsMasterClient && _GameManager.Turn==false)
+        /*if (Input.GetMouseButtonDown(0) && PV.Owner.IsMasterClient && _GameManager.Turn==false)
         {
             SelectAndUseCard();
           
@@ -78,9 +81,271 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonDown(0))
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
+        }      */
+
+        if (Input.GetMouseButtonDown(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
+        {
+            selectCard();
+
+        }
+        else if (Input.GetMouseButtonDown(0) && !PV.Owner.IsMasterClient && _GameManager.Turn == true)
+        {
+            selectCard();
+
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            Debug.LogError("IT IS NOT YOUR TURN!");
+        }
+
+        if (Input.GetMouseButton(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
+        {
+            if(selectedCard!=null)
+            {
+                DragCard();
+            }
+            
+
+        }
+        else if (Input.GetMouseButton(0) && !PV.Owner.IsMasterClient && _GameManager.Turn == true)
+        {
+            if (selectedCard != null)
+            {
+                DragCard();
+            }
+
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            Debug.LogError("IT IS NOT YOUR TURN!");
+        }
+
+        if (Input.GetMouseButtonUp(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
+        {
+            if (selectedCard != null)
+            {
+                ReleaseCard();
+            }
+
+        }
+        else if (Input.GetMouseButtonUp(0) && !PV.Owner.IsMasterClient && _GameManager.Turn == true)
+        {
+            if (selectedCard != null)
+            {
+                ReleaseCard();
+            }
+
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            Debug.LogError("IT IS NOT YOUR TURN!");
         }
 
 
+
+        if (PV.Owner.IsMasterClient && _GameManager.Turn == false && selectedCard == null)
+        {
+            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+            {
+                scaleCard();
+            }
+
+        }
+        else if (!PV.Owner.IsMasterClient && _GameManager.Turn == true && selectedCard == null)
+        {
+            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+            {
+                scaleCard();
+            }
+
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            Debug.LogError("IT IS NOT YOUR TURN!");
+        }  
+
+
+    }
+
+    void scaleCard()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.gameObject.CompareTag("Card"))
+            {
+                
+                if (lastHoveredCard != hit.collider.gameObject)
+                {
+                    
+                    if (lastHoveredCard != null)
+                    {
+                        StopCoroutine("ChangeScale");
+                        StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.04f), 0.2f));
+                    }
+
+                    lastHoveredCard = hit.collider.gameObject;
+                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.9f, 1.2f, 0.04f), 0.2f));
+                }
+            }
+            else 
+            {
+                if (lastHoveredCard != null)
+                {
+                    StopCoroutine("ChangeScale");
+                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.04f), 0.2f));
+                    lastHoveredCard = null; 
+                }
+            }
+        }
+        else 
+        {
+            if (lastHoveredCard != null)
+            {
+                StopCoroutine("ChangeScale");
+                StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.04f), 0.2f));
+                lastHoveredCard = null; 
+            }
+        }
+    }
+
+
+    IEnumerator ChangeScale(Transform target, Vector3 targetScale, float duration)
+    {
+        float time = 0f;
+        Vector3 startScale = target.localScale;
+
+        while (time < duration)
+        {
+            target.localScale = Vector3.Lerp(startScale, targetScale, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        target.localScale = targetScale;
+    }
+
+    void selectCard()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.gameObject.tag == "Card")
+            {
+
+                if (hit.collider.gameObject.GetComponent<CardInformation>().CardMana <= Mana)
+                {
+                    selectedCard = hit.collider.gameObject;
+                    selectedCard.GetComponent<Renderer>().material.color = Color.green;
+
+                    initialCardPosition = selectedCard.transform.position;
+                }
+
+            }
+
+        }
+    }
+    void DragCard()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z = 5f;       //kartın ekrana uzaklığı
+        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        float followSpeed = 5f; // Kartın takip hızı
+        selectedCard.transform.position = Vector3.Lerp(selectedCard.transform.position, targetPosition, Time.deltaTime * followSpeed);
+    }
+
+    void ReleaseCard()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray);
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.gameObject.tag == "AreaBox")
+            {
+                Transform objectBelow = hit.transform;
+
+                foreach (Transform child in objectBelow)
+                {
+                    if (child.CompareTag("UsedCard"))
+                    {
+                        selectedCard.GetComponent<Renderer>().material.color = Color.white;
+                        selectedCard.transform.position = initialCardPosition;
+                        selectedCard.transform.localScale = new Vector3(0.7f, 1f, 0.04f);
+                        selectedCard = null;
+                        return;
+                    }
+                }
+                selectedCard.GetComponent<Renderer>().material.color = Color.white;
+
+                Transform transformBox = hit.collider.gameObject.transform;
+                StartCoroutine(MoveAndRotateCard(selectedCard, transformBox.position, 0.3f));
+                selectedCard.transform.SetParent(transformBox);
+
+                selectedCard.transform.localScale = Vector3.one;
+                selectedCard.transform.localEulerAngles = new Vector3(90, 0, 180);
+                selectedCard.transform.localPosition = Vector3.zero;
+
+                Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
+                ManaCountText.text = Mana.ToString();
+
+                selectedCard.GetComponent<CardController>().UsedCard(selectedCard.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+
+                selectedCard.tag = "UsedCard";
+                DeckCardCount--;
+
+                StackDeck();
+                selectedCard = null;
+                lastHoveredCard = null;
+
+                if (PV.IsMine)
+                {
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+
+                    PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                }
+
+                return; 
+            }
+        }
+        if (selectedCard != null)
+        {
+            selectedCard.GetComponent<Renderer>().material.color = Color.white;
+            selectedCard.transform.position = initialCardPosition;
+            selectedCard.transform.localScale=new Vector3 (0.7f, 1f, 0.04f);
+            selectedCard = null;
+        }
+    }
+
+    IEnumerator MoveAndRotateCard(GameObject card, Vector3 targetPosition,  float duration)
+    {
+        Vector3 startPosition = card.transform.position;
+        float time = 0f;
+
+        Vector3 targetPlus = targetPosition + new Vector3(0f, 0.8f, 0f);
+
+        while (time < duration)
+        {
+            card.transform.position = Vector3.Lerp(startPosition, targetPlus, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        yield return new WaitForSeconds(1.5f);
+        time = 0f;
+        while (time < duration)
+        {
+            card.transform.position = Vector3.Lerp(targetPlus, targetPosition, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }             
+
+        card.transform.position = targetPosition;
+        selectedCard = null;
     }
 
     void SelectAndUseCard()
