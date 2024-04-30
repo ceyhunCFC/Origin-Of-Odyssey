@@ -305,18 +305,26 @@ public class PlayerController : MonoBehaviour
                 DeckCardCount--;
 
                 StackDeck();
-                selectedCard = null;
-                lastHoveredCard = null;
-
+               
                 if (PV.IsMine)
                 {
                     print(Boxindex);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
-                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex);
+
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
+                        selectedCard.GetComponent<CardInformation>().CardName,
+                        selectedCard.GetComponent<CardInformation>().CardDes,
+                        selectedCard.GetComponent<CardInformation>().CardHealth,
+                        selectedCard.GetComponent<CardInformation>().CardDamage,
+                        selectedCard.GetComponent<CardInformation>().CardMana);
+
+
                     PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                 }
 
+                selectedCard = null;
+                lastHoveredCard = null;
                 return; 
             }
         }
@@ -439,13 +447,21 @@ public class PlayerController : MonoBehaviour
 
 
     [PunRPC]
-    public void CreateUsedCard(int boxindex)
+    public void CreateUsedCard(int boxindex, string name, string des, string heatlh, int damage, int mana)
     {
 
         if (PV.IsMine)
         {
             GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform);
-            CreateCard(CardCurrent);
+            CardCurrent.transform.localScale = Vector3.one;
+            CardCurrent.transform.eulerAngles = new Vector3(90,0,180);
+
+            CardCurrent.GetComponent<CardInformation>().CardName = name;
+            CardCurrent.GetComponent<CardInformation>().CardDes = des;
+            CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
+            CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
+            CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+            CardCurrent.GetComponent<CardInformation>().SetInformation();
 
         }
     }
