@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     PhotonView PV;
     GameManager _GameManager;
     GameObject CompetitorPV = null;
+    CardsFunction _CardFunction;
 
     public GameObject CardPrefabSolo; // Tek kart
     
@@ -53,7 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         PV = GetComponent<PhotonView>();
         _GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
+        _CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
 
         if (!PV.IsMine)
         {
@@ -83,6 +84,8 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
         }      */
+
+        
 
         if (Input.GetMouseButtonDown(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
         {
@@ -246,6 +249,10 @@ public class PlayerController : MonoBehaviour
                     initialCardPosition = selectedCard.transform.position;
                 }
 
+            }
+            else if (hit.collider.gameObject.tag == "UsedCard")
+            {
+                _CardFunction.SelectFirstCard(hit.collider.gameObject);
             }
 
         }

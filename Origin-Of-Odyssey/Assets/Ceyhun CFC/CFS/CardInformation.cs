@@ -10,6 +10,7 @@ public class CardInformation : MonoBehaviour
     public string CardHealth;
     public int CardDamage;
     public int CardMana;
+    public bool CardFreeze;
 
     public Text CardNameText;
     public Text CardDesText;
