@@ -59,6 +59,13 @@ MonoBehaviour:
   - RefreshPlayersInformation
   - CreateCompatitorUsedCard
   - CreateUsedCard
+  - DestroyCard
+  - RPC_DestoryCard
+  - DestroyUsedCard
+  - DestroyNetworkObject
+  - RPC_DestroyObject
+  - RPC_SetInformation
+  - RPC_DeleteAreaCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

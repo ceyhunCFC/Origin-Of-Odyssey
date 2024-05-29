@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
+using Photon.Pun;
 
 public class CardsFunction : MonoBehaviour
 {
@@ -13,9 +14,11 @@ public class CardsFunction : MonoBehaviour
     CardsAreaCreator _cardsAreaCreator;
 
     public GameObject CardObject;
+    PhotonView PV;
 
     private void Start()
     {
+        PV = GetComponent<PhotonView>();
         _cardsAreaCreator = GameObject.Find("Area").GetComponent<CardsAreaCreator>();
     }
 
@@ -24,7 +27,8 @@ public class CardsFunction : MonoBehaviour
         if (firstSelectedCard == null)
             return;
 
-        if (Input.GetMouseButtonDown(0) )
+
+        if (Input.GetMouseButtonDown(0))
         {
             RaycastHit[] hits;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -33,7 +37,8 @@ public class CardsFunction : MonoBehaviour
 
             foreach (RaycastHit hit in hits)
             {
-                if (hit.collider.gameObject.tag == "Card")
+                print(hit.collider.gameObject.tag);
+                if (hit.collider.gameObject.tag == "CompetitorCard")
                 {
                     Debug.Log("Run");
                     StandartAttack(firstSelectedCard, hit.collider.gameObject);
@@ -45,18 +50,19 @@ public class CardsFunction : MonoBehaviour
                     //CheckAround(hit.collider.gameObject);
                     //SelectAll("Own", "All");
 
-                    //StandartDamage(hit.collider.gameObject, 3);         //3 damage ve komþulara 1 hasar ve dondur winterschill
+                    //StandartDamage(hit.collider.gameObject, 3);         //3 damage ve kom?ulara 1 hasar ve dondur winterschill
                     //CheckAround(hit.collider.gameObject);
 
-                    //DropMana(1);             //Vitruvian Firstborn  destedeki kaertlarýn maliyetini 1 azalt
+                    //DropMana(1);             //Vitruvian Firstborn  destedeki kaertlar?n maliyetini 1 azalt
 
 
-                    //MultipleCreateCard("Hoplite", "2", 2,7);                 //athena ön cepheyi doldur
-                    //MultipleCreateCard("Spirits of Warriors ", "1", 1, 2);                 //Valkyrie's Chosen 2 tane spirits çaðýr
+                    //MultipleCreateCard("Hoplite", "2", 2,7);                 //athena ?n cepheyi doldur
+                    //MultipleCreateCard("Spirits of Warriors ", "1", 1, 2);                 //Valkyrie's Chosen 2 tane spirits ?a??r
 
                     
                 }
             }
+
         }
     }
 
@@ -86,17 +92,17 @@ public class CardsFunction : MonoBehaviour
 
         if(targetInfo.CardName== "Nemean Lion")
         {
-            damageDealt = 1;                                                                                       //saldýrýlan kart nemean lion ise 1 hasar ver
+            damageDealt = 1;                                                                                       //sald?r?lan kart nemean lion ise 1 hasar ver
         }
         else if(targetInfo.CardName== "Mirror Shield Automaton")
         {
             int attackerHealth = int.Parse(attackerInfo.CardHealth);
-            attackerHealth -= 1;                                                                                   // Mirror Shield Automaton'a saldýranýn canýný 1 azalt
+            attackerHealth -= 1;                                                                                   // Mirror Shield Automaton'a sald?ran?n can?n? 1 azalt
             attackerInfo.CardHealth = attackerHealth.ToString();
         }
         else if(targetInfo.CardName== "Spartan Hoplite")
         {
-            targetInfo.CardDamage += 1;                                                                            //Spartan Hoplitea saldýrýlýrsa spartan hoplite 1 saldýrý gücü alýr
+            targetInfo.CardDamage += 1;                                                                            //Spartan Hoplitea sald?r?l?rsa spartan hoplite 1 sald?r? g?c? al?r
         }
         else if(targetInfo.CardName== "Wasteland Giant")
         {
@@ -104,7 +110,7 @@ public class CardsFunction : MonoBehaviour
         }
         else if(targetInfo.CardName== "Minotaur Labyrinth Keeper")
         {
-            targetInfo.CardDamage += 1;                                                                             //Minotaur Labyrinth Keeper hasar alýrsa damagi 1 artsýn
+            targetInfo.CardDamage += 1;                                                                             //Minotaur Labyrinth Keeper hasar al?rsa damagi 1 arts?n
         }
         
         targetHealth -= damageDealt;
@@ -112,30 +118,35 @@ public class CardsFunction : MonoBehaviour
 
         if (attackerInfo.CardName == "Automaton Duelist")
         {
-            attacker.GetComponent<CardInformation>().CardDamage += 1;                                              //Automaton Duelist saldýrdýktan sonra saldýrý deðeri 1 artar
+            attacker.GetComponent<CardInformation>().CardDamage += 1;                                              //Automaton Duelist sald?rd?ktan sonra sald?r? de?eri 1 artar
         }
         else if (attackerInfo.CardName == "Knight Errant")
         {
-            int attackerHealth = int.Parse(attackerInfo.CardHealth);                                              //Knight Errant saldýrdýktan sonra can deðeri 1 artar
+            int attackerHealth = int.Parse(attackerInfo.CardHealth);                                              //Knight Errant sald?rd?ktan sonra can de?eri 1 artar
             attackerHealth += 1;
             attackerInfo.CardHealth= attackerHealth.ToString();
         }
         else if(attackerInfo.CardName== "Minor Glacial Elemental")
         {
-            targetInfo.CardFreeze = true;                                                                        //Minor Glacial Elemental saldýrdýðý düþman donar
+            targetInfo.CardFreeze = true;                                                                        //Minor Glacial Elemental sald?rd??? d??man donar
         }
 
         if (targetHealth <= 0)
         {
             if(attackerInfo.CardName == "Viking Raider")
             {
-                //viking raider adam öldürürse mana 1 artýr
+                //viking raider adam ?ld?r?rse mana 1 art?r
             }
             Destroy(target);
+
+         
+
         }
 
         firstSelectedCard = null;
     }
+
+   
 
     private void StandartDamage(GameObject target, int damage)
     {
@@ -179,7 +190,7 @@ public class CardsFunction : MonoBehaviour
             if(cardInfo.CardMana > 0)
             {
                 cardInfo.CardMana -= mana;    
-                Debug.Log("Düþtü");
+                Debug.Log("D??t?");
             }
             else
             {
@@ -211,7 +222,7 @@ public class CardsFunction : MonoBehaviour
 
         if(targetInfo.CardName== "Jade Monk")
         {
-            target.GetComponent<CardInformation>().CardDamage += 1;                                   //      Jade Monk her iyileþmede +1 saldýrý kazanýr
+            target.GetComponent<CardInformation>().CardDamage += 1;                                   //      Jade Monk her iyile?mede +1 sald?r? kazan?r
         }
 
         Debug.Log( " healed " + targetInfo.CardName + " for " + health + " value!");
@@ -269,10 +280,10 @@ public class CardsFunction : MonoBehaviour
                 {
                     if (overlappingColliders[i].gameObject.name == "Card_Prefab(Clone)")
                     {
-                        Debug.Log(childCollider + " ile çarpýþan obje: " + overlappingColliders[i].gameObject.name);
+                        Debug.Log(childCollider + " ile ?arp??an obje: " + overlappingColliders[i].gameObject.name);
                         //StandartAttack(target, overlappingColliders[i].gameObject);    
 
-                        //StandartDamage(overlappingColliders[i].gameObject, 1);               //komþulara 1 hasar winterschill
+                        //StandartDamage(overlappingColliders[i].gameObject, 1);               //kom?ulara 1 hasar winterschill
                         //StandartFreeze(overlappingColliders[i].gameObject);
 
                         if (target.GetComponent<CardInformation>().CardName == "Pyramid's Might")
@@ -281,7 +292,7 @@ public class CardsFunction : MonoBehaviour
 
                             int targetHealth = int.Parse(targetInfo.CardHealth);
 
-                            targetHealth += 1;                                                                         //  Pyramid's Might etrafýndakilerin canýna ve damagine +1 veriyor
+                            targetHealth += 1;                                                                         //  Pyramid's Might etraf?ndakilerin can?na ve damagine +1 veriyor
                             targetInfo.CardHealth = targetHealth.ToString();
 
                             targetInfo.CardDamage += 1;
@@ -297,13 +308,13 @@ public class CardsFunction : MonoBehaviour
     {
         int randomIndex = Random.Range(0, cards.Count);
 
-        // Seçilen rastgele kart
+        // Se?ilen rastgele kart
         GameObject selectedCard = cards[randomIndex];
 
-        Debug.Log("Rastgele seçilen kart: " + selectedCard.GetComponent<CardInformation>().CardName);
+        Debug.Log("Rastgele se?ilen kart: " + selectedCard.GetComponent<CardInformation>().CardName);
         //PlusDamage(selectedCard, 1);
 
-        //PlusDamage(selectedCard, 2);                                                 //her büyüden sonra rastgele bir dosta 2 can 2 hasar ver  Anatomist of the Unknown 
+        //PlusDamage(selectedCard, 2);                                                 //her b?y?den sonra rastgele bir dosta 2 can 2 hasar ver  Anatomist of the Unknown 
         //StandartHealth(selectedCard, 2);
 
         if (firstSelectedCard.GetComponent<CardInformation>().CardName== "Falcon-Eyed Hunter")
@@ -341,11 +352,11 @@ public class CardsFunction : MonoBehaviour
                 CreateUsedCard(emptySlots[j], name, "", health, damage, 0);
             }
 
-            Debug.Log(cardsToCreate + " kart rastgele boþ yerlere oluþturuldu.");
+            Debug.Log(cardsToCreate + " kart rastgele bo? yerlere olu?turuldu.");
         }
         else
         {
-            Debug.Log("Hiç boþ yer yok.");
+            Debug.Log("Hi? bo? yer yok.");
         }
     }
 
@@ -374,7 +385,7 @@ public class CardsFunction : MonoBehaviour
     {
         if (cards.Count == 0)
         {
-            Debug.Log("Hiç kart yok.");
+            Debug.Log("Hi? kart yok.");
             return;
         }
 
@@ -441,15 +452,15 @@ public class CardsFunction : MonoBehaviour
                         {
                             howMuch++;
                             ownCards.Add(areaCollision.transform.GetChild(0).gameObject);
-                            //PlusDamage(areaCollision.transform.GetChild(0).gameObject, 2);   //minyonlara 2 artý hasar verir Mongol Fury
-                            //StandartHealth(areaCollision.transform.GetChild(0).gameObject, 3); //Wandering Healer tüm dostlara 3 can ver
+                            //PlusDamage(areaCollision.transform.GetChild(0).gameObject, 2);   //minyonlara 2 art? hasar verir Mongol Fury
+                            //StandartHealth(areaCollision.transform.GetChild(0).gameObject, 3); //Wandering Healer t?m dostlara 3 can ver
                             //ownCards.Add(areaCollision.transform.GetChild(0).gameObject);
-                            //StandartDamage(areaCollision.transform.GetChild(0).gameObject, 3);  //Wasteland Giant hasar aldýðýnda herkese 3 hasar ver
+                            //StandartDamage(areaCollision.transform.GetChild(0).gameObject, 3);  //Wasteland Giant hasar ald???nda herkese 3 hasar ver
                             /*if (areaCollision.transform.GetChild(0).gameObject.GetComponent<CardInformation>().CardName== "Automaton Apprentice")
                             {
                                 CardInformation targetInfo = areaCollision.transform.GetChild(0).gameObject.GetComponent<CardInformation>();
 
-                                int targetHealth = int.Parse(targetInfo.CardHealth);                                                                         //büyüden sonra     Automaton Apprentice karakteri varsa  +! can alsýn
+                                int targetHealth = int.Parse(targetInfo.CardHealth);                                                                         //b?y?den sonra     Automaton Apprentice karakteri varsa  +! can als?n
 
                                 targetHealth += 1;
                                 targetInfo.CardHealth = targetHealth.ToString();
@@ -494,7 +505,7 @@ public class CardsFunction : MonoBehaviour
                         if (childCount > 0)
                         {
                             howMuch++;
-                            //DropDamage(areaCollision.transform.GetChild(0).gameObject, 2);      //ön hat saldýrý 2 eksilt Mutant Behemoth 
+                            //DropDamage(areaCollision.transform.GetChild(0).gameObject, 2);      //?n hat sald?r? 2 eksilt Mutant Behemoth 
                         }
                         else
                         {
@@ -513,9 +524,9 @@ public class CardsFunction : MonoBehaviour
                         {
                             howMuch++;
                             _enemyCards.Add(areaCollision.transform.GetChild(0).gameObject);
-                            //StandartFreeze(areaCollision.transform.GetChild(0).gameObject);       // tüm düþmanlarý dondur gorgon
-                            //StandartDamage(areaCollision.transform.GetChild(0).gameObject,2);     //tüm düþmanlara 2 hasar ver chimera  ve Lightning Storm ve Wasteland Sniper 
-                            //StandartDamage(areaCollision.transform.GetChild(0).gameObject,1);     //Pyromaniac Wizard tüm düþmanlara 1 hasar ver
+                            //StandartFreeze(areaCollision.transform.GetChild(0).gameObject);       // t?m d??manlar? dondur gorgon
+                            //StandartDamage(areaCollision.transform.GetChild(0).gameObject,2);     //t?m d??manlara 2 hasar ver chimera  ve Lightning Storm ve Wasteland Sniper 
+                            //StandartDamage(areaCollision.transform.GetChild(0).gameObject,1);     //Pyromaniac Wizard t?m d??manlara 1 hasar ver
                         }
                         else
                         {
@@ -530,23 +541,23 @@ public class CardsFunction : MonoBehaviour
                     
                         while (randomIndex1 == randomIndex2)
                         {
-                            randomIndex2 = Random.Range(0, _enemyCards.Count); // Ýkinci indexi tekrar seç
+                            randomIndex2 = Random.Range(0, _enemyCards.Count); // ?kinci indexi tekrar se?
                         }
                     
-                        // Ýki farklý kartý seçip her birine hasar ver                                                                       //Urban Ranger rastgele 2 düþman 2 hasar ver
+                        // ?ki farkl? kart? se?ip her birine hasar ver                                                                       //Urban Ranger rastgele 2 d??man 2 hasar ver
                         StandartDamage(_enemyCards[randomIndex1], 2);
                         StandartDamage(_enemyCards[randomIndex2], 2);
                     
-                        Debug.Log("Rastgele 2 farklý düþman kartýna 2'þer hasar verildi.");
+                        Debug.Log("Rastgele 2 farkl? d??man kart?na 2'?er hasar verildi.");
                     }
                     else if (_enemyCards.Count == 1)
                     {
                         StandartDamage(_enemyCards[0], 2);
-                        Debug.Log("Sadece bir düþman kartý olduðu için ona 2 hasar verildi.");
+                        Debug.Log("Sadece bir d??man kart? oldu?u i?in ona 2 hasar verildi.");
                     }
                     else
                     {
-                        Debug.Log("Yeterli düþman kartý yok.");
+                        Debug.Log("Yeterli d??man kart? yok.");
                     }*/
                 }
                 break;

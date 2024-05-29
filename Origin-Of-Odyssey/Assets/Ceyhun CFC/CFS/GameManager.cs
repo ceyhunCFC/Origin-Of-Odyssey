@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameObject Panel;
     PhotonView PV;
 
+   
+
     private void Awake()
     {
         /*if (Instance == null)

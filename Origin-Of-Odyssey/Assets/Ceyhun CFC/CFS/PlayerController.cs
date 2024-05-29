@@ -47,14 +47,17 @@ public class PlayerController : MonoBehaviour
 
     GameObject selectedCard;
     GameObject lastHoveredCard = null;
+    CardProgress _CardProgress;
 
     private Vector3 initialCardPosition;
 
     void Start()
     {
+        //_CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
+
         PV = GetComponent<PhotonView>();
         _GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        _CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
+        _CardProgress = GetComponent<CardProgress>();
 
         if (!PV.IsMine)
         {
@@ -89,12 +92,12 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
         {
-            selectCard();
+            SelectCardFromDeck();
 
         }
         else if (Input.GetMouseButtonDown(0) && !PV.Owner.IsMasterClient && _GameManager.Turn == true)
         {
-            selectCard();
+            SelectCardFromDeck();
 
         }
         else if (Input.GetMouseButtonDown(0))
@@ -106,7 +109,7 @@ public class PlayerController : MonoBehaviour
         {
             if(selectedCard!=null)
             {
-                DragCard();
+                DragCardAfterSelect();
             }
             
 
@@ -115,7 +118,7 @@ public class PlayerController : MonoBehaviour
         {
             if (selectedCard != null)
             {
-                DragCard();
+                DragCardAfterSelect();
             }
 
         }
@@ -151,7 +154,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
             {
-                scaleCard();
+                ScaleDeckCard();
             }
 
         }
@@ -159,7 +162,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
             {
-                scaleCard();
+                ScaleDeckCard();
             }
 
         }
@@ -171,7 +174,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void scaleCard()
+    void ScaleDeckCard()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -231,7 +234,7 @@ public class PlayerController : MonoBehaviour
         target.localScale = targetScale;
     }
 
-    void selectCard()
+    void SelectCardFromDeck()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -252,16 +255,18 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.gameObject.tag == "UsedCard")
             {
-                _CardFunction.SelectFirstCard(hit.collider.gameObject);
+                // _CardFunction.SelectFirstCard(hit.collider.gameObject);
+                print(hit.collider.gameObject.transform.parent);
+                _CardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject));
             }
 
         }
     }
 
-    void DragCard()
+    void DragCardAfterSelect()
     {
         Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 5f;       //kartın ekrana uzaklığı
+        mousePosition.z = 0.5f;       //kartın ekrana uzaklığı
         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         float followSpeed = 5f; // Kartın takip hızı
         selectedCard.transform.position = Vector3.Lerp(selectedCard.transform.position, targetPosition, Time.deltaTime * followSpeed);
@@ -319,7 +324,7 @@ public class PlayerController : MonoBehaviour
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
 
-                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
                         selectedCard.GetComponent<CardInformation>().CardName,
                         selectedCard.GetComponent<CardInformation>().CardDes,
                         selectedCard.GetComponent<CardInformation>().CardHealth,
@@ -350,7 +355,7 @@ public class PlayerController : MonoBehaviour
         Vector3 startPosition = card.transform.position;
         float time = 0f;
 
-        Vector3 targetPlus = targetPosition + new Vector3(0f, 0.8f, 0f);
+        Vector3 targetPlus = targetPosition + new Vector3(0f, 0.4f, 0.8f);
 
         while (time < duration)
         {
@@ -460,6 +465,9 @@ public class PlayerController : MonoBehaviour
         if (PV.IsMine)
         {
             GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform);
+            CardCurrent.tag = "CompetitorCard";
+
+          //  CardCurrent.GetComponent<PhotonView>().ViewID = OwnDeck.Length;
             CardCurrent.transform.localScale = Vector3.one;
             CardCurrent.transform.eulerAngles = new Vector3(90,0,180);
 
@@ -575,7 +583,28 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 0, 3f);
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 1.95f, -0.86f);
+
+    }
+
+    public void DeleteAreaCard(int TargetCardIndex)
+    {
+        if (PV.IsMine)
+        {
+            Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
+
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_DeleteAreaCard", RpcTarget.All, TargetCardIndex);
+        }
+    }
+
+    [PunRPC]
+    void RPC_DeleteAreaCard(int TargetCardIndex)
+    {
+        if (!PV.IsMine)
+            return;
+
+
+         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
 
     }
 
@@ -746,7 +775,7 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 2.5f, -3.8f);
+        GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 2.7f, -3.81f);
 
     }
 
@@ -760,7 +789,7 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 0, 3);
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.95f, -0.86f);
 
     }
 
