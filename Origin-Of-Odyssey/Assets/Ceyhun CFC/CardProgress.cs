@@ -33,7 +33,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 {
                     TargetCard = hit.collider.gameObject;
                     TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, hit.collider.gameObject.transform.parent.gameObject);
-                    print(TargetCardIndex);
+                   
                     StandartDamage(AttackerCard,TargetCard);
 
 
@@ -47,14 +47,20 @@ public class CardProgress : MonoBehaviourPunCallbacks
         CardInformation AttackerInfo = Attacker.GetComponent<CardInformation>();
         CardInformation TargetInfo = Target.GetComponent<CardInformation>();
 
-        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 1).ToString(); // SADECE BİR DAMAGE VURUYOR
+
+        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 1).ToString(); // SADECE BİR DAMAGE VURUYOR         
+
+         GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth);
+
         TargetInfo.SetInformation();
 
-        if (int.Parse(TargetInfo.CardHealth) <= 0)
+
+
+        if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET
         {
-            //  Target.GetComponent<CardController>().DestroyObject(TargetCardIndex);
+          
             GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
-         //   Target.GetComponent<CardController>().SetInformation();
+        
         }
     }
 

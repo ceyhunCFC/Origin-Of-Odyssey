@@ -609,6 +609,37 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    public void RefreshUsedCard(int boxindex, string heatlh)
+    {
+        if (PV.IsMine)
+        {
+        //   GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>().CardHealthText.text = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>().CardHealth;
+
+
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshUsedCard", RpcTarget.All, boxindex, heatlh);
+        }
+
+
+    }
+
+    [PunRPC]
+    public void RPC_RefreshUsedCard(int boxindex, string heatlh)
+    {
+
+        if (PV.IsMine)
+        {
+            GameObject CardCurrent = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject;
+         
+            CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
+            CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+        }
+    }
+
+    
+
+   
+
     [PunRPC]
     public void BeginerFunction() // Tur bize geçtiğinde çalışan fonksion
     {
