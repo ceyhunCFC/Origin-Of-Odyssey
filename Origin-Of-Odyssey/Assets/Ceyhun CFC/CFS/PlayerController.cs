@@ -310,7 +310,7 @@ public class PlayerController : MonoBehaviour
                 Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
 
 
-                if (selectedCard.GetComponent<CardInformation>().CardName == "Heracles")
+                if (selectedCard.GetComponent<CardInformation>().CardName == "Heracles") // MASAYA EKLENEN KART NEDİR
                 {
                     selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + (2 * DeadMonsterCound)).ToString();
                     selectedCard.GetComponent<CardInformation>().CardDamage += (2 * DeadMonsterCound);
@@ -328,6 +328,28 @@ public class PlayerController : MonoBehaviour
                             GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().SetInformation();
                         }
                     }
+
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Odyssean Navigator")
+                {
+                    print("ODYYYYYSEAAANN");
+
+                    //  CreateRandomCard();
+
+                    GameObject spawnedObject = SpawnAndReturnGameObject();
+
+                    if (spawnedObject.GetComponent<CardInformation>().CardHealth=="")
+                    {
+                        print("ODYYYYYSEAAANN SPEEEELLL YARATTTI ");
+                        spawnedObject.GetComponent<CardInformation>().CardMana--;
+
+                    }
+                    else
+                    {
+                        print("ODYYYYYSEAAANN MİNNYOONNNN YARATTTI ");
+                    }
+
                 }
 
 
@@ -576,7 +598,7 @@ public class PlayerController : MonoBehaviour
         CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
         CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
 
-        print(_GameManager.ManaCount);
+   
     }
 
     public void FinishButton()
@@ -638,7 +660,33 @@ public class PlayerController : MonoBehaviour
      
     }
 
-    public void CreateSpellCard()
+    public GameObject SpawnAndReturnGameObject()
+    {
+
+        if (PV.IsMine)
+        {
+            GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+
+            float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+            CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+            CreateCard(CardCurrent);
+            StackDeck();
+            StackCompetitorDeck();
+            DeckCardCount++;
+
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+
+            return CardCurrent;
+        }
+        else
+        {
+            return null;
+        }
+
+
+    }
+
+    public void CreateRandomCard() /// BOŞTA
     {
         if (PV.IsMine)
         {
@@ -651,12 +699,12 @@ public class PlayerController : MonoBehaviour
             StackCompetitorDeck();
             DeckCardCount++;
 
-            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateSpellCard", RpcTarget.All);
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
         }
     }
 
     [PunRPC]
-    void RPC_CreateSpellCard()
+    void RPC_CreateRandomCard()
     {
         if (!PV.IsMine)
             return;

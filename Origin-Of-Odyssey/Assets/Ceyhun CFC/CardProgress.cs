@@ -101,9 +101,6 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
         //FillWithHoplites(); // ON SIRAYI DOLDURUR -- Athena
 
-        //AddSpell(); // DESTEYE YENİ BİR KART EKLİYOR (+1 SPELL HASARI VERMEKSİ GEREKİYORDU YANLIŞLIKLA DESTEYE BİR KART EKLENME OLARAK YAPILDI) -- Stormcaller
-
-
 
 
 
@@ -228,11 +225,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
     }
 
-    void AddSpell()
-    {
-        GetComponent<PlayerController>().CreateSpellCard();
-
-    }
+   
 
     void Siren(GameObject Attacker, GameObject Target)
     {
