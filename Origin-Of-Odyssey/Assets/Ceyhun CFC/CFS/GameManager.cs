@@ -11,11 +11,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     [HideInInspector] public static GameManager Instance;
     [HideInInspector] public bool Turn = false; // FALSE IS MASTER TURN - TRUE IS OTHER TURN
-    [HideInInspector] public int ManaCount = 1;
+    [HideInInspector] public float ManaCount = 1;
     [HideInInspector] public string MasterPlayerName = "";
     [HideInInspector] public string OtherPlayerName = "";
-    [HideInInspector] public int MasterHealth = 10;
-    [HideInInspector] public int OtherHealth = 10;
+    [HideInInspector] public int MasterHealth = 30;
+    [HideInInspector] public int OtherHealth = 30;
     [HideInInspector] public string[] MasterDeck;
     [HideInInspector] public string[] OtherDeck;
     [HideInInspector] public string MasterMainCard = "";
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             Panel.SetActive(true);
-            WinningName.text = OtherPlayerName + " WON!";
+            WinningName.text = OtherPlayerName;
 
             StartCoroutine(LoadMainMenu());
 

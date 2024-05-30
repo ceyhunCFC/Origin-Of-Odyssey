@@ -68,6 +68,9 @@ MonoBehaviour:
   - RPC_DeleteAreaCard
   - RPC_RefreshInfoAreaCard
   - RPC_RefreshUsedCard
+  - RPC_CreateHoplitesCard
+  - RPC_CreateSpellCard
+  - RPC_CreateRandomCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

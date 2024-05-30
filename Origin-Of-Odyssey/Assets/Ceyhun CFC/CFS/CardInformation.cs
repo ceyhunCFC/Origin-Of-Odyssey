@@ -11,6 +11,9 @@ public class CardInformation : MonoBehaviour
     public int CardDamage;
     public int CardMana;
     public bool CardFreeze;
+    public bool isItFirstRaound = true;
+    public bool FirstTakeDamage = true;
+
 
     public Text CardNameText;
     public Text CardDesText;

@@ -524,7 +524,7 @@ public class CardsFunction : MonoBehaviour
                         {
                             howMuch++;
                             _enemyCards.Add(areaCollision.transform.GetChild(0).gameObject);
-                            //StandartFreeze(areaCollision.transform.GetChild(0).gameObject);       // t?m d??manlar? dondur gorgon
+                            StandartFreeze(areaCollision.transform.GetChild(0).gameObject);       // t?m d??manlar? dondur gorgon
                             //StandartDamage(areaCollision.transform.GetChild(0).gameObject,2);     //t?m d??manlara 2 hasar ver chimera  ve Lightning Storm ve Wasteland Sniper 
                             //StandartDamage(areaCollision.transform.GetChild(0).gameObject,1);     //Pyromaniac Wizard t?m d??manlara 1 hasar ver
                         }
