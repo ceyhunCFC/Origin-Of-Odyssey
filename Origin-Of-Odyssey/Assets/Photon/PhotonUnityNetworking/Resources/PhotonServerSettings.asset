@@ -71,6 +71,8 @@ MonoBehaviour:
   - RPC_CreateHoplitesCard
   - RPC_CreateSpellCard
   - RPC_CreateRandomCard
+  - RPC_RotateAndRevert
+  - RPC_CallRotateAndRevert
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

@@ -319,7 +319,7 @@ public class PlayerController : MonoBehaviour
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Stormcaller")
                 {
                   
-                    for (int i = 0; i < GameObject.Find("Deck").transform.GetChildCount(); i++) // KENDİ DESTEMİZDEKİ KARTLARI TEK TEK ÇAĞIR
+                    for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++) // KENDİ DESTEMİZDEKİ KARTLARI TEK TEK ÇAĞIR
                     {
                        
                         if (GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().CardHealth=="")  // ÇAĞIRILAN KARTIN BÜYÜ MÜ OLDUĞU KONTROL ET
@@ -351,6 +351,35 @@ public class PlayerController : MonoBehaviour
                     }
 
                 }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Oracle's Emissary")
+                {
+                    List<GameObject> OwnSpellCards = new List<GameObject>();
+
+                    for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++) // KENDİ DESTEMİZDEKİ KARTLARI TEK TEK ÇAĞIR
+                    {
+                        if (GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().CardHealth == "")  // ÇAĞIRILAN KARTIN BÜYÜ MÜ OLDUĞU KONTROL ET
+                        {
+                            OwnSpellCards.Add(GameObject.Find("Deck").transform.GetChild(i).gameObject);
+                        }
+                    }
+
+                    
+                    if (OwnSpellCards.Count>0)
+                    {
+                        int randomspell = UnityEngine.Random.Range(0, OwnSpellCards.Count);
+
+                       // OwnSpellCards[randomspell].transform.eulerAngles = new Vector3(0,90,0);
+                        print(OwnSpellCards[randomspell]);
+
+
+                       // StartCoroutine(RotateAndRevert(OwnSpellCards[randomspell],randomspell));
+
+                        CallRotateAndRevert(OwnSpellCards[randomspell]);
+                    }
+
+
+                }
+
 
 
 
@@ -410,7 +439,65 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+   
+
     
+    void CallRotateAndRevert(GameObject RotateCard)
+    {
+
+        if (PV.IsMine)
+        {
+
+            StartCoroutine(RotateAndRevert(RotateCard));
+           
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CallRotateAndRevert", RpcTarget.All, RotateCard.GetComponent<CardInformation>().CardName, RotateCard.GetComponent<CardInformation>().CardDes, RotateCard.GetComponent<CardInformation>().CardHealth, RotateCard.GetComponent<CardInformation>().CardDamage, RotateCard.GetComponent<CardInformation>().CardMana);
+
+        }
+
+    }
+
+    [PunRPC]
+    void RPC_CallRotateAndRevert(string name, string des, string heatlh, int damage, int mana)
+    {
+        if (!PV.IsMine)
+            return;
+
+
+        int randomcard = UnityEngine.Random.Range(0, GameObject.Find("CompetitorDeck").transform.childCount);
+
+        GameObject.Find("CompetitorDeck").transform.GetChild(randomcard).GetComponent<CardInformation>().CardName = name;
+        GameObject.Find("CompetitorDeck").transform.GetChild(randomcard).GetComponent<CardInformation>().CardHealth = heatlh;
+        GameObject.Find("CompetitorDeck").transform.GetChild(randomcard).GetComponent<CardInformation>().CardDamage = damage;
+        GameObject.Find("CompetitorDeck").transform.GetChild(randomcard).GetComponent<CardInformation>().CardDes = des;
+        GameObject.Find("CompetitorDeck").transform.GetChild(randomcard).GetComponent<CardInformation>().CardMana = mana;
+        GameObject.Find("CompetitorDeck").transform.GetChild(randomcard).GetComponent<CardInformation>().SetInformation();
+
+
+       
+        StartCoroutine(RotateAndRevert(GameObject.Find("CompetitorDeck").transform.GetChild(randomcard).gameObject));
+
+
+    }
+
+    IEnumerator RotateAndRevert(GameObject RotateCard)
+    {
+
+        Quaternion originalRotation = RotateCard.transform.rotation;
+
+        // 180 derece döndür
+        RotateCard.transform.Rotate(0, 180, 0);
+
+       
+
+        // 2 saniye bekle
+        yield return new WaitForSeconds(20);
+
+        // Eski rotasyona geri döndür
+        RotateCard.transform.rotation = originalRotation;
+
+    }
+
     IEnumerator MoveAndRotateCard(GameObject card, Vector3 targetPosition,  float duration)
     {
         Vector3 startPosition = card.transform.position;
@@ -709,7 +796,7 @@ public class PlayerController : MonoBehaviour
         if (!PV.IsMine)
             return;
 
-        GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("CompetitorDeck").transform);
+        GameObject card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
 
         float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
         card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
@@ -891,7 +978,7 @@ public class PlayerController : MonoBehaviour
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("CompetitorDeck").transform);
+                    GameObject card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
 
                     float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                     card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
@@ -905,7 +992,7 @@ public class PlayerController : MonoBehaviour
             }
             else // DIĞER TURLAR
             {
-                GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("CompetitorDeck").transform);
+                GameObject CardCurrent = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
 
                 float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                 CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
@@ -1139,7 +1226,7 @@ public class PlayerController : MonoBehaviour
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("CompetitorDeck").transform);
+                        GameObject card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
 
                         float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                         card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
