@@ -9,9 +9,9 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
-    PhotonView PV;
+    public PhotonView PV;
     GameManager _GameManager;
-    GameObject CompetitorPV = null;
+    public GameObject CompetitorPV = null;
     CardsFunction _CardFunction;
 
     public GameObject CardPrefabSolo; // Tek kart
@@ -22,12 +22,14 @@ public class PlayerController : MonoBehaviour
     string[] OwnDeck;
     string OwnMainCard = "";
     float OwnHealth = 0;
+    float OwnHeroAttackDamage = 0;
 
 
     string CompetitorName = "";
     string[] CompetitorDeck;
     string CompetitorMainCard = "";
     float CompetitorHealth = 0;
+    float CompetitorHeroAttackDamage = 0;
 
     public Text OwnNameText;
     public Text OwnDeckText;
@@ -58,6 +60,9 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 initialCardPosition;
 
+    public Text OwnHeroAttackDamageText;
+    public Text CompetitorHeroAttackDamageText;
+
     void Start()
     {
         //_CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
@@ -70,6 +75,9 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<PlayerController>().transform.GetChild(0).gameObject.SetActive(false);
         }
+
+
+
 
         GetDataForUI();
     }
@@ -91,7 +99,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0))
         {
-            Debug.LogError("IT IS NOT YOUR TURN!");
+            Debug.LogWarning("IT IS NOT YOUR TURN!");
         }
 
         if (Input.GetMouseButton(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -113,7 +121,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
-            Debug.LogError("IT IS NOT YOUR TURN!");
+            Debug.LogWarning("IT IS NOT YOUR TURN!");
         }
 
         if (Input.GetMouseButtonUp(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -134,7 +142,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            Debug.LogError("IT IS NOT YOUR TURN!");
+            Debug.LogWarning("IT IS NOT YOUR TURN!");
         }
 
 
@@ -157,7 +165,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            Debug.LogError("IT IS NOT YOUR TURN!");
+            Debug.LogWarning("IT IS NOT YOUR TURN!");
         }  
 
 
@@ -245,16 +253,16 @@ public class PlayerController : MonoBehaviour
             else if (hit.collider.gameObject.tag == "UsedCard")
             {
                 // _CardFunction.SelectFirstCard(hit.collider.gameObject);
-                print(hit.collider.gameObject.transform.parent);
+                Debug.LogWarning(hit.collider.gameObject.transform.parent);
+                _CardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject));
 
                 if (hit.collider.gameObject.GetComponent<CardInformation>().isItFirstRaound==true)
                 {
-                    _CardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject));
-                    print("İLK TURU");
+                    Debug.LogWarning("İLK TURU");
                 }
                 else
                 {
-                    print("İLK TURU DEGIL");
+                    Debug.LogWarning("İLK TURU DEGIL");
                 }
             }
 
@@ -309,7 +317,8 @@ public class PlayerController : MonoBehaviour
 
                 Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
 
-
+                //////////////////////////////////// DESTEDEN BİR KART MASYA EKLENDİĞİ ZAMAN ///////////////////////////////
+                
                 if (selectedCard.GetComponent<CardInformation>().CardName == "Heracles") // MASAYA EKLENEN KART NEDİR
                 {
                     selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + (2 * DeadMonsterCound)).ToString();
@@ -333,7 +342,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Odyssean Navigator")
                 {
-                    print("ODYYYYYSEAAANN");
+                    Debug.LogWarning("ODYYYYYSEAAANN");
 
                     //  CreateRandomCard();
 
@@ -341,13 +350,13 @@ public class PlayerController : MonoBehaviour
 
                     if (spawnedObject.GetComponent<CardInformation>().CardHealth=="")
                     {
-                        print("ODYYYYYSEAAANN SPEEEELLL YARATTTI ");
+                        Debug.LogWarning("ODYYYYYSEAAANN SPEEEELLL YARATTTI ");
                         spawnedObject.GetComponent<CardInformation>().CardMana--;
 
                     }
                     else
                     {
-                        print("ODYYYYYSEAAANN MİNNYOONNNN YARATTTI ");
+                        Debug.LogWarning("ODYYYYYSEAAANN MİNNYOONNNN YARATTTI ");
                     }
 
                 }
@@ -369,7 +378,7 @@ public class PlayerController : MonoBehaviour
                         int randomspell = UnityEngine.Random.Range(0, OwnSpellCards.Count);
 
                        // OwnSpellCards[randomspell].transform.eulerAngles = new Vector3(0,90,0);
-                        print(OwnSpellCards[randomspell]);
+                        Debug.LogWarning(OwnSpellCards[randomspell]);
 
 
                        // StartCoroutine(RotateAndRevert(OwnSpellCards[randomspell],randomspell));
@@ -377,6 +386,60 @@ public class PlayerController : MonoBehaviour
                         CallRotateAndRevert(OwnSpellCards[randomspell]);
                     }
 
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Lightning Forger")
+                {
+
+                    if (PV.IsMine)
+                    {
+                        if (PV.Owner.IsMasterClient)
+                        {
+                          
+                           
+                            _GameManager.MasterAddAttackDamage(3);
+                            Debug.LogWarning(_GameManager.MasterAttackDamage);
+                          
+                        }
+                        else
+                        {
+                          
+                         
+                            _GameManager.OtherAddAttackDamage(3);
+                            Debug.LogWarning(_GameManager.OtherAttackDamage);
+
+                        }
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Lightning Bolt")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                    GetComponent<CardProgress>().SirenWorks = true;
+                    GetComponent<CardProgress>().AttackerCard = selectedCard;
+
+
+                    selectedCard.SetActive(false);
+
+                   
+                    selectedCard = null;
+                    lastHoveredCard = null;
+                   
+                    Debug.LogWarning("USSEEDD A SPEEELLL");
+                    return;
 
                 }
 
@@ -388,7 +451,7 @@ public class PlayerController : MonoBehaviour
                 CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
                 CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
 
-                selectedCard.GetComponent<CardController>().UsedCard(selectedCard.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+//                selectedCard.GetComponent<CardController>().UsedCard(selectedCard.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient); // HERO YA DAMAGE VURMA
 
                 selectedCard.tag = "UsedCard";
                 DeckCardCount--;
@@ -397,7 +460,7 @@ public class PlayerController : MonoBehaviour
                
                 if (PV.IsMine)
                 {
-                    print(Boxindex);
+                    Debug.LogWarning(Boxindex);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
 
@@ -430,6 +493,7 @@ public class PlayerController : MonoBehaviour
                 return; 
             }
         }
+
         if (selectedCard != null)
         {
             selectedCard.GetComponent<Renderer>().material.color = Color.white;
@@ -450,7 +514,12 @@ public class PlayerController : MonoBehaviour
         {
 
             StartCoroutine(RotateAndRevert(RotateCard));
-           
+
+            if (RotateCard.GetComponent<CardInformation>().CardMana>=4)
+            {
+                RotateCard.GetComponent<CardController>().AddHealCard(4, PV.Owner.IsMasterClient);
+            }
+
             CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CallRotateAndRevert", RpcTarget.All, RotateCard.GetComponent<CardInformation>().CardName, RotateCard.GetComponent<CardInformation>().CardDes, RotateCard.GetComponent<CardInformation>().CardHealth, RotateCard.GetComponent<CardInformation>().CardDamage, RotateCard.GetComponent<CardInformation>().CardMana);
 
         }
@@ -491,7 +560,7 @@ public class PlayerController : MonoBehaviour
        
 
         // 2 saniye bekle
-        yield return new WaitForSeconds(20);
+        yield return new WaitForSeconds(2);
 
         // Eski rotasyona geri döndür
         RotateCard.transform.rotation = originalRotation;
@@ -647,45 +716,63 @@ public class PlayerController : MonoBehaviour
                 OwnHealth = _GameManager.MasterHealth;
                 CompetitorHealth = _GameManager.OtherHealth;
 
+                OwnHeroAttackDamage = _GameManager.MasterAttackDamage;
+                CompetitorHeroAttackDamage = _GameManager.OtherAttackDamage;
+
                 /*OwnHealthText.text = OwnHealth.ToString() + "/30";
                 OwnHealthBar.fillAmount = OwnHealth / 30;
 
                 CompetitorHealthText.text = CompetitorHealth.ToString() + "/30";
                 CompetitorHealthBar.fillAmount = CompetitorHealth / 30;*/
 
-                RefreshUI(OwnHealth,CompetitorHealth);
+                RefreshUI(OwnHealth,CompetitorHealth, OwnHeroAttackDamage, CompetitorHeroAttackDamage);
             }
             else
             {
                 OwnHealth = _GameManager.OtherHealth;
                 CompetitorHealth = _GameManager.MasterHealth;
 
-               /* OwnHealthText.text = OwnHealth.ToString() + "/30";
-                OwnHealthBar.fillAmount = OwnHealth / 30;
+                OwnHeroAttackDamage = _GameManager.OtherAttackDamage;
+                CompetitorHeroAttackDamage = _GameManager.MasterAttackDamage;
 
-                CompetitorHealthText.text = CompetitorHealth.ToString() + "/30";
-                CompetitorHealthBar.fillAmount = CompetitorHealth / 30;*/
+                /* OwnHealthText.text = OwnHealth.ToString() + "/30";
+                 OwnHealthBar.fillAmount = OwnHealth / 30;
 
-                RefreshUI(OwnHealth, CompetitorHealth);
+                 CompetitorHealthText.text = CompetitorHealth.ToString() + "/30";
+                 CompetitorHealthBar.fillAmount = CompetitorHealth / 30;*/
+
+                RefreshUI(OwnHealth, CompetitorHealth, OwnHeroAttackDamage, CompetitorHeroAttackDamage);
             }
         }
 
     }
 
 
-    public void RefreshUI(float OwnHealth, float CompetitorHealth)
+    public void RefreshUI(float OwnHealth, float CompetitorHealth, float OwnAttackDamage, float CompetitiorAttackDamage)
     {
-        OwnHealthText.text = OwnHealth.ToString() + "/30";
-        OwnHealthBar.fillAmount = OwnHealth / 30;
+        OwnHealthText.text = OwnHealth.ToString() + "/15";
+        OwnHealthBar.fillAmount = OwnHealth / 15;
 
-        CompetitorHealthText.text = CompetitorHealth.ToString() + "/30";
-        CompetitorHealthBar.fillAmount = CompetitorHealth / 30;
+        OwnHeroAttackDamageText.text = OwnAttackDamage.ToString();
+
+
+
+        CompetitorHealthText.text = CompetitorHealth.ToString() + "/15";
+        CompetitorHealthBar.fillAmount = CompetitorHealth / 15;
+
+        CompetitorHeroAttackDamageText.text = CompetitiorAttackDamage.ToString();
+
+
+        CompetitorManaCountText.text = _GameManager.ManaCount + "/10".ToString();
+        CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+
+
+
+
+
 
         OwnManaBar.fillAmount = Mana / 10;
-        CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
-        CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
 
-   
     }
 
     public void FinishButton()
@@ -724,7 +811,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("IT IS NOT YOUR TURN!");
+                    Debug.LogWarning("IT IS NOT YOUR TURN!");
                 }
 
             }
@@ -738,7 +825,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("IT IS NOT YOUR TURN!");
+                    Debug.LogWarning("IT IS NOT YOUR TURN!");
                 }
 
             }
@@ -844,7 +931,7 @@ public class PlayerController : MonoBehaviour
             if (DeadCardName == "Centaur Archer" || DeadCardName == "Minotaur Warrior" || DeadCardName == "Siren" || DeadCardName == "Gorgon" || DeadCardName == "Nemean Lion" || DeadCardName == "Chimera") // ÖLEN KART MONSTER MI?
             {
                 DeadMonsterCound++;
-                print(DeadMonsterCound + " TANE MONSTER CARD ÖLDÜ");
+                Debug.LogWarning(DeadMonsterCound + " TANE MONSTER CARD ÖLDÜ");
             }
 
             CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_DeleteAreaCard", RpcTarget.All, TargetCardIndex);
@@ -957,6 +1044,7 @@ public class PlayerController : MonoBehaviour
                     DeckCardCount++;
                 }
 
+
                
             }
             else // DIĞER TURLAR
@@ -988,7 +1076,7 @@ public class PlayerController : MonoBehaviour
                     DeckCardCount++;
                 }
 
-              
+                GameObject Herocard = Instantiate(Resources.Load<GameObject>("CompetitorHeoCard"), GameObject.Find("CompetitorHeroPivot").transform);
             }
             else // DIĞER TURLAR
             {
@@ -1001,6 +1089,7 @@ public class PlayerController : MonoBehaviour
                 StackCompetitorDeck();
                 DeckCardCount++;
             }
+
         }
        
 
@@ -1014,9 +1103,13 @@ public class PlayerController : MonoBehaviour
     {
         switch (OwnMainCard)
         {
-            case "ZeusCard":
+            case "Zeus":
                 ZeusCard zeusCard = new ZeusCard();
-                int CardIndex = UnityEngine.Random.Range(1, OwnDeck.Length);
+
+               
+                
+
+                int CardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string targetCardName = OwnDeck[CardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
 
                 int targetIndex = -1;
@@ -1134,28 +1227,31 @@ public class PlayerController : MonoBehaviour
                     OwnName = _GameManager.MasterPlayerName;
                     OwnDeck = _GameManager.MasterDeck;
                     OwnMainCard = _GameManager.MasterMainCard;
-
+                    OwnHeroAttackDamage = _GameManager.MasterAttackDamage;
 
                     OwnNameText.text = OwnName;
                     OwnMainCardText.text = OwnMainCard;
+                    OwnHeroAttackDamageText.text = OwnHeroAttackDamage.ToString();
 
                     for (int i = 0; i < OwnDeck.Length; i++)
                     {
                         OwnDeckText.text += ", " + OwnDeck[i];
                     }
                    
-
+                   
 
 
 
                     CompetitorName = _GameManager.OtherPlayerName;
                     CompetitorDeck = _GameManager.OtherDeck;
                     CompetitorMainCard = _GameManager.OtherrMainCard;
+                    CompetitorHeroAttackDamage = _GameManager.OtherAttackDamage;
 
 
 
                     CompetitorNameText.text = CompetitorName;
                     CompetitorMainCardText.text = CompetitorMainCard;
+                    CompetitorHeroAttackDamageText.text = CompetitorHeroAttackDamage.ToString();
 
                     for (int i = 0; i < CompetitorDeck.Length; i++)
                     {
@@ -1163,17 +1259,18 @@ public class PlayerController : MonoBehaviour
                     }
 
 
-                    print("Im MasterClient");
+                    Debug.LogWarning("Im MasterClient");
                 }
                 else
                 {
                     OwnName = _GameManager.OtherPlayerName;
                     OwnDeck = _GameManager.OtherDeck;
                     OwnMainCard = _GameManager.OtherrMainCard;
-
+                    OwnHeroAttackDamage = _GameManager.OtherAttackDamage;
 
                     OwnNameText.text = OwnName;
                     OwnMainCardText.text = OwnMainCard;
+                    OwnHeroAttackDamageText.text = OwnHeroAttackDamage.ToString();
 
                     for (int i = 0; i < OwnDeck.Length; i++)
                     {
@@ -1186,16 +1283,18 @@ public class PlayerController : MonoBehaviour
                     CompetitorName = _GameManager.MasterPlayerName;
                     CompetitorDeck = _GameManager.MasterDeck;
                     CompetitorMainCard = _GameManager.MasterMainCard;
+                    CompetitorHeroAttackDamage = _GameManager.MasterAttackDamage;
                     
                     CompetitorNameText.text = CompetitorName;
                     CompetitorMainCardText.text = CompetitorMainCard;
+                    CompetitorHeroAttackDamageText.text = CompetitorHeroAttackDamage.ToString();
 
                     for (int i = 0; i < CompetitorDeck.Length; i++)
                     {
                         CompetitorDeckText.text += ", " + CompetitorDeck[i];
                     }
 
-                    print("Im OtherClient");
+                    Debug.LogWarning("Im OtherClient");
                 }
             }
 
@@ -1237,6 +1336,8 @@ public class PlayerController : MonoBehaviour
                         
 
                     }
+
+                    GameObject Herocard = Instantiate(Resources.Load<GameObject>("CompetitorHeoCard"), GameObject.Find("CompetitorHeroPivot").transform);
                 }
                 
             }

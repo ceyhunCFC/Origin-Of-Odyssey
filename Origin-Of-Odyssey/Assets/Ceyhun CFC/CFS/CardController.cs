@@ -29,5 +29,20 @@ public class CardController : MonoBehaviourPunCallbacks
         }
     }
 
-  
+    public void AddHealCard(int Heal, bool isMaster)
+    {
+
+        if (isMaster)
+        {
+
+            _GameManager.OtherHeal(Heal);
+
+        }
+        else
+        {
+            _GameManager.MasterDamanage(Heal);
+        }
+    }
+
+
 }

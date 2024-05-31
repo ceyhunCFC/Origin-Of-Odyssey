@@ -12,14 +12,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     [HideInInspector] public static GameManager Instance;
     [HideInInspector] public bool Turn = false; // FALSE IS MASTER TURN - TRUE IS OTHER TURN
     [HideInInspector] public float ManaCount = 1;
+
     [HideInInspector] public string MasterPlayerName = "";
     [HideInInspector] public string OtherPlayerName = "";
+
     [HideInInspector] public int MasterHealth = 30;
     [HideInInspector] public int OtherHealth = 30;
+
+    [HideInInspector] public int MasterAttackDamage = 0;
+    [HideInInspector] public int OtherAttackDamage = 0;
+
     [HideInInspector] public string[] MasterDeck;
     [HideInInspector] public string[] OtherDeck;
+
     [HideInInspector] public string MasterMainCard = "";
     [HideInInspector] public string OtherrMainCard = "";
+
     [HideInInspector] public int TurnCount = 0;
 
 
@@ -90,6 +98,73 @@ public class GameManager : MonoBehaviourPunCallbacks
      
     }
 
+    public void OtherHeal(int Heal)
+    {
+        PV.RPC("RPC_OtherDamanage", RpcTarget.AllBufferedViaServer, Heal);
+    }
+
+    [PunRPC]
+    void RPC_OtherHeal(int Heal)
+    {
+        if (OtherHealth + Heal > 30)
+        {
+            OtherHealth = 30;
+        }
+        else
+        {
+            OtherHealth += Heal;
+        }
+
+    }
+
+    public void MasterHeal(int Heal)
+    {
+        PV.RPC("RPC_MasterHeal", RpcTarget.AllBufferedViaServer, Heal);
+    }
+
+    [PunRPC]
+    void RPC_MasterHeal(int Heal)
+    {
+        if (MasterHealth + Heal > 30)
+        {
+            MasterHealth = 30;
+        }
+        else
+        {
+            MasterHealth += Heal;
+        }
+
+    }
+
+
+    public void OtherAddAttackDamage(int AddDamage)
+    {
+        PV.RPC("RPC_OtherAddAttackDamage", RpcTarget.AllBufferedViaServer, AddDamage);
+    }
+
+    [PunRPC]
+    void RPC_OtherAddAttackDamage(int AddDamage)
+    {
+        print(OtherAttackDamage);
+        OtherAttackDamage += AddDamage;
+        print(OtherAttackDamage);
+
+    }
+
+    public void MasterAddAttackDamage(int AddDamage)
+    {
+        PV.RPC("RPC_MasterAddAttackDamage", RpcTarget.AllBufferedViaServer, AddDamage);
+    }
+
+    [PunRPC]
+    void RPC_MasterAddAttackDamage(int AddDamage)
+    {
+        print(MasterAttackDamage);
+        MasterAttackDamage += AddDamage;
+        print(MasterAttackDamage);
+
+    }
+
 
     IEnumerator LoadMainMenu()
     {
@@ -155,16 +230,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             MasterPlayerName = Nickname;
             MasterDeck = Deck;
-            MasterMainCard = "ZeusCard";
+           // MasterMainCard = "ZeusCard";
+            MasterMainCard = Deck[0];
+            MasterHealth = FindHeroHealth(Deck[0]);
+            MasterAttackDamage = FindHeroAttackDamage(Deck[0]);
 
-           // MasterPlayerNameText.text = MasterPlayerName;
-           //  MasterDeckText.text = MasterDeck.ToString();
+            // MasterPlayerNameText.text = MasterPlayerName;
+            //  MasterDeckText.text = MasterDeck.ToString();
         }
         else if (ID == "2")
         {
             OtherPlayerName = Nickname;
             OtherDeck = Deck;
-            OtherrMainCard = "ZeusCard";
+           // OtherrMainCard = "ZeusCard";
+            OtherrMainCard = Deck[0];
+            OtherHealth = FindHeroHealth(Deck[0]);
+            OtherAttackDamage = FindHeroAttackDamage(Deck[0]);
 
 
             //  OtherPlayerNameText.text = OtherPlayerName;
@@ -173,5 +254,44 @@ public class GameManager : MonoBehaviourPunCallbacks
 
        
     }
+
+    int FindHeroHealth(string HeroName)
+    {
+        switch (HeroName)
+        {
+            case "Zeus":
+                ZeusCard zeusCard = new ZeusCard();
+                return (int) zeusCard.hpValue;
+
+            case "Genghis":
+                GenghisCard genghisCard = new GenghisCard();
+                return (int) genghisCard.hpValue;
+
+
+        }
+
+        return 10;
+
+    }
+
+    int FindHeroAttackDamage(string HeroName)
+    {
+        switch (HeroName)
+        {
+            case "Zeus":
+                ZeusCard zeusCard = new ZeusCard();
+                return (int)zeusCard.attackValue;
+
+            case "Genghis":
+                GenghisCard genghisCard = new GenghisCard();
+                return (int)genghisCard.attackValue;
+
+
+        }
+
+        return 60;
+
+    }
+
 
 }

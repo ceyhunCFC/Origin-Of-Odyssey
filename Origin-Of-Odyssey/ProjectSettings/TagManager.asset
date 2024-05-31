@@ -11,6 +11,7 @@ TagManager:
   - AreaBox
   - UsedCard
   - CompetitorCard
+  - CompetitorHeroCard
   layers:
   - Default
   - TransparentFX

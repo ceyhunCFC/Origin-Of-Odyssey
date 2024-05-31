@@ -73,6 +73,10 @@ MonoBehaviour:
   - RPC_CreateRandomCard
   - RPC_RotateAndRevert
   - RPC_CallRotateAndRevert
+  - RPC_MasterHeal
+  - RPC_OtherHeal
+  - RPC_MasterAddAttackDamage
+  - RPC_OtherAddAttackDamage
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

@@ -8,10 +8,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
 {
     
 
-    GameObject AttackerCard,TargetCard,SecoundTargetCard;
+    public GameObject AttackerCard,TargetCard,SecoundTargetCard;
     int AttackerCardIndex, TargetCardIndex, SecoundTargetCardIndex;
 
-    bool SirenWorks = false;
+   public bool SirenWorks = false;
 
 
     private void Update()
@@ -19,6 +19,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
         if (AttackerCard == null)
             return;
 
+        Debug.LogWarning("KART SECİMİ BEKLENİYORRR");
 
         if (Input.GetMouseButtonDown(0) && SirenWorks==false) // KENDİ SALDIRI KARTIMIZI SEÇTİKTEN SONRA AKTİF OLUR 
         {
@@ -36,6 +37,15 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
 
                 }
+                else if (hit.collider.gameObject.CompareTag("CompetitorHeroCard"))
+                {
+                    TargetCard = hit.collider.gameObject; // SEÇİLEN RAKİP KART BUDUR
+                    StandartDamage(AttackerCard, TargetCard); // BİZİM KARTIMIZ VE SEÇİLEN RAKİP HERO GÖNDERİLİR
+
+
+
+                   
+                }
             }
         }
         else if (Input.GetMouseButtonDown(0) && SirenWorks == true)
@@ -50,29 +60,67 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     TargetCard = hit.collider.gameObject;
                     TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, hit.collider.gameObject.transform.parent.gameObject);
 
-                    print("İKİNCİ KART SEÇİLDİ");
-                    Siren(AttackerCard, TargetCard);
+                    Debug.LogWarning("İKİNCİ KART SEÇİLDİ");
+
+                    if (AttackerCard.GetComponent<CardInformation>().CardName== "Siren")
+                    {
+                        Siren(AttackerCard, TargetCard);
+
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName != "Lightning Bolt")
+                    {
+                        AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        LightningBolt(AttackerInfo, TargetInfo);
+
+                        Debug.LogWarning("LİGHTİNG BOLLLLTT");
+                    }
+                  
 
 
+                }
+                else if (hit.collider.gameObject.CompareTag("CompetitorHeroCard"))
+                {
+                    TargetCard = hit.collider.gameObject;
+
+                    if (AttackerCard.GetComponent<CardInformation>().CardName == "Siren")
+                    {
+                        Siren(AttackerCard, TargetCard);
+
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Lightning Bolt")
+                    {
+                        AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        LightningBolt(AttackerInfo, TargetInfo);
+
+                        Debug.LogWarning("LİGHTİNG BOLLLLTT");
+                    }
                 }
             }
         }
 
     }
 
+    CardInformation AttackerInfo=null;
+    CardInformation TargetInfo=null;
+
     void StandartDamage(GameObject Attacker, GameObject Target) // HANGİ HASAR ŞEKLİ UYGULANACAĞI SEÇİLMELİDİR
     {
-        CardInformation AttackerInfo = Attacker.GetComponent<CardInformation>();
-        CardInformation TargetInfo = Target.GetComponent<CardInformation>();
+         AttackerInfo = Attacker.GetComponent<CardInformation>();
+        TargetInfo = Target.GetComponent<CardInformation>();
 
-        //TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - TargetInfo.CardDamage).ToString(); // KARTIN DAMAGİNİ VURUR VURUYOR -- Centaur Archer - Minotaur Warrior - Greek Hoplite
+
+
+
+        //TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString(); // KARTIN DAMAGİNİ VURUR VURUYOR -- Centaur Archer - Minotaur Warrior - Greek Hoplite
 
 
         /*if (TargetInfo.CardDamage < 3)
        {
            SirenWorks = true;
            AttackerCard = Target;              -- RAKİBİN 3 DAMAGEDEN KÜÇÜK OLAN BİR MİNYONU SEÇİLİR VE BAŞKA BİR RAKİP MİNYONA HASAR VERİLİR. - Sirens
-           print("İLK KART SEÇİLDİ");
+           Debug.LogWarning("İLK KART SEÇİLDİ");
        }*/
 
 
@@ -101,25 +149,21 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
         //FillWithHoplites(); // ON SIRAYI DOLDURUR -- Athena
 
+        /*  LightningBolt(AttackerInfo,TargetInfo);  // Bir minyon ya da hero seçecek, ona hasar verecek
+          return;*/
+
+       // LightningStorm(); //  rakip minyonlara 2 yada 3 hasar verecek - Lightning Storm
 
 
-
-        GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-
-        if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
-        {
-          
-            GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
-        
-        }
+        RefreshCardDatas();
     }
 
   
     public void SetAttackerCard(int AttackerCardIndex)
     {
-        print(AttackerCardIndex);
+        Debug.LogWarning(AttackerCardIndex);
         AttackerCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[AttackerCardIndex].transform.GetChild(0).gameObject;
-        print(AttackerCard);
+        Debug.LogWarning(AttackerCard);
     }
 
     void DamageCardsAround(int DamageCount)
@@ -143,7 +187,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
         // Bulunan nesneleri işleme
         foreach (GameObject obj in nearbyObjects)
         {
-            Debug.Log("Nearby object found: " + obj.name);
+            Debug.LogWarning("Nearby object found: " + obj.name);
 
             obj.GetComponent<CardInformation>().CardHealth = (int.Parse(obj.GetComponent<CardInformation>().CardHealth) - DamageCount).ToString(); // SADECE BİR DAMAGE VURUYOR -- Nemean Lion
             int NearbyCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, obj.transform.parent.gameObject);
@@ -229,7 +273,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
     void Siren(GameObject Attacker, GameObject Target)
     {
-        print("HASAR VERİLDİ!");
+        Debug.LogWarning("HASAR VERİLDİ!");
         CardInformation AttackerInfo = Attacker.GetComponent<CardInformation>();
         CardInformation TargetInfo = Target.GetComponent<CardInformation>();
 
@@ -246,6 +290,82 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
     }
 
-    
+    void LightningBolt(CardInformation AttackerInfo, CardInformation TargetInfo)
+    {
+        if (TargetInfo.CardHealth != "") // BU BİR MİNYON
+        {
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 1).ToString(); // KARTIN DAMAGİNİ VURUR VURUYOR
+
+            RefreshCardDatas();
+        }
+        else if (TargetCard.name == "CompetitorHeoCard(Clone)") // BU RAKİP HERO
+        {
+            AttackerCard.GetComponent<CardController>().UsedCard(1, GetComponent<PlayerController>().PV.Owner.IsMasterClient); // HERO YA DAMAGE VURMA
+
+            if (GetComponent<PlayerController>().PV.IsMine)
+            {
+                GetComponent<PlayerController>().CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+
+            }
+        }
+
+        Destroy(AttackerCard);
+
+    }
+
+    void LightningStorm()
+    {
+        GameObject[] allTargets = GameObject.FindGameObjectsWithTag("CompetitorCard"); // RAKİBİN BÜTÜN KARTLARINI AL
+
+
+        foreach (var Card in allTargets)
+        {
+
+            if (Card.GetComponent<CardInformation>().CardHealth != "") // MİNİYON OLUP OLMADIĞINI ÖĞREN - ŞARTI SAĞLIYORSA MİNYONDUR.
+            {
+                int CurrentCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, Card.transform.parent.gameObject);
+                int RandomDamage = UnityEngine.Random.Range(2,3);
+                Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) - RandomDamage).ToString(); //  İKİ DAMAGE VURUYOR
+                GetComponent<PlayerController>().RefreshUsedCard(CurrentCardIndex, Card.GetComponent<CardInformation>().CardHealth); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
+
+                if (int.Parse(Card.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET
+                {
+
+                    GetComponent<PlayerController>().DeleteAreaCard(CurrentCardIndex);
+
+                }
+
+                if (TargetCardIndex != CurrentCardIndex) // ŞUANKİ KART İLK SEÇİLEN RAKİP MİNYON KARTI İLE AYNI DEĞİLSE ÇALIŞTIR
+                {
+
+
+                }
+
+            }
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+    void RefreshCardDatas()
+    {
+        GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
+
+        if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+        {
+
+            GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+
+        }
+
+    }
 
 }

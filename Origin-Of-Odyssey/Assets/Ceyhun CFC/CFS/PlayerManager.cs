@@ -39,7 +39,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
 
 
-			_GameManager.SendData(PlayerID, Nickname,Deck);
+			_GameManager.SendData(PlayerID, Nickname, Deck);
 
 		
 		}
