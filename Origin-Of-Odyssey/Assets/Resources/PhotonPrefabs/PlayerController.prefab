@@ -1499,7 +1499,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackerCard: {fileID: 0}
   TargetCard: {fileID: 0}
-  SecoundTargetCard: {fileID: 0}
   SirenWorks: 0
 --- !u!1 &4346544841015542748
 GameObject:

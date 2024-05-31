@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0))
         {
-            Debug.LogWarning("IT IS NOT YOUR TURN!");
+            Debug.LogError("IT IS NOT YOUR TURN!");
         }
 
         if (Input.GetMouseButton(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
-            Debug.LogWarning("IT IS NOT YOUR TURN!");
+            Debug.LogError("IT IS NOT YOUR TURN!");
         }
 
         if (Input.GetMouseButtonUp(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            Debug.LogWarning("IT IS NOT YOUR TURN!");
+            Debug.LogError("IT IS NOT YOUR TURN!");
         }
 
 
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            Debug.LogWarning("IT IS NOT YOUR TURN!");
+            Debug.LogError("IT IS NOT YOUR TURN!");
         }  
 
 
@@ -253,16 +253,16 @@ public class PlayerController : MonoBehaviour
             else if (hit.collider.gameObject.tag == "UsedCard")
             {
                 // _CardFunction.SelectFirstCard(hit.collider.gameObject);
-                Debug.LogWarning(hit.collider.gameObject.transform.parent);
+                Debug.LogError(hit.collider.gameObject.transform.parent);
                 _CardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject));
 
                 if (hit.collider.gameObject.GetComponent<CardInformation>().isItFirstRaound==true)
                 {
-                    Debug.LogWarning("İLK TURU");
+                    Debug.LogError("İLK TURU");
                 }
                 else
                 {
-                    Debug.LogWarning("İLK TURU DEGIL");
+                    Debug.LogError("İLK TURU DEGIL");
                 }
             }
 
@@ -342,7 +342,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Odyssean Navigator")
                 {
-                    Debug.LogWarning("ODYYYYYSEAAANN");
+                    Debug.LogError("ODYYYYYSEAAANN");
 
                     //  CreateRandomCard();
 
@@ -350,13 +350,13 @@ public class PlayerController : MonoBehaviour
 
                     if (spawnedObject.GetComponent<CardInformation>().CardHealth=="")
                     {
-                        Debug.LogWarning("ODYYYYYSEAAANN SPEEEELLL YARATTTI ");
+                        Debug.LogError("ODYYYYYSEAAANN SPEEEELLL YARATTTI ");
                         spawnedObject.GetComponent<CardInformation>().CardMana--;
 
                     }
                     else
                     {
-                        Debug.LogWarning("ODYYYYYSEAAANN MİNNYOONNNN YARATTTI ");
+                        Debug.LogError("ODYYYYYSEAAANN MİNNYOONNNN YARATTTI ");
                     }
 
                 }
@@ -378,7 +378,7 @@ public class PlayerController : MonoBehaviour
                         int randomspell = UnityEngine.Random.Range(0, OwnSpellCards.Count);
 
                        // OwnSpellCards[randomspell].transform.eulerAngles = new Vector3(0,90,0);
-                        Debug.LogWarning(OwnSpellCards[randomspell]);
+                        Debug.LogError(OwnSpellCards[randomspell]);
 
 
                        // StartCoroutine(RotateAndRevert(OwnSpellCards[randomspell],randomspell));
@@ -398,7 +398,7 @@ public class PlayerController : MonoBehaviour
                           
                            
                             _GameManager.MasterAddAttackDamage(3);
-                            Debug.LogWarning(_GameManager.MasterAttackDamage);
+                            Debug.LogError(_GameManager.MasterAttackDamage);
                           
                         }
                         else
@@ -406,7 +406,7 @@ public class PlayerController : MonoBehaviour
                           
                          
                             _GameManager.OtherAddAttackDamage(3);
-                            Debug.LogWarning(_GameManager.OtherAttackDamage);
+                            Debug.LogError(_GameManager.OtherAttackDamage);
 
                         }
                     }
@@ -438,9 +438,180 @@ public class PlayerController : MonoBehaviour
                     selectedCard = null;
                     lastHoveredCard = null;
                    
-                    Debug.LogWarning("USSEEDD A SPEEELLL");
+                    Debug.LogError("USSEEDD A SPEEELLL");
                     return;
 
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Gorgon")
+                {
+
+                    GetComponent<CardProgress>().FreezeAllEnemyMinions();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Chimera")
+                {
+
+                    GetComponent<CardProgress>().DamageToAlLOtherMinions();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Athena")
+                {
+
+                    GetComponent<CardProgress>().FillWithHoplites();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Lightning Storm")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                    GetComponent<CardProgress>().LightningStorm();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Olympian Favor") // BOŞŞŞŞ FONKSİON
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                   // GetComponent<CardProgress>().LightningStorm();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Aegis Shield") // BOŞŞŞŞ FONKSİON
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                    // GetComponent<CardProgress>().LightningStorm();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Golden Fleece") // BOŞŞŞŞ FONKSİON
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                    // GetComponent<CardProgress>().LightningStorm();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Labyrinth Maze") // BOŞŞŞŞ FONKSİON
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                    // GetComponent<CardProgress>().LightningStorm();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Divine Ascention") // BOŞŞŞŞ FONKSİON
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                    // GetComponent<CardProgress>().LightningStorm();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    return;
                 }
 
 
@@ -460,7 +631,7 @@ public class PlayerController : MonoBehaviour
                
                 if (PV.IsMine)
                 {
-                    Debug.LogWarning(Boxindex);
+                    Debug.LogError(Boxindex);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
 
@@ -811,7 +982,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("IT IS NOT YOUR TURN!");
+                    Debug.LogError("IT IS NOT YOUR TURN!");
                 }
 
             }
@@ -825,7 +996,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("IT IS NOT YOUR TURN!");
+                    Debug.LogError("IT IS NOT YOUR TURN!");
                 }
 
             }
@@ -931,7 +1102,7 @@ public class PlayerController : MonoBehaviour
             if (DeadCardName == "Centaur Archer" || DeadCardName == "Minotaur Warrior" || DeadCardName == "Siren" || DeadCardName == "Gorgon" || DeadCardName == "Nemean Lion" || DeadCardName == "Chimera") // ÖLEN KART MONSTER MI?
             {
                 DeadMonsterCound++;
-                Debug.LogWarning(DeadMonsterCound + " TANE MONSTER CARD ÖLDÜ");
+                Debug.LogError(DeadMonsterCound + " TANE MONSTER CARD ÖLDÜ");
             }
 
             CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_DeleteAreaCard", RpcTarget.All, TargetCardIndex);
@@ -1259,7 +1430,7 @@ public class PlayerController : MonoBehaviour
                     }
 
 
-                    Debug.LogWarning("Im MasterClient");
+                    Debug.LogError("Im MasterClient");
                 }
                 else
                 {
@@ -1294,7 +1465,7 @@ public class PlayerController : MonoBehaviour
                         CompetitorDeckText.text += ", " + CompetitorDeck[i];
                     }
 
-                    Debug.LogWarning("Im OtherClient");
+                    Debug.LogError("Im OtherClient");
                 }
             }
 
