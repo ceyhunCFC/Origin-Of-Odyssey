@@ -9,10 +9,11 @@ public class CardProgress : MonoBehaviourPunCallbacks
     
 
     public GameObject AttackerCard,TargetCard;
-    int AttackerCardIndex, TargetCardIndex;
+    int TargetCardIndex;
 
-   public bool SirenWorks = false;
-
+    public bool SecoundTargetCard = false;
+    CardInformation AttackerInfo = null;
+    CardInformation TargetInfo = null;
 
     private void Update()
     {
@@ -21,7 +22,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
         Debug.LogError("KART SECİMİ BEKLENİYORRR");
 
-        if (Input.GetMouseButtonDown(0) && SirenWorks==false) // KENDİ SALDIRI KARTIMIZI SEÇTİKTEN SONRA AKTİF OLUR 
+        if (Input.GetMouseButtonDown(0) && SecoundTargetCard==false) // KENDİ SALDIRI KARTIMIZI SEÇTİKTEN SONRA AKTİF OLUR 
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -50,7 +51,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 }
             }
         }
-        else if (Input.GetMouseButtonDown(0) && SirenWorks == true)
+        else if (Input.GetMouseButtonDown(0) && SecoundTargetCard == true)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -64,7 +65,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
                     Debug.LogError("İKİNCİ KART SEÇİLDİ");
 
-                    if (AttackerCard.GetComponent<CardInformation>().CardName== "Siren")
+                    if (AttackerCard.GetComponent<CardInformation>().CardName == "Siren")
                     {
                         Siren(AttackerCard, TargetCard);
 
@@ -81,7 +82,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
 
                 }
-                else if (hit.collider.gameObject.CompareTag("CompetitorHeroCard"))
+               /* else if (hit.collider.gameObject.CompareTag("CompetitorHeroCard"))
                 {
                     TargetCard = hit.collider.gameObject;
 
@@ -98,14 +99,13 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
                         Debug.LogError("LİGHTİNG BOLLLLTT");
                     }
-                }
+                }*/
             }
         }
 
     }
 
-    CardInformation AttackerInfo=null;
-    CardInformation TargetInfo=null;
+   
 
     void StandartDamage(GameObject Attacker, GameObject Target) // HANGİ HASAR ŞEKLİ UYGULANACAĞI SEÇİLMELİDİR
     {
@@ -127,7 +127,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
             AttackerCard = null;
             TargetCard = null;
             TargetCardIndex = -1;
-            SirenWorks = false;
+            SecoundTargetCard = false;
             return;
         }
         else
@@ -149,7 +149,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 case "Siren":
                     if (TargetInfo.CardDamage < 3)
                     {
-                        SirenWorks = true;
+                        SecoundTargetCard = true;
                         AttackerCard = Target;              
                         Debug.LogError("İLK KART SEÇİLDİ");
                     }
@@ -207,7 +207,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
         /*if (TargetInfo.CardDamage < 3)
        {
-           SirenWorks = true;
+           SecoundTargetCard = true;
            AttackerCard = Target;              -- RAKİBİN 3 DAMAGEDEN KÜÇÜK OLAN BİR MİNYONU SEÇİLİR VE BAŞKA BİR RAKİP MİNYONA HASAR VERİLİR. - Sirens
            Debug.LogError("İLK KART SEÇİLDİ");
        }*/
@@ -247,7 +247,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
         RefreshCardDatas();
         AttackerCard = null;
         TargetCard = null;
-        SirenWorks = false;
+        SecoundTargetCard = false;
         TargetCardIndex = -1;
     }
 
@@ -366,7 +366,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
     void Siren(GameObject Attacker, GameObject Target)
     {
-        Debug.LogError("HASAR VERİLDİ!");
+        Debug.LogError("SİREN HASAR VERDİ!");
         CardInformation AttackerInfo = Attacker.GetComponent<CardInformation>();
         CardInformation TargetInfo = Target.GetComponent<CardInformation>();
 

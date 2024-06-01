@@ -428,7 +428,7 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    GetComponent<CardProgress>().SirenWorks = true;
+                    GetComponent<CardProgress>().SecoundTargetCard = true;
                     GetComponent<CardProgress>().AttackerCard = selectedCard;
 
 
@@ -500,7 +500,9 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                   // GetComponent<CardProgress>().LightningStorm();
+                    GetComponent<CardProgress>().SecoundTargetCard = true;
+                  //  GetComponent<CardProgress>().AttackerCard = selectedCard;
+                    GetComponent<CardProgress>().LightningStorm();
 
                     selectedCard.SetActive(false);
                     selectedCard = null;
