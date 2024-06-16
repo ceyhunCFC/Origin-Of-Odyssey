@@ -664,13 +664,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4187807097084116817}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 2628971181882739657}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: MainCardSpecial
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1485,6 +1485,8 @@ MonoBehaviour:
   DeadMonsterCound: 0
   OwnHeroAttackDamageText: {fileID: 2811176848035667705}
   CompetitorHeroAttackDamageText: {fileID: 664844411364063452}
+  OlympiaKillCount: 0
+  SpellsExtraDamage: 0
 --- !u!114 &6638573949623686288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1499,7 +1501,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackerCard: {fileID: 0}
   TargetCard: {fileID: 0}
+  TargetCardIndex: 0
   SecoundTargetCard: 0
+  ForMyCard: 0
 --- !u!1 &4346544841015542748
 GameObject:
   m_ObjectHideFlags: 0

@@ -112,7 +112,7 @@ public class CardCtrl : MonoBehaviour
             {
                 GameObject newCard = Instantiate(cardPrefab, parentTransform);
                 CardDisplay cardDisplay = newCard.GetComponent<CardDisplay>();
-
+                newCard.GetComponent<Button>().interactable = false;         //demo için eklendi diðer kartlarýn interactable ý false olcak
                 cardDisplay.cardNameText.text = minion.name;
                 cardDisplay.cardRarityText.text = minion.rarity.ToString();
                 cardDisplay.cardAttackText.text = minion.attack.ToString();
@@ -130,7 +130,7 @@ public class CardCtrl : MonoBehaviour
             {
                 GameObject newCard = Instantiate(cardPrefab, parentTransform);
                 CardDisplay cardDisplay = newCard.GetComponent<CardDisplay>();
-
+                newCard.GetComponent<Button>().interactable = false;         //demo için eklendi diðer kartlarýn interactable ý false olcak
                 cardDisplay.cardNameText.text = spell.name;
                 cardDisplay.cardRarityText.text = spell.rarity.ToString();
                 cardDisplay.cardAttackText.text = "";
@@ -161,7 +161,7 @@ public class CardCtrl : MonoBehaviour
         {
             GameObject newCard = Instantiate(cardPrefab, parentTransform);
             CardDisplay cardDisplay = newCard.GetComponent<CardDisplay>();
-
+            newCard.GetComponent<Button>().interactable = false;         //demo için eklendi diðer kartlarýn interactable ý false olcak
             cardDisplay.cardNameText.text = card.name;
             cardDisplay.cardRarityText.text = card.rarity.ToString();
             cardDisplay.cardAttackText.text = card.attack.ToString();

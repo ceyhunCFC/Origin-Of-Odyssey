@@ -268,20 +268,20 @@ public class AuthManager : MonoBehaviour
         {
             cardNames.Add(spell.name);             //zeus spells add
         }
-        int remainingCardsCount = 40 - cardNames.Count;
+        /*int remainingCardsCount = 40 - cardNames.Count;
 
         foreach (StandartCard standartCard in standartCards.standartcards)
         {
             if (remainingCardsCount <= 0)
             {
-                break;
+                break;                                                                              //zeuskart dýþýnda kartlarý 40 a tamamlamak için demo için kaldýrýldý
             }
             if (!cardNames.Contains(standartCard.name))
             {
                 cardNames.Add(standartCard.name);    //40-zeuscards and add standartcards
                 remainingCardsCount--;
             }
-        }
+        }   */
         string jsonData = "[" + string.Join(",", cardNames.ConvertAll(name => "\"" + name + "\"").ToArray()) + "]";
 
         RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken, jsonData)

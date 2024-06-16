@@ -78,6 +78,14 @@ MonoBehaviour:
   - RPC_MasterAddAttackDamage
   - RPC_OtherAddAttackDamage
   - BeginTurn
+  - RPC_RefreshMyCard
+  - RPC_FinishButton
+  - RPC_LabyrinthMaze
+  - RPC_RefreshFinishTurn
+  - RPC_RefreshCompotitorCard
+  - RPC_KeshikCard
+  - DestroyDeckCard
+  - RPC_SetSpellsExtraDamage
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

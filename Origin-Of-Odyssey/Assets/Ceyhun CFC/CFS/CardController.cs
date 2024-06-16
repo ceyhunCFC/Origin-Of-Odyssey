@@ -40,7 +40,7 @@ public class CardController : MonoBehaviourPunCallbacks
         }
         else
         {
-            _GameManager.MasterDamanage(Heal);
+            _GameManager.MasterHeal(Heal);
         }
     }
 

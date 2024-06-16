@@ -10,9 +10,13 @@ public class CardInformation : MonoBehaviour
     public string CardHealth;
     public int CardDamage;
     public int CardMana;
-    public bool CardFreeze;
+    public bool CardFreeze=false;
     public bool isItFirstRaound = true;
-    public bool FirstTakeDamage = true;
+    public bool FirstTakeDamage = true;         //raunt baþýna
+    public bool HaveShield = false;
+    public bool DivineSelected = false;
+    public bool FirstDamageTaken = true;       // kart konulduðu andan beri       true damage almamýþ demek
+    public bool isAttacked = false;
 
 
     public Text CardNameText;

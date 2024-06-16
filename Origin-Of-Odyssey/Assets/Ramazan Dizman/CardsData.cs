@@ -122,7 +122,7 @@ public class ZeusCard : CardStats
         cardName = "Zeus";
         hpValue = 15f;
         dodgeValue = 4f;
-        attackValue = 6f;
+        attackValue = 1f;
         defenceValue = 6f;
         criticalValue = 5f;
         duelsWon = 0;

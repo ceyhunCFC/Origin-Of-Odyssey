@@ -1516,7 +1516,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 688571327}
   m_OnClick:
     m_PersistentCalls:
@@ -2694,7 +2694,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 950076790}
   m_OnClick:
     m_PersistentCalls:
@@ -3878,7 +3878,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playPanel: {fileID: 1999448919}
   mainCardsCanvas: {fileID: 1654428636}
-  NavbarPanel: {fileID: 0}
 --- !u!114 &1549858938
 MonoBehaviour:
   m_ObjectHideFlags: 0
