@@ -1480,39 +1480,88 @@ public class PlayerController : MonoBehaviour
     {
         if (PV.IsMine)
         {
-            GameObject existingObject = GameObject.Find("OwnMainCardGameObject");
-            if (existingObject == null)
+            if ( PV.Owner.IsMasterClient && _GameManager.Turn == false)
             {
-                GameObject OwnMainCardGameObject = new GameObject("OwnMainCardGameObject");
-                OwnMainCardGameObject.AddComponent<CardInformation>();
-                OwnMainCardGameObject.AddComponent<CardController>();
-                existingObject = OwnMainCardGameObject;
-            }
+                GameObject existingObject = GameObject.Find("OwnMainCardGameObject");
+                if (existingObject == null)
+                {
+                    GameObject OwnMainCardGameObject = new GameObject("OwnMainCardGameObject");
+                    OwnMainCardGameObject.AddComponent<CardInformation>();
+                    OwnMainCardGameObject.AddComponent<CardController>();
+                    existingObject = OwnMainCardGameObject;
+                }
 
-            switch (OwnMainCard)
+                switch (OwnMainCard)
+                {
+
+                    case "Zeus":
+                        if (Mana >= 2)
+                        {
+                            existingObject.GetComponent<CardInformation>().CardName = "Zeus";
+                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                            existingObject.GetComponent<CardInformation>().CardMana = 2;
+
+                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                        }
+                        break;
+                    case "Genghis":
+                        if (Mana >= 2)
+                        {
+                            existingObject.GetComponent<CardInformation>().CardName = "Genghis";
+                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                            existingObject.GetComponent<CardInformation>().CardMana = 2;
+
+                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                        }
+                        break;
+                }
+
+            }
+            else if ( !PV.Owner.IsMasterClient && _GameManager.Turn == true)
             {
-                
-                case "Zeus":
-                    if (Mana >= 2)
-                    {
-                        existingObject.GetComponent<CardInformation>().CardName = "Zeus";
-                        existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
-                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                GameObject existingObject = GameObject.Find("OwnMainCardGameObject");
+                if (existingObject == null)
+                {
+                    GameObject OwnMainCardGameObject = new GameObject("OwnMainCardGameObject");
+                    OwnMainCardGameObject.AddComponent<CardInformation>();
+                    OwnMainCardGameObject.AddComponent<CardController>();
+                    existingObject = OwnMainCardGameObject;
+                }
 
-                        GetComponent<CardProgress>().AttackerCard = existingObject;
-                    }
-                    break;
-                case "Genghis":
-                    if (Mana >= 2)
-                    {
-                        existingObject.GetComponent<CardInformation>().CardName = "Genghis";
-                        existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
-                        existingObject.GetComponent<CardInformation>().CardMana= 2;
+                switch (OwnMainCard)
+                {
 
-                        GetComponent<CardProgress>().AttackerCard = existingObject;
-                    }
-                    break;
+                    case "Zeus":
+                        if (Mana >= 2)
+                        {
+                            existingObject.GetComponent<CardInformation>().CardName = "Zeus";
+                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                            existingObject.GetComponent<CardInformation>().CardMana = 2;
+
+                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                        }
+                        break;
+                    case "Genghis":
+                        if (Mana >= 2)
+                        {
+                            existingObject.GetComponent<CardInformation>().CardName = "Genghis";
+                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                            existingObject.GetComponent<CardInformation>().CardMana = 2;
+
+                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                        }
+                        break;
+                }
+
             }
+            else if (Input.GetMouseButtonDown(0))
+            {
+                Debug.LogError("IT IS NOT YOUR TURN!");
+
+                GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
+            }
+            
         }
     }
 
