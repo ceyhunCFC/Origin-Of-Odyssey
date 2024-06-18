@@ -320,6 +320,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
 
             }
+            if (GetComponent<PlayerController>().PV.IsMine)
+            {
+                GetComponent<PlayerController>().SetMana(AttackerCard);
+            }
 
             AttackerCard = null;
             TargetCard = null;
@@ -351,7 +355,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         Debug.LogError("İLK KART SEÇİLDİ");
 
                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "First card selected.";
-
+                        return;
 
                     }
                     break;
@@ -508,6 +512,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
        // LightningStorm(); //  rakip minyonlara 2 yada 3 hasar verecek - Lightning Storm
 
+        if(GetComponent<PlayerController>().PV.IsMine)
+        {
+            GetComponent<PlayerController>().SetMana(AttackerCard);
+        }
         RefreshCardDatas();
         AttackerCard = null;
         TargetCard = null;

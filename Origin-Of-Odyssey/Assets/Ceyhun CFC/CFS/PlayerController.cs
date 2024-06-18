@@ -1497,6 +1497,7 @@ public class PlayerController : MonoBehaviour
                     {
                         existingObject.GetComponent<CardInformation>().CardName = "Zeus";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
 
                         GetComponent<CardProgress>().AttackerCard = existingObject;
                     }
@@ -1506,11 +1507,25 @@ public class PlayerController : MonoBehaviour
                     {
                         existingObject.GetComponent<CardInformation>().CardName = "Genghis";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana= 2;
 
                         GetComponent<CardProgress>().AttackerCard = existingObject;
                     }
                     break;
             }
+        }
+    }
+
+    public void SetMana(GameObject attackercard)
+    {
+        if(attackercard.GetComponent<CardInformation>().CardName=="Zeus")
+        {
+            Mana -= attackercard.GetComponent<CardInformation>().CardMana;
+
+            ManaCountText.text = Mana.ToString() + "/10";
+            OwnManaBar.fillAmount = Mana / 10f;
+            CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+            CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
         }
     }
 
