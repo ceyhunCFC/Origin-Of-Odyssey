@@ -245,11 +245,16 @@ MonoBehaviour:
   CardFreeze: 0
   isItFirstRaound: 1
   FirstTakeDamage: 1
-  CardNameText: {fileID: 0}
-  CardDesText: {fileID: 0}
-  CardHealthText: {fileID: 0}
-  CardDamageText: {fileID: 0}
-  CardManaText: {fileID: 0}
+  HaveShield: 0
+  DivineSelected: 0
+  FirstDamageTaken: 1
+  isAttacked: 0
+  CardNameText: {fileID: 3503785215774116764}
+  CardDesText: {fileID: 2436654656967440558}
+  CardHealthText: {fileID: 2879304106318651243}
+  CardDamageText: {fileID: 3444559999918201156}
+  CardManaText: {fileID: 3572500332005150431}
+  CardVisualImage: {fileID: 8574078719430889474}
 --- !u!1 &1911938401461289292
 GameObject:
   m_ObjectHideFlags: 0

@@ -556,7 +556,7 @@ GameObject:
   - component: {fileID: 450195520811598716}
   - component: {fileID: 2061855588843497844}
   m_Layer: 5
-  m_Name: Button (Legacy)
+  m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2403,7 +2403,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3024673549077077071
 RectTransform:
   m_ObjectHideFlags: 0

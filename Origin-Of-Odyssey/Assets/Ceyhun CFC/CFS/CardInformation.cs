@@ -10,12 +10,13 @@ public class CardInformation : MonoBehaviour
     public string CardHealth;
     public int CardDamage;
     public int CardMana;
+   // public Sprite CardVisual;
     public bool CardFreeze=false;
     public bool isItFirstRaound = true;
-    public bool FirstTakeDamage = true;         //raunt baþýna
+    public bool FirstTakeDamage = true;         //raunt baï¿½ï¿½na
     public bool HaveShield = false;
     public bool DivineSelected = false;
-    public bool FirstDamageTaken = true;       // kart konulduðu andan beri       true damage almamýþ demek
+    public bool FirstDamageTaken = true;       // kart konulduï¿½u andan beri       true damage almamï¿½ï¿½ demek
     public bool isAttacked = false;
 
 
@@ -24,6 +25,7 @@ public class CardInformation : MonoBehaviour
     public Text CardHealthText;
     public Text CardDamageText;
     public Text CardManaText;
+    public Image CardVisualImage;
 
 
     public void SetInformation()
@@ -33,6 +35,23 @@ public class CardInformation : MonoBehaviour
         CardHealthText.text = CardHealth;
         CardDamageText.text = CardDamage.ToString();
         CardManaText.text = CardMana.ToString();
+        CardVisualImage.sprite = GetSpriteByName(CardName);
+    }
+
+    public Sprite GetSpriteByName(string spriteName)
+    {
+        // Resources klasÃ¶rÃ¼nde sprite'Ä± arar
+        Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + spriteName);
+
+        if (foundSprite == null)
+        {
+            Debug.LogWarning("Sprite not found: " + spriteName);
+
+            foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            return foundSprite;
+        }
+
+        return foundSprite;
     }
 
 }

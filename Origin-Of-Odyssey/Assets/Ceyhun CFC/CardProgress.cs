@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System;
+using UnityEngine.UI;
+
 
 public class CardProgress : MonoBehaviourPunCallbacks
 {
@@ -23,6 +25,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
             return;
 
         Debug.LogError("KART SECİMİ BEKLENİYORRR");
+
+       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "There's a card in front of it.";
+
 
         if (Input.GetMouseButtonDown(0) && SecoundTargetCard==false) // KENDİ SALDIRI KARTIMIZI SEÇTİKTEN SONRA AKTİF OLUR 
         {
@@ -56,6 +61,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
                                     if (dotProductForward > 0.5f)
                                     {
                                         Debug.Log("Önünde kart var");
+
+                                         Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "There's a card in front of it.";
+                                        
+
                                         AttackerCard = null;
                                         TargetCard = null;
                                         TargetCardIndex = -1;
@@ -72,6 +81,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         TargetInfo.FirstTakeDamage = false;
                         GetComponent<PlayerController>().RefreshCompotitorCard(TargetCardIndex, TargetInfo.FirstTakeDamage,TargetInfo.CardFreeze);
                         Debug.LogError("Have Shield ");                 // aegis shild varsa saldıramaz
+
+                       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text= "Have Shield.";
+
+
                         AttackerCard = null;
                         TargetCard = null;
                         TargetCardIndex = -1;
@@ -83,6 +96,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         TargetInfo = TargetCard.GetComponent<CardInformation>();
                         TargetInfo.FirstDamageTaken = false;
                         Debug.LogError("Pegasus first damage shield ");                 //pegasus ilk saldırısında hasar almaz
+                      
+                       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Pegasus first damage shield.";
+
+
                         AttackerCard = null;
                         TargetCard = null;
                         TargetCardIndex = -1;
@@ -91,6 +108,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     if (TargetCard.GetComponent<CardInformation>().FirstDamageTaken == true && TargetCard.GetComponent<CardInformation>().CardName == "Odyssean Navigator")
                     {
                         Debug.LogError("Odyssean Navigator not attack yet ");                 //Odyssean Navigator saldırmadan saldırılamaz
+                        
+                       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Odyssean Navigator not attack yet.";
+
                         AttackerCard = null;
                         TargetCard = null;
                         TargetCardIndex = -1;
@@ -126,6 +146,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
                     Debug.LogError("İKİNCİ KART SEÇİLDİ");
 
+                   Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Second Card Selected.";
+
+
                     if (AttackerCard.GetComponent<CardInformation>().CardName == "Siren")
                     {
                         Siren(AttackerCard, TargetCard);
@@ -147,6 +170,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         TargetCard = null;
                         TargetCardIndex = -1;
                         Debug.LogError("LİGHTİNG BOLLLLTT");
+
+                       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text= "LIGHTING BOLLLLTT!";
+
                     }
                     
 
@@ -159,13 +185,19 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject);
                     Debug.LogError("İKİNCİ KART SEÇİLDİ");
 
+                   Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text  = "Second Card Selected.";
+
+
                     if (AttackerCard.GetComponent<CardInformation>().CardName == "Golden Fleece")
                     {
                         TargetInfo = TargetCard.GetComponent<CardInformation>();
 
                         GoldenFleece(TargetInfo);
 
-                        Debug.LogError("GoldenFleecee");
+                        Debug.LogError("Golden Fleecee");
+
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text  = "Golden Fleecee.";
+
                     }
                     else if (AttackerCard.GetComponent<CardInformation>().CardName == "Aegis Shield")
                     {
@@ -183,6 +215,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         TargetCardIndex = -1;
 
                         Debug.LogError("Aegis Shieldddd");
+
+                          Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Aegis Shieldddd.";
+
                     }
                     else if (AttackerCard.GetComponent<CardInformation>().CardName == "Olympian Favor")
                     {
@@ -203,6 +238,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         TargetCardIndex = -1;
 
                         Debug.LogError("Olympiann");
+
+                       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Olympiann.";
+
                     }
                     else if (AttackerCard.GetComponent<CardInformation>().CardName == "Divine Ascention")
                     {
@@ -221,6 +259,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         TargetCardIndex = -1;
 
                         Debug.LogError("Divine Ascention");
+
+                       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Divine Ascention.";
+
                     }
 
                 }
@@ -270,6 +311,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
             AttackerCard.GetComponent<CardController>().UsedCard(AttackerInfo.CardDamage, GetComponent<PlayerController>().PV.Owner.IsMasterClient); // HERO YA DAMAGE VURMA
             Debug.LogError("HEROYA DAMAGEEEEE");
 
+           Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Damage to the enemy!";
+
+
             if (GetComponent<PlayerController>().PV.IsMine)
             {
                 GetComponent<PlayerController>().CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
@@ -305,6 +349,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         GetComponent<CardProgress>().SecoundTargetCard = true;
                         AttackerCard = Target;              
                         Debug.LogError("İLK KART SEÇİLDİ");
+
+                       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "First card selected.";
+
+
                     }
                     break;
 
@@ -630,6 +678,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
     void Siren(GameObject Attacker, GameObject Target)
     {
         Debug.LogError("SİREN HASAR VERDİ!");
+
+        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "The siren did damage.";
+
+
         CardInformation AttackerInfo = Attacker.GetComponent<CardInformation>();
         CardInformation TargetInfo = Target.GetComponent<CardInformation>();
 
@@ -716,6 +768,8 @@ public class CardProgress : MonoBehaviourPunCallbacks
     void GoldenFleece(CardInformation Target)
     {
         Debug.LogError("Golden Fleece seçildi!");
+
+       Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Golden Fleece selected.";
 
 
         if (Target.CardHealth != "") // BU BİR MİNYON

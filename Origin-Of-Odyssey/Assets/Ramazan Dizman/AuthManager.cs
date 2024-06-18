@@ -37,7 +37,7 @@ public class AuthManager : MonoBehaviour
             AccountLogin();
         }
 
-        LoginAccount("test1@test.com", "test1@test.com");
+       // LoginAccount("test1@test.com", "test1@test.com");
 
     }
 
@@ -274,7 +274,7 @@ public class AuthManager : MonoBehaviour
         {
             if (remainingCardsCount <= 0)
             {
-                break;                                                                              //zeuskart dýþýnda kartlarý 40 a tamamlamak için demo için kaldýrýldý
+                break;                                                                              //zeuskart dï¿½ï¿½ï¿½nda kartlarï¿½ 40 a tamamlamak iï¿½in demo iï¿½in kaldï¿½rï¿½ldï¿½
             }
             if (!cardNames.Contains(standartCard.name))
             {

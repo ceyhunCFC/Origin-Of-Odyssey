@@ -16,8 +16,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject CardPrefabSolo; // Tek kart
     
-
-
+   
     string OwnName = "";
     string[] OwnDeck;
     string OwnMainCard = "";
@@ -42,6 +41,9 @@ public class PlayerController : MonoBehaviour
     public Text CompetitorMainCardText;
     public Text CompetitorHealthText;
     public Text CompetitorManaCountText;
+
+   
+
 
     public Image OwnHealthBar;
     public Image OwnManaBar;
@@ -103,6 +105,9 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonDown(0))
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
+
+            GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
         }
 
         if (Input.GetMouseButton(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -125,6 +130,8 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButton(0))
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
+            GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
         }
 
         if (Input.GetMouseButtonUp(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -146,6 +153,8 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
+              GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
         }
 
 
@@ -169,6 +178,8 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
+              GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
         }  
 
 
@@ -264,6 +275,8 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     Debug.Log("CardFreeze or firstraund or isattacked");
+                   GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                   TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "CardFreeze or firstraund or isattacked.";
                 }
             }
 
@@ -354,12 +367,19 @@ public class PlayerController : MonoBehaviour
                     if (spawnedObject.GetComponent<CardInformation>().CardHealth=="")
                     {
                         Debug.LogError("ODYYYYYSEAAANN SPEEEELLL YARATTTI ");
+
+                        GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                        TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Odyssean Navigator created a spell..";
+
                         spawnedObject.GetComponent<CardInformation>().CardMana--;
 
                     }
                     else
                     {
                         Debug.LogError("ODYYYYYSEAAANN MİNNYOONNNN YARATTTI ");
+
+                        GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                        TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Odyssean Navigator created a minion..";
                     }
 
                 }
@@ -448,6 +468,10 @@ public class PlayerController : MonoBehaviour
                     lastHoveredCard = null;
                    
                     Debug.LogError("USSEEDD A SPEEELLL");
+
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+
                     return;
 
                 }
@@ -490,6 +514,8 @@ public class PlayerController : MonoBehaviour
                     lastHoveredCard = null;
 
                     Debug.LogError("USSEEDD A SPEEELLL");
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Olympian Favor") 
@@ -520,6 +546,8 @@ public class PlayerController : MonoBehaviour
                     lastHoveredCard = null;
 
                     Debug.LogError("USSEEDD A SPEEELLL");
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Aegis Shield") 
@@ -550,6 +578,8 @@ public class PlayerController : MonoBehaviour
                     lastHoveredCard = null;
 
                     Debug.LogError("USSEEDD A SPEEELLL");
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Golden Fleece") 
@@ -580,6 +610,8 @@ public class PlayerController : MonoBehaviour
                     lastHoveredCard = null;
 
                     Debug.LogError("USSEEDD A SPEEELLL");
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Labyrinth Maze") 
@@ -606,6 +638,8 @@ public class PlayerController : MonoBehaviour
                     lastHoveredCard = null;
 
                     Debug.LogError("USSEEDD A SPEEELLL");
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Divine Ascention") 
@@ -636,6 +670,8 @@ public class PlayerController : MonoBehaviour
                     lastHoveredCard = null;
 
                     Debug.LogError("USSEEDD A SPEEELLL");
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Centaur Archer" || selectedCard.GetComponent<CardInformation>().CardName == "Minotaur Warrior" || selectedCard.GetComponent<CardInformation>().CardName == "Pegasus Rider" || selectedCard.GetComponent<CardInformation>().CardName == "Greek Hoplite" || selectedCard.GetComponent<CardInformation>().CardName =="Siren")
@@ -1016,6 +1052,9 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     Debug.LogError("IT IS NOT YOUR TURN!");
+
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my turn!";
                 }
 
             }
@@ -1030,6 +1069,8 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     Debug.LogError("IT IS NOT YOUR TURN!");
+                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my turn!";
                 }
 
             }
@@ -1175,11 +1216,17 @@ public class PlayerController : MonoBehaviour
             {
                 DeadMonsterCound++;
                 Debug.LogError(DeadMonsterCound + " TANE MONSTER CARD ÖLDÜ");
+
+                GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "a total of " + DeadMonsterCound + "monsters are dead.";
             }
             else if(DeadCardName== "Keshik Cavalry")
             {
                 
                 Debug.LogError("keshikdead");
+
+                GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Keshik Cavalry Dead!";
             }
             if(GetComponent<CardProgress>().AttackerCard != null)
             {
