@@ -1487,6 +1487,9 @@ MonoBehaviour:
   CompetitorHeroAttackDamageText: {fileID: 664844411364063452}
   OlympiaKillCount: 0
   SpellsExtraDamage: 0
+  GodsBaneUsed: 0
+  SteppeAmbush: 0
+  NomadicTactics: 0
 --- !u!114 &6638573949623686288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1504,6 +1507,8 @@ MonoBehaviour:
   TargetCardIndex: 0
   SecoundTargetCard: 0
   ForMyCard: 0
+  ForHeal: 0
+  WindFury: 1
 --- !u!1 &4346544841015542748
 GameObject:
   m_ObjectHideFlags: 0

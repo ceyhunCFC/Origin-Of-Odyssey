@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour
 
     public int OlympiaKillCount = 0;
     public int SpellsExtraDamage = 0;
+    public bool GodsBaneUsed = false;
+    public bool SteppeAmbush = false;
+    public bool NomadicTactics = false;
 
     void Start()
     {
@@ -457,8 +460,8 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    GetComponent<CardProgress>().SecoundTargetCard = true;
-                    GetComponent<CardProgress>().AttackerCard = selectedCard;
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.AttackerCard = selectedCard;
 
 
                     selectedCard.SetActive(false);
@@ -466,7 +469,8 @@ public class PlayerController : MonoBehaviour
                    
                     selectedCard = null;
                     lastHoveredCard = null;
-                   
+
+                    UsedSpell();
                     Debug.LogError("USSEEDD A SPEEELLL");
 
                     GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
@@ -478,17 +482,17 @@ public class PlayerController : MonoBehaviour
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Gorgon")
                 {
 
-                    GetComponent<CardProgress>().FreezeAllEnemyMinions();
+                    _CardProgress.FreezeAllEnemyMinions();
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Chimera")
                 {
 
-                    GetComponent<CardProgress>().DamageToAlLOtherMinions();
+                    _CardProgress.DamageToAlLOtherMinions();
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Athena")
                 {
 
-                    GetComponent<CardProgress>().FillWithHoplites();
+                    _CardProgress.FillWithHoplites();
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Lightning Storm")
                 {
@@ -507,12 +511,13 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    GetComponent<CardProgress>().LightningStorm();
+                    _CardProgress.LightningStorm();
 
                     selectedCard.SetActive(false);
                     selectedCard = null;
                     lastHoveredCard = null;
 
+                    UsedSpell();
                     Debug.LogError("USSEEDD A SPEEELLL");
                       GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
@@ -535,16 +540,17 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    //  GetComponent<CardProgress>().AttackerCard = selectedCard;
+                    //  _CardProgress.AttackerCard = selectedCard;
 
-                    GetComponent<CardProgress>().SecoundTargetCard = true;
-                    GetComponent<CardProgress>().AttackerCard = selectedCard;
-                    GetComponent<CardProgress>().ForMyCard = true;
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
                     selectedCard = null;
                     lastHoveredCard = null;
 
+                    UsedSpell();
                     Debug.LogError("USSEEDD A SPEEELLL");
                       GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
@@ -567,16 +573,17 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    // GetComponent<CardProgress>().LightningStorm();
+                    // _CardProgress.LightningStorm();
 
-                    GetComponent<CardProgress>().SecoundTargetCard = true;
-                    GetComponent<CardProgress>().AttackerCard = selectedCard;
-                    GetComponent<CardProgress>().ForMyCard = true;
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
                     selectedCard = null;
                     lastHoveredCard = null;
 
+                    UsedSpell();
                     Debug.LogError("USSEEDD A SPEEELLL");
                       GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
@@ -599,16 +606,17 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    // GetComponent<CardProgress>().LightningStorm();
+                    // _CardProgress.LightningStorm();
 
-                    GetComponent<CardProgress>().SecoundTargetCard = true;
-                    GetComponent<CardProgress>().AttackerCard = selectedCard;
-                    GetComponent<CardProgress>().ForMyCard = true;
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
                     selectedCard = null;
                     lastHoveredCard = null;
 
+                    UsedSpell();
                     Debug.LogError("USSEEDD A SPEEELLL");
                       GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
@@ -637,6 +645,7 @@ public class PlayerController : MonoBehaviour
                     selectedCard = null;
                     lastHoveredCard = null;
 
+                    UsedSpell();
                     Debug.LogError("USSEEDD A SPEEELLL");
                       GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
@@ -659,32 +668,440 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    // GetComponent<CardProgress>().LightningStorm();
+                    // _CardProgress.LightningStorm();
 
-                    GetComponent<CardProgress>().SecoundTargetCard = true;
-                    GetComponent<CardProgress>().AttackerCard = selectedCard;
-                    GetComponent<CardProgress>().ForMyCard = true;
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
                     selectedCard = null;
                     lastHoveredCard = null;
 
+                    UsedSpell();
                     Debug.LogError("USSEEDD A SPEEELLL");
                       GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
-                else if(selectedCard.GetComponent<CardInformation>().CardName == "Centaur Archer" || selectedCard.GetComponent<CardInformation>().CardName == "Minotaur Warrior" || selectedCard.GetComponent<CardInformation>().CardName == "Pegasus Rider" || selectedCard.GetComponent<CardInformation>().CardName == "Greek Hoplite" || selectedCard.GetComponent<CardInformation>().CardName =="Siren")
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Centaur Archer" 
+                    || selectedCard.GetComponent<CardInformation>().CardName == "Minotaur Warrior" 
+                    || selectedCard.GetComponent<CardInformation>().CardName == "Pegasus Rider" 
+                    || selectedCard.GetComponent<CardInformation>().CardName == "Greek Hoplite" 
+                    || selectedCard.GetComponent<CardInformation>().CardName =="Siren"                           //oynandığı tur saldırabilenler
+                    || selectedCard.GetComponent<CardInformation>().CardName== "Mongol Lancer"
+                    || selectedCard.GetComponent<CardInformation>().CardName == "Keshik Cavalry")
                 {
                     selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
                 }
-                else if(selectedCard.GetComponent<CardInformation>().CardName== "Mongol Messenger")
+                else if(selectedCard.GetComponent<CardInformation>().CardName== "Mongol Messenger")       //genghis here
                 {
+                    GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (GameObject card in mycards)
+                    {
+                        if (card.GetComponent<CardInformation>().CardName == "Steppe Warlord")
+                        {
+                            Debug.Log("SteppeWorld var can arttırıldı");
+                            selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                            selectedCard.GetComponent<CardInformation>().SetInformation();
+                            int cardindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                            RefreshMyCard(cardindex,
+                                selectedCard.GetComponent<CardInformation>().CardHealth,
+                                selectedCard.GetComponent<CardInformation>().HaveShield,
+                                selectedCard.GetComponent<CardInformation>().CardDamage,
+                                selectedCard.GetComponent<CardInformation>().DivineSelected,
+                                selectedCard.GetComponent<CardInformation>().FirstTakeDamage,
+                                selectedCard.GetComponent<CardInformation>().FirstDamageTaken,
+                                selectedCard.GetComponent<CardInformation>().EternalShield);
+                        }
+                    }
                     SpawnAndReturnGameObject();
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName== "Mongol Archer")
+                {
+                    GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (GameObject card in mycards)
+                    {
+                        if (card.GetComponent<CardInformation>().CardName == "Steppe Warlord")
+                        {
+                            Debug.Log("SteppeWorld var can arttırıldı");
+                            selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                            selectedCard.GetComponent<CardInformation>().SetInformation();
+                            int cardindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                            RefreshMyCard(cardindex,
+                                selectedCard.GetComponent<CardInformation>().CardHealth,
+                                selectedCard.GetComponent<CardInformation>().HaveShield,
+                                selectedCard.GetComponent<CardInformation>().CardDamage,
+                                selectedCard.GetComponent<CardInformation>().DivineSelected,
+                                selectedCard.GetComponent<CardInformation>().FirstTakeDamage,
+                                selectedCard.GetComponent<CardInformation>().FirstDamageTaken,
+                                selectedCard.GetComponent<CardInformation>().EternalShield);
+                        }
+                    }
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    int[] validIndices = { 0, 6, 7, 13 };
+
+                    if (Array.Exists(validIndices, element => element == index))
+                    {
+                        Debug.Log("Selected Mongol Archer card is at a valid index: " + index);
+                        selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                    }
+                    else
+                    {
+                        Debug.Log("Selected Mongol Archer card is not at a valid index.");
+                    }
 
 
+                    selectedCard.GetComponent<CardInformation>().SetInformation();
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName== "Mongol Shaman")
+                {
+                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.ForHeal = true;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName=="Eagle Hunter")
+                {
+                    List<int> emptyCells = new List<int>();
 
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyCells.Add(i);
+                        }
+                    }
+                    if (emptyCells.Count > 0)
+                    {
+                        int randomIndex = emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)];
+
+                        CreateSpecialCard("Eagle", "1", 2, 0, randomIndex, true);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No empty cells available to place the Eagle card.");
+                    }
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName== "Yurt Builder")
+                {
+                    if(PV.IsMine)
+                    {
+                        Mana += 1;
+
+                        ManaCountText.text = Mana.ToString() + "/10";
+                        OwnManaBar.fillAmount = Mana / 10f;
+                        CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                        CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+
+                        Debug.Log("Mana bir arttırıldı");
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Marco Polo")
+                {
+                    //3 kart göster birini seç ve destesine ekle
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Nomadic Scout")
+                {
+                    PlayerController[] objects = PlayerController.FindObjectsOfType<PlayerController>();
+                    foreach (PlayerController obj in objects)
+                    {
+                        if (obj.name == "PlayerController(Clone)" && obj.GetComponent<PlayerController>().PV != this.PV)
+                        {
+                            if(obj.GetComponent<PlayerController>().NomadicTactics==true)
+                            {
+                                Debug.Log("Nomadic tactik sırrı ortaya çıktı");
+                                obj.GetComponent<PlayerController>().NomadicTactics = false;
+                            }
+                            if (obj.GetComponent<PlayerController>().SteppeAmbush == true)
+                            {
+                                Debug.Log("Steppeambush sırrı ortaya çıktı");
+                                obj.GetComponent<PlayerController>().SteppeAmbush = false;
+                            }
+                        }
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Steppe Warlord")
+                {
+                    GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (GameObject card in mycards)
+                    {
+                        if (card.GetComponent<CardInformation>().CardName == "Mongol Messenger" || card.GetComponent<CardInformation>().CardName== "Mongol Archer" || card.GetComponent<CardInformation>().CardName== "General Subutai")
+                        {
+                            Debug.Log("KartBulundu can arttırıldı");
+                            card.GetComponent<CardInformation>().CardDamage += 2;
+                            card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                            card.GetComponent<CardInformation>().SetInformation();
+                            int cardindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                            RefreshMyCard(cardindex,
+                                card.GetComponent<CardInformation>().CardHealth,
+                                card.GetComponent<CardInformation>().HaveShield,
+                                card.GetComponent<CardInformation>().CardDamage,
+                                card.GetComponent<CardInformation>().DivineSelected,
+                                card.GetComponent<CardInformation>().FirstTakeDamage,
+                                card.GetComponent<CardInformation>().FirstDamageTaken,
+                                card.GetComponent<CardInformation>().EternalShield);
+                        }
+                    }
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "General Subutai")
+                {
+                    selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                    GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (GameObject card in mycards)
+                    {
+                        if (card.GetComponent<CardInformation>().CardName == "Steppe Warlord")
+                        {
+                            Debug.Log("SteppeWorld var can arttırıldı");
+                            selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                            selectedCard.GetComponent<CardInformation>().SetInformation();
+                            int cardindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                            RefreshMyCard(cardindex,
+                                selectedCard.GetComponent<CardInformation>().CardHealth,
+                                selectedCard.GetComponent<CardInformation>().HaveShield,
+                                selectedCard.GetComponent<CardInformation>().CardDamage,
+                                selectedCard.GetComponent<CardInformation>().DivineSelected,
+                                selectedCard.GetComponent<CardInformation>().FirstTakeDamage,
+                                selectedCard.GetComponent<CardInformation>().FirstDamageTaken,
+                                selectedCard.GetComponent<CardInformation>().EternalShield);
+                        }
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Horseback Archery")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();                                                                                                            //genghis spells
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+                    _CardProgress.HorsebackArchery();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Ger Defense")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();                                                                                                            
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.ForMyCard = true;
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Mongol Fury")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+                    _CardProgress.MongolFury();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Around the Great Wall")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+                    _CardProgress.AroundtheGreatWall();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Eternal Steppe’s Whisper")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+
+                    _CardProgress.SecoundTargetCard = true;
+                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.ForMyCard = true;
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "God’s Bane")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+                    GodsBaneUsed = true;
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("GodsBane", RpcTarget.All,2);          //rakibin kartının manasını 2 arttırır
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Steppe Ambush")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+                    SteppeAmbush = true;
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_SteppeAmbush", RpcTarget.Others,SteppeAmbush);
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Nomadic Tactics")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
+                    CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackDeck();
+
+                    if (PV.IsMine)
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                        PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    }
+                    NomadicTactics = true;
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_NomadicTactics", RpcTarget.Others, NomadicTactics);
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    UsedSpell();
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
 
                 ManaCountText.text = Mana.ToString() + "/10";
                 OwnManaBar.fillAmount = Mana / 10f;
@@ -743,8 +1160,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    void GodsBane(int mana)
+    {
+        for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++) // KENDİ DESTEMİZDEKİ KARTLARI TEK TEK ÇAĞIR
+        {
 
-    
+            if (GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().CardHealth == "")  // ÇAĞIRILAN KARTIN BÜYÜ MÜ OLDUĞU KONTROL ET
+            {
+                GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().CardMana += mana;
+                GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().SetInformation();
+            }
+        }
+    }
+
+
+
+
     void CallRotateAndRevert(GameObject RotateCard)
     {
 
@@ -931,6 +1363,7 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
             CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
             CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+            CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
         }
@@ -1020,12 +1453,6 @@ public class PlayerController : MonoBehaviour
         GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
         CompetitorPV = null;
 
-        foreach (var card in AllOwnCards)
-        {
-            card.GetComponent<CardInformation>().isItFirstRaound = false;
-            card.GetComponent<CardInformation>().CardFreeze = false;
-            card.GetComponent<CardInformation>().isAttacked = false;
-        }
 
         foreach (GameObject obj in objects)
         {
@@ -1038,6 +1465,34 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        
+        foreach (var card in AllOwnCards)
+        {
+            card.GetComponent<CardInformation>().isItFirstRaound = false;
+            card.GetComponent<CardInformation>().CardFreeze = false;
+            card.GetComponent<CardInformation>().isAttacked = false;
+            card.GetComponent<CardInformation>().CanAttackBehind = false;
+            if (card.GetComponent<CardInformation>().CardName == "Kublai Khan")
+            {
+                _CardProgress.KublaiKhan();
+            }
+            if(card.GetComponent<CardInformation>().MongolFury==true)
+            {
+                card.GetComponent<CardInformation>().CardDamage -= 2;
+                card.GetComponent<CardInformation>().MongolFury = false;
+                card.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                RefreshMyCard(index, 
+                    card.GetComponent<CardInformation>().CardHealth, 
+                    card.GetComponent<CardInformation>().HaveShield,
+                    card.GetComponent<CardInformation>().CardDamage,
+                    card.GetComponent<CardInformation>().DivineSelected,
+                    card.GetComponent<CardInformation>().FirstTakeDamage, 
+                    card.GetComponent<CardInformation>().FirstDamageTaken,
+                    card.GetComponent<CardInformation>().EternalShield);
+            }
+        }
+        _CardProgress.WindFury = true;
 
         if (PV.IsMine)
         {
@@ -1076,11 +1531,11 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        GetComponent<CardProgress>().AttackerCard = null;
-        GetComponent<CardProgress>().TargetCard = null;
-        GetComponent<CardProgress>().TargetCardIndex = -1;
-        GetComponent<CardProgress>().SecoundTargetCard = false;
-        GetComponent<CardProgress>().ForMyCard = false;
+        _CardProgress.AttackerCard = null;
+        _CardProgress.TargetCard = null;
+        _CardProgress.TargetCardIndex = -1;
+        _CardProgress.SecoundTargetCard = false;
+        _CardProgress.ForMyCard = false;
 
 
     }
@@ -1201,6 +1656,28 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void DeleteMyCard(int TargetCardIndex)
+    {
+        if(PV.IsMine)
+        {
+            GameObject DeadCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject;
+            Destroy(DeadCard);
+
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_DeleteMyCard", RpcTarget.All, TargetCardIndex);
+        }
+    }
+
+    [PunRPC]
+    void RPC_DeleteMyCard(int TargetCardIndex)
+    {
+        if (!PV.IsMine)
+            return;
+
+
+        Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
+    }
+
+
     public void DeleteAreaCard(int TargetCardIndex)
     {
         if (PV.IsMine)
@@ -1225,12 +1702,22 @@ public class PlayerController : MonoBehaviour
                 
                 Debug.LogError("keshikdead");
 
+                CreateSpecialCard("Keshik", "2", 2, 0, TargetCardIndex,false);
+
                 GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                 TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Keshik Cavalry Dead!";
             }
-            if(GetComponent<CardProgress>().AttackerCard != null)
+            else if(DeadCardName== "Flaming Camel")
             {
-                if (GetComponent<CardProgress>().AttackerCard.GetComponent<CardInformation>().CardName == "Zeus")
+                _CardProgress.FlamingCamel();
+            }
+            else if(DeadCardName== "Steppe Warlord")
+            {
+                _CardProgress.SteppeWarlord();
+            }
+            if(_CardProgress.AttackerCard != null)
+            {
+                if (_CardProgress.AttackerCard.GetComponent<CardInformation>().CardName == "Zeus")
                 {
                     OlympiaKillCount++;
                     if (OlympiaKillCount > 4)
@@ -1250,9 +1737,45 @@ public class PlayerController : MonoBehaviour
                                 randomCard.GetComponent<CardInformation>().CardDamage,
                                 randomCard.GetComponent<CardInformation>().DivineSelected,
                                 randomCard.GetComponent<CardInformation>().FirstTakeDamage,
-                                randomCard.GetComponent<CardInformation>().FirstDamageTaken);
+                                randomCard.GetComponent<CardInformation>().FirstDamageTaken,
+                                randomCard.GetComponent<CardInformation>().EternalShield);
                         }
 
+                    }
+                }
+                else if(_CardProgress.AttackerCard.GetComponent<CardInformation>().CardName == "Mongol Lancer")
+                {
+                    if (TargetCardIndex > 6 && TargetCardIndex <14)
+                    {
+                        GameObject[] allTargets = GameObject.FindGameObjectsWithTag("CompetitorCard");
+
+                        foreach (GameObject target in allTargets)
+                        {
+                            if (target != DeadCard)
+                            {
+                                float distance = Vector3.Distance(DeadCard.transform.position, target.transform.position);
+
+                                if (distance <= 0.55f)
+                                {
+                                    Vector3 directionToTarget = (target.transform.position - DeadCard.transform.position).normalized;
+
+                                    float dotProductBackward = Vector3.Dot(-DeadCard.transform.up, directionToTarget);
+
+                                    if (dotProductBackward > 0.5f)
+                                    {
+                                        Debug.Log("Arkasında kart var");
+                                        target.GetComponent<CardInformation>().CardHealth =(int.Parse(target.GetComponent<CardInformation>().CardHealth) - _CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage).ToString();
+                                        int index= Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions,target.transform.parent.gameObject);
+                                        RefreshUsedCard(index, target.GetComponent<CardInformation>().CardHealth, target.GetComponent<CardInformation>().CardDamage);
+                                        if (int.Parse(target.GetComponent<CardInformation>().CardHealth) <= 0)
+                                        {
+                                            DeleteAreaCard(index);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1290,6 +1813,7 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().CardHealth = 1.ToString();
             CardCurrent.GetComponent<CardInformation>().CardDamage = 1;
             CardCurrent.GetComponent<CardInformation>().CardMana = 1;
+            CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
 
@@ -1314,25 +1838,26 @@ public class PlayerController : MonoBehaviour
         CardCurrent.GetComponent<CardInformation>().CardHealth = 1.ToString();
         CardCurrent.GetComponent<CardInformation>().CardDamage = 1;
         CardCurrent.GetComponent<CardInformation>().CardMana = 1;
+        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
         CardCurrent.GetComponent<CardInformation>().SetInformation();
     }
 
 
-    public void RefreshUsedCard(int boxindex, string heatlh)
+    public void RefreshUsedCard(int boxindex, string heatlh,int damage)
     {
         if (PV.IsMine)
         {
 
             GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>().SetInformation();
 
-            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshUsedCard", RpcTarget.All, boxindex, heatlh);
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshUsedCard", RpcTarget.All, boxindex, heatlh, damage);
         }
 
 
     }
 
     [PunRPC]
-    public void RPC_RefreshUsedCard(int boxindex, string heatlh)
+    public void RPC_RefreshUsedCard(int boxindex, string heatlh,int damage)
     {
 
         if (PV.IsMine)
@@ -1340,6 +1865,7 @@ public class PlayerController : MonoBehaviour
             GameObject CardCurrent = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject;
          
             CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
+            CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
         }
@@ -1373,19 +1899,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void RefreshMyCard(int boxindex, string heatlh,bool haveshield,int damage,bool divineselected,bool firstdamage,bool firstdamagetaken)
+    public void RefreshMyCard(int boxindex, string heatlh,bool haveshield,int damage,bool divineselected,bool firstdamage,bool firstdamagetaken,bool eternalshield)
     {
         if (PV.IsMine)
         {
 
             GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>().SetInformation();       //kendi kart bilgimi güncelleme
 
-            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshMyCard", RpcTarget.All, boxindex, heatlh,haveshield,damage,divineselected,firstdamage,firstdamagetaken);
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshMyCard", RpcTarget.All, boxindex, heatlh,haveshield,damage,divineselected,firstdamage,firstdamagetaken,eternalshield);
         }
     }
 
     [PunRPC]
-    public void RPC_RefreshMyCard(int boxindex, string heatlh,bool haveshield,int damage,bool divineselected,bool firstdamage,bool firstdamagetaken)
+    public void RPC_RefreshMyCard(int boxindex, string heatlh,bool haveshield,int damage,bool divineselected,bool firstdamage,bool firstdamagetaken,bool eternalshield)
     {
         if (PV.IsMine)
         {
@@ -1397,6 +1923,7 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().DivineSelected=divineselected;
             CardCurrent.GetComponent<CardInformation>().FirstTakeDamage = firstdamage;
             CardCurrent.GetComponent<CardInformation>().FirstDamageTaken = firstdamagetaken;
+            CardCurrent.GetComponent<CardInformation>().EternalShield=eternalshield;
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
         }
@@ -1501,7 +2028,7 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                            _CardProgress.AttackerCard = existingObject;
                         }
                         break;
                     case "Genghis":
@@ -1511,7 +2038,35 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                            //existingObject.GetComponent<CardController>().UsedCard(existingObject.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+
+                            GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+                            foreach (GameObject card in mycards)
+                            {
+                                if(card.GetComponent<CardInformation>().CardName== "Horse Breeder")
+                                {
+                                    List<int> emptyCells = new List<int>();
+
+                                    for (int i = 0; i < 14; i++)
+                                    {
+                                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                        {
+                                            emptyCells.Add(i);
+                                        }
+                                    }
+                                    if (emptyCells.Count > 0)
+                                    {
+                                        int randomIndex = emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)];
+
+                                        CreateSpecialCard("Steppe Horse", "2", 2, 0, randomIndex, false);
+                                    }
+                                    else
+                                    {
+                                        Debug.LogWarning("No empty cells available to place the Eagle card.");
+                                    }
+                                }
+                            }
+
                         }
                         break;
                 }
@@ -1538,7 +2093,7 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                            _CardProgress.AttackerCard = existingObject;
                         }
                         break;
                     case "Genghis":
@@ -1548,7 +2103,34 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            GetComponent<CardProgress>().AttackerCard = existingObject;
+                            //existingObject.GetComponent<CardController>().UsedCard(existingObject.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+
+                            GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+                            foreach (GameObject card in mycards)
+                            {
+                                if (card.GetComponent<CardInformation>().CardName == "Horse Breeder")
+                                {
+                                    List<int> emptyCells = new List<int>();
+
+                                    for (int i = 0; i < 14; i++)
+                                    {
+                                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                        {
+                                            emptyCells.Add(i);
+                                        }
+                                    }
+                                    if (emptyCells.Count > 0)
+                                    {
+                                        int randomIndex = emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)];
+
+                                        CreateSpecialCard("Steppe Horse", "2", 2, 0, randomIndex, true);
+                                    }
+                                    else
+                                    {
+                                        Debug.LogWarning("No empty cells available to place the Eagle card.");
+                                    }
+                                }
+                            }
                         }
                         break;
                 }
@@ -1567,7 +2149,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetMana(GameObject attackercard)
     {
-        if(attackercard.GetComponent<CardInformation>().CardName=="Zeus")
+        if(attackercard.GetComponent<CardInformation>().CardName=="Zeus" || attackercard.GetComponent<CardInformation>().CardName == "Genghis")
         {
             Mana -= attackercard.GetComponent<CardInformation>().CardMana;
 
@@ -1637,7 +2219,8 @@ public class PlayerController : MonoBehaviour
                             card.GetComponent<CardInformation>().CardDamage, 
                             card.GetComponent<CardInformation>().DivineSelected,
                             card.GetComponent<CardInformation>().FirstTakeDamage,
-                            card.GetComponent<CardInformation>().FirstDamageTaken);
+                            card.GetComponent<CardInformation>().FirstDamageTaken,
+                            card.GetComponent<CardInformation>().EternalShield);
                     }
                     if(card.GetComponent<CardInformation>().FirstTakeDamage==false)
                     {
@@ -1649,8 +2232,34 @@ public class PlayerController : MonoBehaviour
                             card.GetComponent<CardInformation>().CardDamage, 
                             card.GetComponent<CardInformation>().DivineSelected,
                             card.GetComponent<CardInformation>().FirstTakeDamage,
-                            card.GetComponent<CardInformation>().FirstDamageTaken);
+                            card.GetComponent<CardInformation>().FirstDamageTaken,
+                            card.GetComponent<CardInformation>().EternalShield);
                     }
+                    if (card.GetComponent<CardInformation>().GerDefense == true)
+                    {
+                        card.GetComponent<CardInformation>().GerDefense = false;
+                        card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+                        card.GetComponent<CardInformation>().SetInformation();
+                        if (int.Parse(card.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+                        {
+                            int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                            DeleteAreaCard(index);
+                        }
+                    }
+                    if (card.GetComponent<CardInformation>().EternalShield == true)
+                    {
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);      //tur sonu eternalshiled false yap
+                        card.GetComponent<CardInformation>().EternalShield = false;
+                        RefreshMyCard(TargetCardIndex,
+                            card.GetComponent<CardInformation>().CardHealth,
+                            card.GetComponent<CardInformation>().HaveShield,
+                            card.GetComponent<CardInformation>().CardDamage,
+                            card.GetComponent<CardInformation>().DivineSelected,
+                            card.GetComponent<CardInformation>().FirstTakeDamage,
+                            card.GetComponent<CardInformation>().FirstDamageTaken,
+                            card.GetComponent<CardInformation>().EternalShield);
+                    }
+
                 }
 
                 if (OlympiaKillCount >= 4)
@@ -1662,12 +2271,13 @@ public class PlayerController : MonoBehaviour
                             Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().CardHealth = (int.Parse(Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().CardHealth) + 2).ToString();
                             int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, Cards.transform.parent.gameObject);
                             RefreshMyCard(TargetCardIndex, 
-                                Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().CardHealth,
-                                Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().HaveShield, 
-                                Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().CardDamage,
-                                Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().DivineSelected,
-                                Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().FirstTakeDamage,
-                                Cards.GetComponent<CardInformation>().GetComponent<CardInformation>().FirstDamageTaken);
+                                Cards.GetComponent<CardInformation>().CardHealth,
+                                Cards.GetComponent<CardInformation>().HaveShield, 
+                                Cards.GetComponent<CardInformation>().CardDamage,
+                                Cards.GetComponent<CardInformation>().DivineSelected,
+                                Cards.GetComponent<CardInformation>().FirstTakeDamage,
+                                Cards.GetComponent<CardInformation>().FirstDamageTaken,
+                                Cards.GetComponent<CardInformation>().EternalShield);
                         }
                     }
                 }
@@ -1707,6 +2317,12 @@ public class PlayerController : MonoBehaviour
                             obj.GetComponent<PlayerController>().PV.RPC("RPC_SetSpellsExtraDamage", RpcTarget.All,0);
                         }
                     }
+                }
+                if(GodsBaneUsed==true)
+                {
+                    Debug.Log("godbande dropmana");
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("GodsBane", RpcTarget.All, -2);
+                    GodsBaneUsed = false;
                 }
 
             }
@@ -1761,6 +2377,135 @@ public class PlayerController : MonoBehaviour
         SpellsExtraDamage = damage;
     }
 
+    [PunRPC]
+    void RPC_SteppeAmbush(bool steppeambush)
+    {
+        PlayerController[] objects = PlayerController.FindObjectsOfType<PlayerController>();
+        foreach (PlayerController obj in objects)
+        {
+            if (obj.name == "PlayerController(Clone)" && obj.GetComponent<PlayerController>().PV != this.PV)
+            {
+                obj.GetComponent<PlayerController>().SteppeAmbush = steppeambush;
+            }
+        }
+    }
+    void UsedSpell()
+    {
+        if (!PV.IsMine)
+            return;
+        PlayerController[] objects = PlayerController.FindObjectsOfType<PlayerController>();
+        foreach (PlayerController obj in objects)
+        {
+            if (obj.name == "PlayerController(Clone)" && obj.GetComponent<PlayerController>().PV != this.PV && obj.GetComponent<PlayerController>().SteppeAmbush ==true)
+            {
+                List<int> emptyCells = new List<int>();
+
+                for (int i = 0; i < 14; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyCells.Add(i);
+                    }
+                }
+                if (emptyCells.Count > 0)
+                {
+                    int randomIndex = emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)];
+
+                    CreateSpecialCard("Horse Archer", "2", 3, 0, randomIndex, false);
+                    obj.GetComponent<PlayerController>().SteppeAmbush = false;
+                }
+                else
+                {
+                    Debug.LogWarning("No empty cells available to place the Eagle card.");
+                }
+            }
+        }
+    }
+    [PunRPC]
+    void RPC_NomadicTactics(bool nomadictactics)
+    {
+        PlayerController[] objects = PlayerController.FindObjectsOfType<PlayerController>();
+        foreach (PlayerController obj in objects)
+        {
+            if (obj.name == "PlayerController(Clone)" && obj.GetComponent<PlayerController>().PV != this.PV)
+            {
+                obj.GetComponent<PlayerController>().NomadicTactics = nomadictactics;
+            }
+        }
+    }
+    public void CheckNomadicTactics()
+    {
+        if (!PV.IsMine)
+            return;
+
+
+        PlayerController[] objects = PlayerController.FindObjectsOfType<PlayerController>();
+        foreach (PlayerController obj in objects)
+        {
+
+            if (obj.name == "PlayerController(Clone)" && obj.GetComponent<PlayerController>().PV != this.PV && obj.GetComponent<PlayerController>().NomadicTactics == true)
+            {
+
+                GameObject TargetCard = _CardProgress.TargetCard;
+                GameObject[] mycards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                GameObject attackercard = _CardProgress.AttackerCard;
+
+                foreach (GameObject target in mycards)
+                {
+
+                    if (target != TargetCard)
+                    {
+                        float distance = Vector3.Distance(TargetCard.transform.position, target.transform.position);
+
+                        if (distance <= 0.55f)
+                        {
+
+                            Vector3 directionToTarget = (target.transform.position - TargetCard.transform.position).normalized;
+
+                            float dotProductForward = Vector3.Dot(TargetCard.transform.up, directionToTarget);
+                            float dotProductRight = Vector3.Dot(TargetCard.transform.right, directionToTarget);
+                            float dotProductLeft = Vector3.Dot(-TargetCard.transform.right, directionToTarget);
+                            float dotProductBackward = Vector3.Dot(-TargetCard.transform.up, directionToTarget);
+
+
+                            if (dotProductForward > 0.5f || dotProductRight > 0.5f || dotProductLeft > 0.5f || dotProductBackward > 0.5f)
+                            {
+
+                                CardInformation TargetInfo = target.GetComponent<CardInformation>();
+
+                                int cardindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, attackercard.transform.parent.gameObject);
+
+                                attackercard.GetComponent<CardInformation>().CardHealth = (int.Parse(attackercard.GetComponent<CardInformation>().CardHealth) - TargetInfo.CardDamage).ToString();
+
+                                RefreshMyCard(cardindex,
+                                attackercard.GetComponent<CardInformation>().CardHealth,
+                                attackercard.GetComponent<CardInformation>().HaveShield,
+                                attackercard.GetComponent<CardInformation>().CardDamage,
+                                attackercard.GetComponent<CardInformation>().DivineSelected,
+                                attackercard.GetComponent<CardInformation>().FirstTakeDamage,
+                                attackercard.GetComponent<CardInformation>().FirstDamageTaken,
+                                attackercard.GetComponent<CardInformation>().EternalShield);
+
+                                if (int.Parse(attackercard.GetComponent<CardInformation>().CardHealth) <= 0)
+                                {
+                                    Debug.Log("Target card " + attackercard.GetComponent<CardInformation>().CardName + " is dead");
+                                    DeleteMyCard(cardindex);
+                                    break;
+                                }
+
+                                Debug.Log(TargetInfo.CardName + " " + attackercard.GetComponent<CardInformation>().CardHealth);
+                            }
+                        }
+                    }
+                }
+
+                obj.GetComponent<PlayerController>().NomadicTactics = false;
+            }
+        }
+    }
+
+
+
     void CreateZeusSpell(GameObject CardCurrent)
     {
         ZeusCard zeusCard = new ZeusCard();
@@ -1774,6 +2519,65 @@ public class PlayerController : MonoBehaviour
         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.spells[spellIndex].mana;
+        CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+    }
+
+    void CreateSpecialCard(string name, string health, int damage,int mana,int index,bool front)
+    {
+        if(PV.IsMine)
+        {
+            GameObject CardCurrent;
+            if(front)
+            {
+                CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[index].transform);
+                CardCurrent.tag = "UsedCard";
+            }
+            else
+            {
+                CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform);
+                CardCurrent.tag = "CompetitorCard";
+            }
+            
+
+            CardCurrent.transform.localScale = Vector3.one;
+            CardCurrent.transform.localEulerAngles = new Vector3(90, 0, 180);
+            CardCurrent.GetComponent<CardInformation>().CardName = name;
+            CardCurrent.GetComponent<CardInformation>().CardHealth = health;
+            CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
+            CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+            CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+            CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateSpecialCard", RpcTarget.All, name,  health, damage, mana, index,front);
+        }
+    }
+
+    [PunRPC]
+    void RPC_CreateSpecialCard(string name,  string health, int damage, int mana, int index,bool front)
+    {
+        if (!PV.IsMine)
+            return;
+        GameObject CardCurrent;
+        if (front)
+        {
+            CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform);
+            CardCurrent.tag = "CompetitorCard";
+        }
+        else
+        {
+            CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[index].transform);
+            CardCurrent.tag = "UsedCard";
+        }
+
+         
+        CardCurrent.transform.localScale = Vector3.one;
+        CardCurrent.transform.localEulerAngles = new Vector3(90, 0, 180);
+        CardCurrent.GetComponent<CardInformation>().CardName = name;
+        CardCurrent.GetComponent<CardInformation>().CardHealth = health;
+        CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
+        CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
         CardCurrent.GetComponent<CardInformation>().SetInformation();
 
     }
@@ -1805,6 +2609,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = zeusCard.minions[targetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.minions[targetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
                     }
@@ -1845,6 +2650,7 @@ public class PlayerController : MonoBehaviour
                           CardCurrent.GetComponent<CardInformation>().CardHealth = genghisCard.minions[GenghistargetIndex].health.ToString();
                           CardCurrent.GetComponent<CardInformation>().CardDamage = genghisCard.minions[GenghistargetIndex].attack;
                           CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.minions[GenghistargetIndex].mana;
+                          CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                           CardCurrent.GetComponent<CardInformation>().SetInformation();
                           break;
                       }

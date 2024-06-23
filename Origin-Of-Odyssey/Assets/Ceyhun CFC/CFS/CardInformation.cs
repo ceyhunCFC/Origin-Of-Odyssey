@@ -10,14 +10,19 @@ public class CardInformation : MonoBehaviour
     public string CardHealth;
     public int CardDamage;
     public int CardMana;
+    public string MaxHealth;
    // public Sprite CardVisual;
     public bool CardFreeze=false;
     public bool isItFirstRaound = true;
     public bool FirstTakeDamage = true;         //raunt ba��na
     public bool HaveShield = false;
     public bool DivineSelected = false;
-    public bool FirstDamageTaken = true;       // kart konuldu�u andan beri       true damage almam�� demek
+    public bool FirstDamageTaken = true;       // kart konuldu�u andan beri       true damage almamis demek
     public bool isAttacked = false;
+    public bool GerDefense = false;
+    public bool MongolFury = false;
+    public bool CanAttackBehind = false;
+    public bool EternalShield = false;
 
 
     public Text CardNameText;
@@ -52,6 +57,11 @@ public class CardInformation : MonoBehaviour
         }
 
         return foundSprite;
+    }
+
+    public void SetMaxHealth()
+    {
+        MaxHealth = CardHealth;
     }
 
 }

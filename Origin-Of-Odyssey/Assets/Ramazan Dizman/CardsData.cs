@@ -179,7 +179,7 @@ public class GenghisCard : CardStats
         cardName = "Genghis";
         hpValue = 11f;
         dodgeValue = 4f;
-        attackValue = 6f;
+        attackValue = 2f;
         defenceValue = 5f;
         criticalValue = 7f;
         duelsWon = 0;

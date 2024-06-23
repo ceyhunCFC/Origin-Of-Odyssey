@@ -86,6 +86,12 @@ MonoBehaviour:
   - RPC_KeshikCard
   - DestroyDeckCard
   - RPC_SetSpellsExtraDamage
+  - RPC_CreateSpecialCard
+  - RPC_DeleteMyCard
+  - GodsBane
+  - RPC_SteppeAmbush
+  - UsedSpell
+  - RPC_NomadicTactics
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
