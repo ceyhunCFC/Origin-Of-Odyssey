@@ -352,6 +352,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
         if (TargetInfo.CardName == "Nemean Lion")
         {
             TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 1).ToString();
+            CheckMyCard();
             RefreshCardDatas();
             AttackerCard = null;
             TargetCard = null;
@@ -380,6 +381,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 Debug.Log("No card selected due to 50% chance.");
                 TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
             }
+            CheckMyCard();
             RefreshCardDatas();
             AttackerCard = null;
             TargetCard = null;
@@ -499,12 +501,20 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
                 case "Mongol Messenger":                                                                                  //genghis cards
+                    if (GetComponent<PlayerController>().PV.IsMine)
+                    {
+                        GetComponent<PlayerController>().NomadsLand += 1;
+                    }
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
                 case "Khan’s Envoy":
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
                 case "Mongol Archer":
+                    if (GetComponent<PlayerController>().PV.IsMine)
+                    {
+                        GetComponent<PlayerController>().NomadsLand += 1;
+                    }
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
                 case "Steppe Warlord":
@@ -538,6 +548,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
                 case "General Subutai":
+                    if (GetComponent<PlayerController>().PV.IsMine)
+                    {
+                        GetComponent<PlayerController>().NomadsLand += 1;
+                    }
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
                 case "Marco Polo":
@@ -595,6 +609,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
         {
             GetComponent<PlayerController>().SetMana(AttackerCard);
         }
+        CheckMyCard();
         RefreshCardDatas();
         AttackerCard = null;
         TargetCard = null;
@@ -1059,5 +1074,14 @@ public class CardProgress : MonoBehaviourPunCallbacks
         GetComponent<PlayerController>().RefreshMyCard(TargetCardIndex, TargetInfo.CardHealth,haveshield, damage, divineselected,firstdamage,firstdamagetaken,eternalshield); // Can alan kartı güncelle       
     }
 
-
+    public void CheckMyCard()
+    {
+        AttackerInfo.CardHealth = (int.Parse(AttackerInfo.CardHealth) - TargetInfo.CardDamage).ToString();
+        int mycardindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, AttackerCard.transform.parent.gameObject);
+        GetComponent<PlayerController>().RefreshMyCard(mycardindex, AttackerInfo.CardHealth, AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
+        if (int.Parse(AttackerInfo.CardHealth) <= 0)
+        {
+            GetComponent<PlayerController>().DeleteMyCard(mycardindex);
+        }
+    }
 }

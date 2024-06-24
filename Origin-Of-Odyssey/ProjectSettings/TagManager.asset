@@ -12,6 +12,9 @@ TagManager:
   - UsedCard
   - CompetitorCard
   - CompetitorHeroCard
+  - CompetitorAreaBox
+  - CompetitorDeckCard
+  - SelectCard
   layers:
   - Default
   - TransparentFX

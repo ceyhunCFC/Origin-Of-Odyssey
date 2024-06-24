@@ -3020,7 +3020,7 @@ GameObject:
   - component: {fileID: 6960164333894570008}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3047,7 +3047,7 @@ GameObject:
   - component: {fileID: 2311795154177049555}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3909,7 +3909,7 @@ GameObject:
   - component: {fileID: 8656866405206492682}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4071,7 +4071,7 @@ GameObject:
   - component: {fileID: 7150378882552748828}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4090,7 +4090,7 @@ GameObject:
   - component: {fileID: 8306004320773772361}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4117,7 +4117,7 @@ GameObject:
   - component: {fileID: 6598766613593660519}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4243,7 +4243,7 @@ GameObject:
   - component: {fileID: 2133865961806422614}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4321,7 +4321,7 @@ GameObject:
   - component: {fileID: 3722703664749779235}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4948,7 +4948,7 @@ GameObject:
   - component: {fileID: 251327311707532895}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4967,7 +4967,7 @@ GameObject:
   - component: {fileID: 6777988063635411939}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5028,7 +5028,7 @@ GameObject:
   - component: {fileID: 8708112066973879810}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5353,7 +5353,7 @@ GameObject:
   - component: {fileID: 957966209601819648}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5380,7 +5380,7 @@ GameObject:
   - component: {fileID: 1009535233951650913}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5483,7 +5483,7 @@ GameObject:
   - component: {fileID: 4141036535324349997}
   m_Layer: 0
   m_Name: Cube(Clone)
-  m_TagString: AreaBox
+  m_TagString: CompetitorAreaBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

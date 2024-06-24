@@ -1490,6 +1490,7 @@ MonoBehaviour:
   GodsBaneUsed: 0
   SteppeAmbush: 0
   NomadicTactics: 0
+  NomadsLand: 0
 --- !u!114 &6638573949623686288
 MonoBehaviour:
   m_ObjectHideFlags: 0

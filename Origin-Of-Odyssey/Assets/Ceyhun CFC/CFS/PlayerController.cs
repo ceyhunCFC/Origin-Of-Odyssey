@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
     public bool GodsBaneUsed = false;
     public bool SteppeAmbush = false;
     public bool NomadicTactics = false;
+    public int NomadsLand = 0;
 
     void Start()
     {
@@ -801,7 +802,34 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Marco Polo")
                 {
-                    //3 kart göster birini seç ve destesine ekle
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        Vector3[] positions = new Vector3[3];
+                        float yPosition = 2.7f;
+                        float zPosition = -2.7f;
+
+                        Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
+                        Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
+                        Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+
+                        positions[0] = screenPos1;
+                        positions[1] = screenPos2;
+                        positions[2] = screenPos3;
+
+                        for (int i = 0; i < positions.Length; i++)
+                        {
+                            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                            GameObject CardCurrent = Instantiate(CardPrefabSolo, positions[i], rotation);
+                            CardCurrent.tag = "SelectCard";
+                            CardCurrent.AddComponent<Button>();
+                            CreateCard(CardCurrent);
+                            CardCurrent.GetComponent<Button>().onClick.AddListener(() => SelectedCard(CardCurrent));
+
+                        }
+                    }
+                    else
+                        Debug.Log("Desten Dolu");
+
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Nomadic Scout")
                 {
@@ -1158,6 +1186,28 @@ public class PlayerController : MonoBehaviour
             selectedCard.transform.localScale=new Vector3 (0.7f, 1f, 0.04f);
             selectedCard = null;
         }
+    }
+
+    public void SelectedCard(GameObject Card)
+    {
+        GameObject CardCurrent= Instantiate(Card, GameObject.Find("Deck").transform);
+
+        CardCurrent.name = Card.name;
+        CardCurrent.tag = "Card";
+        CardCurrent.transform.localEulerAngles = new Vector3(45, 0, 180);
+        float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+        CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+        StackDeck();
+        StackCompetitorDeck();
+        DeckCardCount++;
+
+        GameObject[] SelectCard = GameObject.FindGameObjectsWithTag("SelectCard");
+        foreach (GameObject cardObj in SelectCard)
+        {
+            Destroy(cardObj);
+        }
+
+        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
     }
 
     [PunRPC]
@@ -2025,7 +2075,7 @@ public class PlayerController : MonoBehaviour
                         if (Mana >= 2)
                         {
                             existingObject.GetComponent<CardInformation>().CardName = "Zeus";
-                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
                             _CardProgress.AttackerCard = existingObject;
@@ -2035,11 +2085,21 @@ public class PlayerController : MonoBehaviour
                         if (Mana >= 2)
                         {
                             existingObject.GetComponent<CardInformation>().CardName = "Genghis";
-                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
+                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            //existingObject.GetComponent<CardController>().UsedCard(existingObject.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+                            if(NomadsLand >= 5)
+                            {
+                                if(_GameManager.MasterAttackDamage <= 2 )
+                                {
+                                    Debug.Log("Nomadiclands Aktif");
+                                    _GameManager.MasterAddAttackDamage(1);
+                                }
+                            }
 
+                            existingObject.GetComponent<CardController>().UsedCard(existingObject.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+
+                            SetMana(existingObject);
                             GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
                             foreach (GameObject card in mycards)
                             {
@@ -2103,7 +2163,17 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            //existingObject.GetComponent<CardController>().UsedCard(existingObject.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+
+                            if (NomadsLand >= 5)
+                            {
+                                if (_GameManager.OtherAttackDamage <= 2)
+                                {
+                                    Debug.Log("Nomadiclands Aktif");
+                                    _GameManager.OtherAddAttackDamage(1);
+                                }
+                            }
+                            existingObject.GetComponent<CardController>().UsedCard(existingObject.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
+                            SetMana(existingObject);
 
                             GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
                             foreach (GameObject card in mycards)
@@ -2143,7 +2213,12 @@ public class PlayerController : MonoBehaviour
                 GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                 TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
             }
-            
+            if (PV.IsMine)
+            {
+                CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+            }
+
         }
     }
 
@@ -2335,7 +2410,7 @@ public class PlayerController : MonoBehaviour
                 for (int i = 0; i < 3; i++)
                 {
                     GameObject card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
-                    card.tag = "Card";
+                    card.tag = "CompetitorDeckCard";
                     float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                     card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
                     CreateCard(card);
@@ -2351,7 +2426,7 @@ public class PlayerController : MonoBehaviour
                 if (GameObject.Find("CompetitorDeck").transform.childCount < 10)
                 {
                     GameObject CardCurrent = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
-                    CardCurrent.tag = "Card";
+                    CardCurrent.tag = "CompetitorDeckCard";
                     float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                     CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
                     CreateCard(CardCurrent);
@@ -2813,7 +2888,7 @@ public class PlayerController : MonoBehaviour
                     for (int i = 0; i < 3; i++)
                     {
                         GameObject card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
-                        card.tag = "Card";
+                        card.tag = "CompetitorDeckCard";
                         float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                         card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
                         CreateCard(card);

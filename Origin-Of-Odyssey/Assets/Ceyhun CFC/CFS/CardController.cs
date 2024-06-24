@@ -16,7 +16,7 @@ public class CardController : MonoBehaviourPunCallbacks
 
     public void UsedCard(int Damage,bool isMaster)
     {
-
+        _GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (isMaster)
         {
            
