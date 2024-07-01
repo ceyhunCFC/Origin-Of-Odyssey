@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     public Text OwnMainCardText;
     public Text OwnHealthText;
     public Text ManaCountText;
+    public Text WhoseTurnText;
+    public Text Timer;
 
     public Text CompetitorNameText;
     public Text CompetitorDeckText;
@@ -42,8 +44,11 @@ public class PlayerController : MonoBehaviour
     public Text CompetitorHealthText;
     public Text CompetitorManaCountText;
 
-   
 
+    public GameObject DamageText;
+    public GameObject LogsPrefab;
+    public Button finishButton;
+    GameObject LogsContainerContent;
 
     public Image OwnHealthBar;
     public Image OwnManaBar;
@@ -55,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     int DeckCardCount = 0;
     float Mana = 3;
+    float elapsedTime = 60;
 
     GameObject selectedCard;
     GameObject lastHoveredCard = null;
@@ -79,7 +85,7 @@ public class PlayerController : MonoBehaviour
         PV = GetComponent<PhotonView>();
         _GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _CardProgress = GetComponent<CardProgress>();
-
+        LogsContainerContent = GameObject.Find("Container");
         if (!PV.IsMine)
         {
             GetComponent<PlayerController>().transform.GetChild(0).gameObject.SetActive(false);
@@ -95,6 +101,22 @@ public class PlayerController : MonoBehaviour
     {
         if (!PV.IsMine)
             return;
+
+        if(finishButton.interactable==true)
+        {
+            elapsedTime -= Time.deltaTime;
+            int seconds = Mathf.FloorToInt(elapsedTime % 60f);
+
+            Timer.text = string.Format("{0:00}:{1:00}", 00, seconds);
+
+            if (elapsedTime <= 0f)
+            {
+                elapsedTime = 60;
+                Timer.text = "00:60";
+                Debug.Log("Countdown finished!");
+                FinishButton();
+            }
+        }
 
         if (Input.GetMouseButtonDown(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
         {
@@ -460,9 +482,10 @@ public class PlayerController : MonoBehaviour
                         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SetAttackerCard(index);
 
 
                     selectedCard.SetActive(false);
@@ -511,7 +534,8 @@ public class PlayerController : MonoBehaviour
                         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
-
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.LightningStorm();
 
                     selectedCard.SetActive(false);
@@ -541,10 +565,10 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    //  _CardProgress.AttackerCard = selectedCard;
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
@@ -574,10 +598,10 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    // _CardProgress.LightningStorm();
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
@@ -607,10 +631,10 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    // _CardProgress.LightningStorm();
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
@@ -669,10 +693,10 @@ public class PlayerController : MonoBehaviour
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
 
-                    // _CardProgress.LightningStorm();
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
@@ -694,6 +718,9 @@ public class PlayerController : MonoBehaviour
                     || selectedCard.GetComponent<CardInformation>().CardName == "Keshik Cavalry")
                 {
                     selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                    Transform childTransform = selectedCard.transform;
+                    Transform green = childTransform.Find("Green");
+                    green.gameObject.SetActive(true);
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName== "Mongol Messenger")       //genghis here
                 {
@@ -760,9 +787,11 @@ public class PlayerController : MonoBehaviour
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName== "Mongol Shaman")
                 {
-                    _CardProgress.AttackerCard = selectedCard;
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.SecoundTargetCard = true;
                     _CardProgress.ForHeal = true;
+                    _CardProgress.OpenMyCardSign();
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName=="Eagle Hunter")
                 {
@@ -877,6 +906,9 @@ public class PlayerController : MonoBehaviour
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "General Subutai")
                 {
                     selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                    Transform childTransform = selectedCard.transform;
+                    Transform green = childTransform.Find("Green");
+                    green.gameObject.SetActive(true);
                     GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
                     foreach (GameObject card in mycards)
                     {
@@ -942,8 +974,9 @@ public class PlayerController : MonoBehaviour
                         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
@@ -972,6 +1005,8 @@ public class PlayerController : MonoBehaviour
                         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.MongolFury();
 
                     selectedCard.SetActive(false);
@@ -1000,6 +1035,9 @@ public class PlayerController : MonoBehaviour
                         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.AroundtheGreatWall();
 
                     selectedCard.SetActive(false);
@@ -1028,9 +1066,10 @@ public class PlayerController : MonoBehaviour
                         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                         PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                     }
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.AttackerCard = selectedCard;
+                    _CardProgress.SetAttackerCard(index);
                     _CardProgress.ForMyCard = true;
 
                     selectedCard.SetActive(false);
@@ -1496,12 +1535,224 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void CreateTextAtTargetIndex(int targetIndex, int damage,bool mycard)
+    {
+        Transform targetTransform;
+        if (mycard)
+        {
+            targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[targetIndex].transform;
+        }
+        else
+        {
+            targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[targetIndex].transform;
+        }
+        
+
+        GameObject damageTextObject = Instantiate(DamageText);
+        damageTextObject.transform.parent = targetTransform;
+        damageTextObject.transform.localPosition = new Vector3(0, 3, 0);
+        damageTextObject.transform.localRotation = Quaternion.Euler(5, 0, 0);
+        damageTextObject.transform.localScale = new Vector3(0.01f, 0.05f, 0.01f);
+        Text textComponent = damageTextObject.GetComponentInChildren<Text>();
+        textComponent.text = "-" + damage.ToString();
+        Destroy(damageTextObject, 3f);
+
+        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateTextAtTargetIndex", RpcTarget.Others,targetIndex,damage,mycard);
+    }
+
+    [PunRPC]
+    void RPC_CreateTextAtTargetIndex(int targetIndex,int damage,bool mycard)
+    {
+        Transform targetTransform;
+        if (mycard)
+        {
+            targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[targetIndex].transform;
+        }
+        else
+        {
+            targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[targetIndex].transform;
+        }
+
+
+        GameObject damageTextObject = Instantiate(DamageText);
+        damageTextObject.transform.parent = targetTransform;
+        damageTextObject.transform.localPosition = new Vector3(0, 3, 0);
+        damageTextObject.transform.localRotation = Quaternion.Euler(5, 0, 0);
+        damageTextObject.transform.localScale = new Vector3(0.01f, 0.05f, 0.01f);
+        Text textComponent = damageTextObject.GetComponentInChildren<Text>();
+        textComponent.text = "-" + damage.ToString();
+        Destroy(damageTextObject, 3f);
+    }
+
+    public void RefreshLog(int damage, bool isdead, string attackercardname, string targetcardname, Color color)
+    {
+        GameObject logsObject = Instantiate(LogsPrefab, LogsContainerContent.transform);
+        string colorString = ColorToString(color);
+
+        // Damage text objesini bul ve değerini güncelle
+        Text logsDamageText = logsObject.transform.Find("Damage").GetComponent<Text>();
+        if(damage!=0)
+        {
+            logsDamageText.text = damage.ToString();
+        }
+        
+
+        // Dead objesini bul ve gerekli işlemi yap
+        Transform deadObject = logsObject.transform.Find("Dead");
+        if (deadObject != null && isdead)
+        {
+            deadObject.gameObject.SetActive(true);
+            Image deadImage = deadObject.GetComponent<Image>();
+            deadImage.color = color;
+        }
+        else if (deadObject == null)
+        {
+            Debug.LogWarning("Dead object not found in LogsPrefab.");
+        }
+
+        // Attacker ve Target objelerini bul ve resimlerini yükle
+        Transform attackerObject = logsObject.transform.Find("Attacker");
+        Transform targetObject = logsObject.transform.Find("Target");
+
+        if (attackerObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + attackercardname);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + attackercardname);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image attackerImage = attackerObject.GetComponent<Image>();
+            if (attackerImage != null)
+            {
+                attackerImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Attacker object not found in LogsPrefab.");
+        }
+
+        if (targetObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + targetcardname);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + targetcardname);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image targetImage = targetObject.GetComponent<Image>();
+            if (targetImage != null)
+            {
+                targetImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Target object not found in LogsPrefab.");
+        }
+
+        // Rakip oyuncular için RPC çağrısı yap
+        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshLog", RpcTarget.Others, damage, isdead, attackercardname, targetcardname, colorString);
+    }
+
+
+    [PunRPC]
+    void RPC_RefreshLog(int damage,bool isdead,string attackercardname, string targetcardname,string colorString)
+    {
+        GameObject logsObject = Instantiate(LogsPrefab, LogsContainerContent.transform);
+        Color color= ColorFromString(colorString);
+        Text logsDamageText = logsObject.transform.Find("Damage").GetComponent<Text>();
+        logsDamageText.text = damage.ToString();
+        Transform deadObject = logsObject.transform.Find("Dead");
+        if (deadObject != null && isdead)
+        {
+            deadObject.gameObject.SetActive(true);
+            Image deadImage = deadObject.GetComponent<Image>();
+            deadImage.color=color;
+        }
+        else
+        {
+            Debug.LogWarning("Dead object not found in LogsPrefab.");
+        }
+        Transform attackerObject = logsObject.transform.Find("Attacker");
+        Transform targetObject = logsObject.transform.Find("Target");
+
+        if (attackerObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + attackercardname);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + attackercardname);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image attackerImage = attackerObject.GetComponent<Image>();
+            if (attackerImage != null)
+            {
+                attackerImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Attacker object not found in LogsPrefab.");
+        }
+
+        if (targetObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + targetcardname);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + targetcardname);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image targetImage = targetObject.GetComponent<Image>();
+            if (targetImage != null)
+            {
+                targetImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Target object not found in LogsPrefab.");
+        }
+    }
+    public string ColorToString(Color color)
+    {
+        return color.r + "," + color.g + "," + color.b + "," + color.a;
+    }
+
+    public Color ColorFromString(string colorString)
+    {
+        string[] colorValues = colorString.Split(',');
+        if (colorValues.Length == 4)
+        {
+            float r = float.Parse(colorValues[0]);
+            float g = float.Parse(colorValues[1]);
+            float b = float.Parse(colorValues[2]);
+            float a = float.Parse(colorValues[3]);
+            return new Color(r, g, b, a);
+        }
+        return Color.white; // Hata durumunda varsayılan renk
+    }
+
     public void FinishButton()
     {
         // Find all GameObjects with the specified name
         GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
         GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
         CompetitorPV = null;
+        WhoseTurnText.text = "Enemy Turn";
+        Timer.text = "00:60";
+        elapsedTime = 60;
+        finishButton.interactable = false;
 
 
         foreach (GameObject obj in objects)
@@ -1543,6 +1794,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         _CardProgress.WindFury = true;
+        _CardProgress.ResetAllSign();
 
         if (PV.IsMine)
         {
@@ -2078,7 +2330,7 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            _CardProgress.AttackerCard = existingObject;
+                            _CardProgress.SetMainAttackerCard(existingObject);
                         }
                         break;
                     case "Genghis":
@@ -2153,7 +2405,7 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.OtherAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
 
-                            _CardProgress.AttackerCard = existingObject;
+                            _CardProgress.SetMainAttackerCard(existingObject);
                         }
                         break;
                     case "Genghis":
@@ -2260,9 +2512,11 @@ public class PlayerController : MonoBehaviour
                     StackCompetitorDeck();
                     DeckCardCount++;
                 }
+                WhoseTurnText.text = "Finish Turn";
+                finishButton.interactable = true;
 
 
-               
+
             }
             else // DIĞER TURLAR
             {
@@ -2399,6 +2653,9 @@ public class PlayerController : MonoBehaviour
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("GodsBane", RpcTarget.All, -2);
                     GodsBaneUsed = false;
                 }
+                _CardProgress.BattleableCard();
+                WhoseTurnText.text = "Finish Turn";
+                finishButton.interactable = true;
 
             }
 
@@ -2820,7 +3077,7 @@ public class PlayerController : MonoBehaviour
                         CompetitorDeckText.text += ", " + CompetitorDeck[i];
                     }
 
-
+                    WhoseTurnText.text = "Finish Turn";
                     Debug.LogError("Im MasterClient");
                 }
                 else
@@ -2856,6 +3113,8 @@ public class PlayerController : MonoBehaviour
                         CompetitorDeckText.text += ", " + CompetitorDeck[i];
                     }
 
+                    WhoseTurnText.text = "Enemy Turn";
+                    finishButton.interactable = false;
                     Debug.LogError("Im OtherClient");
                 }
             }

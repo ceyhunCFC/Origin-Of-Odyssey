@@ -92,6 +92,8 @@ MonoBehaviour:
   - RPC_SteppeAmbush
   - UsedSpell
   - RPC_NomadicTactics
+  - RPC_CreateTextAtTargetIndex
+  - RPC_RefreshLog
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
