@@ -790,7 +790,8 @@ public class PlayerController : MonoBehaviour
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
                     _CardProgress.SetAttackerCard(index);
                     _CardProgress.SecoundTargetCard = true;
-                    _CardProgress.ForHeal = true;
+                    _CardProgress.ForHealMongolShaman = true;
+                    _CardProgress.OpenMyCardSign();
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName=="Eagle Hunter")
                 {
@@ -1545,6 +1546,45 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+    public void CreateTextHero(int damage)
+    {
+        GameObject competitorHeroPivot = GameObject.Find("CompetitorHeroPivot");
+
+        // CompetitorHeroPivot'un ilk çocuğunu bul
+        if (competitorHeroPivot != null && competitorHeroPivot.transform.childCount > 0)
+        {
+            Transform firstChild = competitorHeroPivot.transform.GetChild(0);
+
+            // DamageText nesnesini oluştur
+            GameObject damageTextObject = Instantiate(DamageText);
+
+            // DamageText nesnesini ilk çocuğun içine yerleştir
+            damageTextObject.transform.SetParent(firstChild);
+
+            // DamageText nesnesinin yerel pozisyonunu ve dönüşünü ayarla (gerekirse)
+            damageTextObject.transform.localPosition = new Vector3(-1,0,0);
+            damageTextObject.transform.localRotation = Quaternion.Euler(-20, 180, 180);
+            damageTextObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+
+            // X ekseninde -1 çevir
+            Vector3 localScale = damageTextObject.transform.localScale;
+            localScale.x = -1 * localScale.x;
+            damageTextObject.transform.localScale = localScale;
+
+            Debug.Log("DamageText successfully created in the first child of CompetitorHeroPivot.");
+
+            Text textComponent = damageTextObject.GetComponentInChildren<Text>();
+            textComponent.text = "-" + damage.ToString();
+            Destroy(damageTextObject, 3f);
+        }
+        else
+        {
+            Debug.LogWarning("CompetitorHeroPivot not found or it has no children.");
+        }
+    }
+
+
     public void CreateTextAtTargetIndex(int targetIndex, int damage,bool mycard)
     {
         Transform targetTransform;
@@ -1604,6 +1644,10 @@ public class PlayerController : MonoBehaviour
         if(damage!=0)
         {
             logsDamageText.text = damage.ToString();
+        }
+        else
+        {
+            logsDamageText.text = null;
         }
         
 
@@ -1679,6 +1723,14 @@ public class PlayerController : MonoBehaviour
         Text logsDamageText = logsObject.transform.Find("Damage").GetComponent<Text>();
         logsDamageText.text = damage.ToString();
         Transform deadObject = logsObject.transform.Find("Dead");
+        if (damage != 0)
+        {
+            logsDamageText.text = damage.ToString();
+        }
+        else
+        {
+            logsDamageText.text = null;
+        }
         if (deadObject != null && isdead)
         {
             deadObject.gameObject.SetActive(true);
@@ -2014,7 +2066,7 @@ public class PlayerController : MonoBehaviour
                 
                 Debug.LogError("keshikdead");
 
-                CreateSpecialCard("Keshik", "2", 2, 0, TargetCardIndex,false);
+                CreateSpecialCard("Keshik on Foot", "2", 2, 0, TargetCardIndex,false);
 
                 GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                 TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Keshik Cavalry Dead!";
@@ -2079,6 +2131,8 @@ public class PlayerController : MonoBehaviour
                                         target.GetComponent<CardInformation>().CardHealth =(int.Parse(target.GetComponent<CardInformation>().CardHealth) - _CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage).ToString();
                                         int index= Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions,target.transform.parent.gameObject);
                                         RefreshUsedCard(index, target.GetComponent<CardInformation>().CardHealth, target.GetComponent<CardInformation>().CardDamage);
+                                        CreateTextAtTargetIndex(index, _CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, false);
+                                        RefreshLog(-_CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, true, _CardProgress.AttackerCard.GetComponent<CardInformation>().CardName, target.GetComponent<CardInformation>().CardName, Color.red);
                                         if (int.Parse(target.GetComponent<CardInformation>().CardHealth) <= 0)
                                         {
                                             DeleteAreaCard(index);
@@ -3015,20 +3069,58 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-  
+
 
     void StackDeck()
     {
-     
-        for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
+
+        if (GameObject.Find("Deck").transform.childCount < 6)
         {
-            float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
 
-            GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
+            {
+                float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+            }
+
+            GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 2.7f, -3.81f);
+
         }
+        else if (GameObject.Find("Deck").transform.childCount < 10)
+        {
 
-        GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 2.7f, -3.81f);
+            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
+            {
+                float xPos = i * 0.4f - 0.4f; // Kartın X konumunu belirliyoruz
 
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8931351f, 351.836639f, 174.237427f);
+
+
+
+            }
+
+            GameObject.Find("Deck").transform.position = new Vector3(0.3f - GameObject.Find("Deck").transform.childCount * 0.1f, 2.7f, -3.81f);
+
+        }
+        else
+        {
+
+            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
+            {
+                float xPos = i * 0.3f - 0.3f; // Kartın X konumunu belirliyoruz
+
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8471832f, 350.247925f, 173.120972f);
+
+
+
+            }
+
+            GameObject.Find("Deck").transform.position = new Vector3(0.05f - GameObject.Find("Deck").transform.childCount * 0.05f, 2.7f, -3.81f);
+
+        }
     }
 
     void StackCompetitorDeck()

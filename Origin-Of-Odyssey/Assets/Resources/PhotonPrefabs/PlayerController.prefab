@@ -1513,7 +1513,7 @@ MonoBehaviour:
   TargetCardIndex: 0
   SecoundTargetCard: 0
   ForMyCard: 0
-  ForHeal: 0
+  ForHealMongolShaman: 0
   WindFury: 1
 --- !u!1 &4346544841015542748
 GameObject:
