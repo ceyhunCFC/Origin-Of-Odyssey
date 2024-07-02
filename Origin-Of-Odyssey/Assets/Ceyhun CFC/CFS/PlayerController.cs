@@ -1506,18 +1506,29 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    float firstCompetitorHealth=0;
+    float firstOwnHealt=0;
+
 
     public void RefreshUI(float OwnHealth, float CompetitorHealth, float OwnAttackDamage, float CompetitiorAttackDamage)
     {
-        OwnHealthText.text = OwnHealth.ToString() + "/15";
-        OwnHealthBar.fillAmount = OwnHealth / 15;
+
+        if(firstCompetitorHealth==0 || firstOwnHealt==0)
+        {   
+            firstOwnHealt = OwnHealth;
+            firstCompetitorHealth=CompetitorHealth;
+
+        }
+
+        OwnHealthText.text = OwnHealth.ToString() + "/" + firstOwnHealt.ToString();
+        OwnHealthBar.fillAmount = OwnHealth / firstOwnHealt;
 
         OwnHeroAttackDamageText.text = OwnAttackDamage.ToString();
 
 
 
-        CompetitorHealthText.text = CompetitorHealth.ToString() + "/15";
-        CompetitorHealthBar.fillAmount = CompetitorHealth / 15;
+        CompetitorHealthText.text = CompetitorHealth.ToString() + "/" + firstCompetitorHealth.ToString();
+        CompetitorHealthBar.fillAmount = CompetitorHealth / firstCompetitorHealth;
 
         CompetitorHeroAttackDamageText.text = CompetitiorAttackDamage.ToString();
 
@@ -3047,34 +3058,43 @@ public class PlayerController : MonoBehaviour
                     OwnMainCard = _GameManager.MasterMainCard;
                     OwnHeroAttackDamage = _GameManager.MasterAttackDamage;
 
+                   
+
                     OwnNameText.text = OwnName;
                     OwnMainCardText.text = OwnMainCard;
                     OwnHeroAttackDamageText.text = OwnHeroAttackDamage.ToString();
+                    
+                    OwnHealth = _GameManager.MasterHealth; //new
+                    OwnHealthText.text = OwnHealth.ToString(); // new 
+
+                   
 
                     for (int i = 0; i < OwnDeck.Length; i++)
                     {
                         OwnDeckText.text += ", " + OwnDeck[i];
                     }
                    
-                   
-
-
-
                     CompetitorName = _GameManager.OtherPlayerName;
                     CompetitorDeck = _GameManager.OtherDeck;
                     CompetitorMainCard = _GameManager.OtherrMainCard;
                     CompetitorHeroAttackDamage = _GameManager.OtherAttackDamage;
 
+                    CompetitorHealth = _GameManager.OtherHealth; // new 
+                    CompetitorHealthText.text = CompetitorHealth.ToString(); //new
 
 
                     CompetitorNameText.text = CompetitorName;
                     CompetitorMainCardText.text = CompetitorMainCard;
                     CompetitorHeroAttackDamageText.text = CompetitorHeroAttackDamage.ToString();
 
+                   
+
                     for (int i = 0; i < CompetitorDeck.Length; i++)
                     {
                         CompetitorDeckText.text += ", " + CompetitorDeck[i];
                     }
+
+                    
 
                     WhoseTurnText.text = "Finish Turn";
                     Debug.LogError("Im MasterClient");
@@ -3086,9 +3106,16 @@ public class PlayerController : MonoBehaviour
                     OwnMainCard = _GameManager.OtherrMainCard;
                     OwnHeroAttackDamage = _GameManager.OtherAttackDamage;
 
+                   
+
                     OwnNameText.text = OwnName;
                     OwnMainCardText.text = OwnMainCard;
                     OwnHeroAttackDamageText.text = OwnHeroAttackDamage.ToString();
+
+                    OwnHealth = _GameManager.OtherHealth; //new
+                    OwnHealthText.text = OwnHealth.ToString(); //new
+
+
 
                     for (int i = 0; i < OwnDeck.Length; i++)
                     {
@@ -3102,10 +3129,15 @@ public class PlayerController : MonoBehaviour
                     CompetitorDeck = _GameManager.MasterDeck;
                     CompetitorMainCard = _GameManager.MasterMainCard;
                     CompetitorHeroAttackDamage = _GameManager.MasterAttackDamage;
+
+                  
                     
                     CompetitorNameText.text = CompetitorName;
                     CompetitorMainCardText.text = CompetitorMainCard;
                     CompetitorHeroAttackDamageText.text = CompetitorHeroAttackDamage.ToString();
+                    
+                    CompetitorHealth = _GameManager.MasterHealth; //new
+                    CompetitorHealthText.text = CompetitorHealth.ToString(); //new
 
                     for (int i = 0; i < CompetitorDeck.Length; i++)
                     {
@@ -3140,6 +3172,17 @@ public class PlayerController : MonoBehaviour
                         
                   }
 
+                    OwnHealth = _GameManager.MasterHealth; //new
+                    OwnHealthText.text = OwnHealth.ToString(); // new 
+
+                    CompetitorHealth = _GameManager.OtherHealth; // new 
+                    CompetitorHealthText.text = CompetitorHealth.ToString(); //new
+
+                
+
+
+                  
+
                 }
                 else
                 {
@@ -3157,6 +3200,15 @@ public class PlayerController : MonoBehaviour
 
                     }
 
+                    
+                    OwnHealth = _GameManager.OtherHealth; //new
+                    OwnHealthText.text = OwnHealth.ToString(); //new
+
+                    CompetitorHealth = _GameManager.MasterHealth; //new
+                    CompetitorHealthText.text = CompetitorHealth.ToString(); //new
+
+                    
+                 
                     GameObject Herocard = Instantiate(Resources.Load<GameObject>("CompetitorHeoCard"), GameObject.Find("CompetitorHeroPivot").transform);
                 }
                 
