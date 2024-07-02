@@ -791,7 +791,6 @@ public class PlayerController : MonoBehaviour
                     _CardProgress.SetAttackerCard(index);
                     _CardProgress.SecoundTargetCard = true;
                     _CardProgress.ForHeal = true;
-                    _CardProgress.OpenMyCardSign();
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName=="Eagle Hunter")
                 {

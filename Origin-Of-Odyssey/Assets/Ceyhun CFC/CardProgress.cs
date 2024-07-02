@@ -679,6 +679,12 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 OpenMyCardSign();
                 break;
             case "Mongol Shaman":
+                if (AttackerCard.GetComponent<CardInformation>().isItFirstRaound)
+                {
+                    OpenMyCardSign();
+                }
+                else
+                    EnemyFrontlineAndHero();
                 break;
             case "Ger Defense":
                 OpenMyCardSign();
