@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     CardsFunction _CardFunction;
 
     public GameObject CardPrefabSolo; // Tek kart
+    public GameObject CardPrefabInGame;
     
    
     string OwnName = "";
@@ -351,15 +352,17 @@ public class PlayerController : MonoBehaviour
                 selectedCard.GetComponent<Renderer>().material.color = Color.white;
 
                 Transform transformBox = hit.collider.gameObject.transform;
+                GameObject TemporaryObject = selectedCard;
+                selectedCard = CreateAreaCard(Boxindex, selectedCard.GetComponent<CardInformation>().CardName, selectedCard.GetComponent<CardInformation>().CardDes, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage, selectedCard.GetComponent<CardInformation>().CardMana);
+                Destroy(TemporaryObject);
                 StartCoroutine(MoveAndRotateCard(selectedCard, transformBox.position, 0.3f));
                 selectedCard.transform.SetParent(transformBox);
-
-                selectedCard.transform.localScale = Vector3.one;
-                selectedCard.transform.localEulerAngles = new Vector3(90, 0, 180);
                 selectedCard.transform.localPosition = Vector3.zero;
+                selectedCard.transform.localScale = new Vector3(1, 1, 0.04f);
+                selectedCard.transform.localEulerAngles = new Vector3(45f, 0f, 180);
 
                 Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
-
+                
                 //////////////////////////////////// DESTEDEN BİR KART MASYA EKLENDİĞİ ZAMAN ///////////////////////////////
                 
                 if (selectedCard.GetComponent<CardInformation>().CardName == "Heracles") // MASAYA EKLENEN KART NEDİR
@@ -1181,7 +1184,7 @@ public class PlayerController : MonoBehaviour
                 DeckCardCount--;
 
                 StackDeck();
-               
+                                
                 if (PV.IsMine)
                 {
                     Debug.LogError(Boxindex);
@@ -1350,6 +1353,7 @@ public class PlayerController : MonoBehaviour
 
         card.transform.position = targetPosition;
         selectedCard = null;
+        StackDeck();
     }
 
     void SelectAndUseCard()
@@ -1433,6 +1437,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public GameObject CreateAreaCard(int boxindex, string name, string des, string heatlh, int damage, int mana)
+    {
+        GameObject CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform);
+        CardCurrent.tag = "UsedCard";
+
+        CardCurrent.GetComponent<CardInformation>().CardName = name;
+        CardCurrent.GetComponent<CardInformation>().CardDes = des;
+        CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
+        CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
+        CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+        CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+        return CardCurrent;
+    }
 
     [PunRPC]
     public void CreateUsedCard(int boxindex, string name, string des, string heatlh, int damage, int mana)
@@ -1440,12 +1459,13 @@ public class PlayerController : MonoBehaviour
 
         if (PV.IsMine)
         {
-            GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform);
+            GameObject CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform);
             CardCurrent.tag = "CompetitorCard";
 
           //  CardCurrent.GetComponent<PhotonView>().ViewID = OwnDeck.Length;
-            CardCurrent.transform.localScale = Vector3.one;
-            CardCurrent.transform.eulerAngles = new Vector3(90,0,180);
+            CardCurrent.transform.localScale = new Vector3(1,1,0.04f);
+            CardCurrent.transform.localPosition = Vector3.zero;
+            CardCurrent.transform.localEulerAngles = new Vector3(45,0,180);
 
             CardCurrent.GetComponent<CardInformation>().CardName = name;
             CardCurrent.GetComponent<CardInformation>().CardDes = des;
@@ -2170,9 +2190,10 @@ public class PlayerController : MonoBehaviour
          
          
             GameObject CardCurrent = Instantiate(Resources.Load<GameObject>("HoplitesCard_Prefab"), GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[CreateCardIndex].transform);
-          
-            CardCurrent.transform.localScale = Vector3.one;
-            CardCurrent.transform.eulerAngles = new Vector3(90, 0, 180);
+
+            CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
+            CardCurrent.transform.eulerAngles = new Vector3(45, 0, 180);
+            CardCurrent.transform.localPosition = Vector3.zero;
 
             CardCurrent.GetComponent<CardInformation>().CardName = "Hoplite";
             CardCurrent.GetComponent<CardInformation>().CardDes = "Hoplitesssss";
@@ -2926,18 +2947,19 @@ public class PlayerController : MonoBehaviour
             GameObject CardCurrent;
             if(front)
             {
-                CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[index].transform);
+                CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[index].transform);
                 CardCurrent.tag = "UsedCard";
             }
             else
             {
-                CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform);
+                CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform);
                 CardCurrent.tag = "CompetitorCard";
             }
-            
 
-            CardCurrent.transform.localScale = Vector3.one;
-            CardCurrent.transform.localEulerAngles = new Vector3(90, 0, 180);
+
+            CardCurrent.transform.localPosition = Vector3.zero;
+            CardCurrent.transform.localEulerAngles = new Vector3(45, 0, 180);
+            CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
             CardCurrent.GetComponent<CardInformation>().CardName = name;
             CardCurrent.GetComponent<CardInformation>().CardHealth = health;
             CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
@@ -2957,18 +2979,19 @@ public class PlayerController : MonoBehaviour
         GameObject CardCurrent;
         if (front)
         {
-            CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform);
+            CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform);
             CardCurrent.tag = "CompetitorCard";
         }
         else
         {
-            CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[index].transform);
+            CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[index].transform);
             CardCurrent.tag = "UsedCard";
         }
 
          
-        CardCurrent.transform.localScale = Vector3.one;
-        CardCurrent.transform.localEulerAngles = new Vector3(90, 0, 180);
+        CardCurrent.transform.localPosition = Vector3.zero;
+        CardCurrent.transform.localEulerAngles = new Vector3(45, 0, 180);
+        CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
         CardCurrent.GetComponent<CardInformation>().CardName = name;
         CardCurrent.GetComponent<CardInformation>().CardHealth = health;
         CardCurrent.GetComponent<CardInformation>().CardDamage = damage;

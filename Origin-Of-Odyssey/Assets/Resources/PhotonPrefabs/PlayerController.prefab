@@ -1468,6 +1468,7 @@ MonoBehaviour:
   PV: {fileID: 0}
   CompetitorPV: {fileID: 0}
   CardPrefabSolo: {fileID: 1798911962605047886, guid: 515ee43589829493b9d191026fda22ba, type: 3}
+  CardPrefabInGame: {fileID: 1798911962605047886, guid: 95f91097fd2028549ad29acd2425208c, type: 3}
   OwnNameText: {fileID: 7411510846269854161}
   OwnDeckText: {fileID: 7524901730799239401}
   OwnMainCardText: {fileID: 85984075966275172}
