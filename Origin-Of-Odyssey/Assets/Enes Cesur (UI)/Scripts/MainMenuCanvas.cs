@@ -27,6 +27,16 @@ public class MainMenuCanvas : MonoBehaviour
     {
         SceneManager.LoadScene("Lobby");
     }
+
+    public void OpenOfflinePanel()
+    {
+        SceneManager.LoadScene("BattleMapOffline");
+    }
+
+    public void OpenTutorialPanel()
+    {
+        SceneManager.LoadScene("TutorialBattleMap");
+    }
     
     public void QuitButton()
     {

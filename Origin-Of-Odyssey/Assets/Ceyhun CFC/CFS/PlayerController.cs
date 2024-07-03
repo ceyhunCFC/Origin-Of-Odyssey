@@ -2390,10 +2390,15 @@ public class PlayerController : MonoBehaviour
         DeckCardCount++;
     }
 
+    public Animator HeroAnimator;
     public void MainCardSpecial()
     {
+      
+       
+     
         if (PV.IsMine)
         {
+            
             if ( PV.Owner.IsMasterClient && _GameManager.Turn == false)
             {
                 GameObject existingObject = GameObject.Find("OwnMainCardGameObject");
@@ -2405,6 +2410,8 @@ public class PlayerController : MonoBehaviour
                     existingObject = OwnMainCardGameObject;
                 }
 
+              
+
                 switch (OwnMainCard)
                 {
 
@@ -2414,7 +2421,7 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardName = "Zeus";
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
-
+                            HeroAnimator.SetTrigger("Ulti");
                             _CardProgress.SetMainAttackerCard(existingObject);
                         }
                         break;
@@ -2424,7 +2431,7 @@ public class PlayerController : MonoBehaviour
                             existingObject.GetComponent<CardInformation>().CardName = "Genghis";
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
-
+                            HeroAnimator.SetTrigger("Ulti");
                             if(NomadsLand >= 5)
                             {
                                 if(_GameManager.MasterAttackDamage <= 2 )
@@ -2467,6 +2474,8 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
                 }
+
+             
 
             }
             else if ( !PV.Owner.IsMasterClient && _GameManager.Turn == true)
@@ -2557,6 +2566,8 @@ public class PlayerController : MonoBehaviour
             }
 
         }
+
+      
     }
 
     public void SetMana(GameObject attackercard)

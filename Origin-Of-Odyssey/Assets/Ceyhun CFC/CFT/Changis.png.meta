@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c098d6f6eba9a44fa9436f429c45f662
+guid: 6f9687dbe6d8f9b408a6c8845986f279
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -45,10 +45,10 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 4
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -69,6 +69,19 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -123,85 +136,169 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CharAnim_0
+      name: Changis_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1007
+        width: 774
+        height: 1007
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e17bfc4861cecc84ebf4e3ef7464a983
+      internalID: 902718033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Changis_1
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 1007
+        width: 824
+        height: 1007
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e198f0922b5e41148818437e1cedc31f
+      internalID: 439503357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Changis_2
+      rect:
+        serializedVersion: 2
+        x: 1598
+        y: 1007
+        width: 671
+        height: 1007
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 153aaa6f02335de4d80b17368d9ff9a9
+      internalID: 1025317980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Changis_3
+      rect:
+        serializedVersion: 2
+        x: 2439
+        y: 1007
+        width: 724
+        height: 1007
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f95abc5cea59634c96f4ab8e4c6fd8d
+      internalID: -1441802960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Changis_4
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1222
-        height: 1566
+        width: 914
+        height: 1007
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2ea116ed948bf43e68cd16ed83f514b2
-      internalID: 110596325
+      spriteID: d7c49f43a7576f047b06121c4ed02e20
+      internalID: 1089277012
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CharAnim_1
+      name: Changis_5
       rect:
         serializedVersion: 2
-        x: 1222
+        x: 914
         y: 0
-        width: 1222
-        height: 1566
+        width: 914
+        height: 1007
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef571a8f0dc894f1abe1dae2af3d0824
-      internalID: -354526514
+      spriteID: 8392f2f0b7cfeea4b93969cdb290e063
+      internalID: -161399929
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CharAnim_2
+      name: Changis_6
       rect:
         serializedVersion: 2
-        x: 2444
+        x: 1828
         y: 0
-        width: 1222
-        height: 1566
+        width: 914
+        height: 1007
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a251d375433dd452b8befad445720a71
-      internalID: 789347397
+      spriteID: 8715826f24422d34aae8d1bb92cc5155
+      internalID: 906174193
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CharAnim_3
+      name: Changis_7
       rect:
         serializedVersion: 2
-        x: 3666
+        x: 2742
         y: 0
-        width: 1222
-        height: 1566
+        width: 914
+        height: 1007
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 91da267f23f084010ae6d0df3d8e69b4
-      internalID: -473108740
+      spriteID: b9abbbbbbf9d67945bc126b3892c7fe4
+      internalID: 456100725
       vertices: []
       indices: 
       edges: []
@@ -209,7 +306,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 00d65dce35e6e1642acc8e79e18dbf30
     internalID: 0
     vertices: []
     indices: 
@@ -217,10 +314,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      CharAnim_0: 110596325
-      CharAnim_1: -354526514
-      CharAnim_2: 789347397
-      CharAnim_3: -473108740
+      Changis_0: 902718033
+      Changis_1: 439503357
+      Changis_2: 1025317980
+      Changis_3: -1441802960
+      Changis_4: 1089277012
+      Changis_5: -161399929
+      Changis_6: 906174193
+      Changis_7: 456100725
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

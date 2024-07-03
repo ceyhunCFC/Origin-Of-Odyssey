@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/LoginScene.unity
     guid: 343dd7bf5ea92a64e9a6dc5b452ad14b
@@ -20,5 +17,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Ceyhun CFC/BattleMap.unity
     guid: f69316c7b5b8e489babc00f0d38b7df1
+  - enabled: 1
+    path: Assets/Ceyhun CFC/Offline/BattleMapOffline.unity
+    guid: f240718b2da783e41889eeab7a68ac85
+  - enabled: 1
+    path: Assets/Ceyhun CFC/Tutorial/TutorialBattleMap.unity
+    guid: 72ea754a72dd4e7429b906a30cf7e328
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

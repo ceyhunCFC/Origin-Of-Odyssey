@@ -1927,107 +1927,6 @@ MonoBehaviour:
   sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!1 &1436348356
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1436348358}
-  - component: {fileID: 1436348357}
-  - component: {fileID: 1436348359}
-  - component: {fileID: 1436348360}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1436348357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436348356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 743ac53a7bf194e99b0aff2315db0096, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Turn: 0
-  ManaCount: 1
-  MasterPlayerName: 
-  OtherPlayerName: 
-  MasterHealth: 30
-  OtherHealth: 30
-  MasterAttackDamage: 0
-  OtherAttackDamage: 0
-  MasterDeck: []
-  OtherDeck: []
-  MasterMainCard: 
-  OtherrMainCard: 
-  TurnCount: 0
-  MasterPlayerNameText: {fileID: 1037046931}
-  OtherPlayerNameText: {fileID: 1413255636}
-  MasterDeckText: {fileID: 375951588}
-  OtherDeckText: {fileID: 1034038959}
-  WhoTurnText: {fileID: 615383755}
-  WinningName: {fileID: 163690910}
-  Panel: {fileID: 1087345496}
---- !u!4 &1436348358
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436348356}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1436348359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436348356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 999
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &1436348360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436348356}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e43c3467ba8d044c9e41907cb15cfab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CardObject: {fileID: 1798911962605047886, guid: 515ee43589829493b9d191026fda22ba, type: 3}
 --- !u!1 &1526019889
 GameObject:
   m_ObjectHideFlags: 0
@@ -4113,6 +4012,63 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &4508751665579033483
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2871291665533177769, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_Name
+      value: TutorialPlayerController
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3960262144857777790, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
 --- !u!33 &4635043784654105310
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5789,8 +5745,8 @@ SceneRoots:
   - {fileID: 98400810}
   - {fileID: 1087345500}
   - {fileID: 1183588149}
-  - {fileID: 1436348358}
   - {fileID: 1740206923}
   - {fileID: 2009030648}
   - {fileID: 1921299287}
   - {fileID: 6312374454774399888}
+  - {fileID: 4508751665579033483}
