@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Ceyhun CFC/BattleMap.unity
     guid: f69316c7b5b8e489babc00f0d38b7df1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Ceyhun CFC/Offline/BattleMapOffline.unity
     guid: f240718b2da783e41889eeab7a68ac85
   - enabled: 1
