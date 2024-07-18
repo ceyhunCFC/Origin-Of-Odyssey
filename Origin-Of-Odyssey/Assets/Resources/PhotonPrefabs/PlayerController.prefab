@@ -1489,6 +1489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PV: {fileID: 0}
+  _GameManager: {fileID: 0}
   CompetitorPV: {fileID: 0}
   CardPrefabSolo: {fileID: 1798911962605047886, guid: 515ee43589829493b9d191026fda22ba, type: 3}
   CardPrefabInGame: {fileID: 1798911962605047886, guid: 95f91097fd2028549ad29acd2425208c, type: 3}
@@ -1512,6 +1513,10 @@ MonoBehaviour:
   CompetitorHealthBar: {fileID: 5227573716049669525}
   CompetitorManaBar: {fileID: 5863588969606758050}
   DeadMonsterCound: 0
+  DeckCardCount: 0
+  Mana: 3
+  lastHoveredCard: {fileID: 0}
+  _CardProgress: {fileID: 0}
   OwnHeroAttackDamageText: {fileID: 2811176848035667705}
   CompetitorHeroAttackDamageText: {fileID: 664844411364063452}
   OlympiaKillCount: 0
@@ -1520,6 +1525,8 @@ MonoBehaviour:
   SteppeAmbush: 0
   NomadicTactics: 0
   NomadsLand: 0
+  AsgardQuestion: 0
+  DeadMyCardName: []
   HeroAnimator: {fileID: 2961789529435728672}
 --- !u!114 &6638573949623686288
 MonoBehaviour:

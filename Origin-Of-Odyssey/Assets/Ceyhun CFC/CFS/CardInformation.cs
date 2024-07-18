@@ -23,6 +23,8 @@ public class CardInformation : MonoBehaviour
     public bool MongolFury = false;
     public bool CanAttackBehind = false;
     public bool EternalShield = false;
+    public bool Gallop = false;                    //tur sonunda eline geri verir kartı
+    public int ChargeBrokandSindri = 0;             
 
 
     public Text CardNameText;
