@@ -26,8 +26,8 @@ public class PlayerController : MonoBehaviour
 
 
     string CompetitorName = "";
-    string[] CompetitorDeck;
-    string CompetitorMainCard = "";
+    [HideInInspector] public string[] CompetitorDeck;
+    [HideInInspector] public string CompetitorMainCard = "";
     float CompetitorHealth = 0;
     float CompetitorHeroAttackDamage = 0;
 
@@ -45,6 +45,9 @@ public class PlayerController : MonoBehaviour
     public Text CompetitorHealthText;
     public Text CompetitorManaCountText;
 
+    public GameObject healthTextObject;
+    public GameObject attackTextObject;
+    public GameObject drawCardTextObject;
 
     public GameObject DamageText;
     public GameObject LogsPrefab;
@@ -57,10 +60,6 @@ public class PlayerController : MonoBehaviour
     public Image CompetitorHealthBar;
     public Image CompetitorManaBar;
 
-    public int DeadMonsterCound = 0;
-
-    public int DeckCardCount = 0;
-    public float Mana = 3;
     float elapsedTime = 60;
 
     GameObject selectedCard;
@@ -72,15 +71,17 @@ public class PlayerController : MonoBehaviour
     public Text OwnHeroAttackDamageText;
     public Text CompetitorHeroAttackDamageText;
 
-    public int OlympiaKillCount = 0;
-    public int SpellsExtraDamage = 0;
-    public bool GodsBaneUsed = false;
-    public bool SteppeAmbush = false;
-    public bool NomadicTactics = false;
-    public int NomadsLand = 0;
-    public int AsgardQuestion = 0;
-    public int DeadCardCountMy = 0;
-    public int DeadCardCountEnemy = 0;
+    [HideInInspector] public int OlympiaKillCount = 0;
+    [HideInInspector] public int SpellsExtraDamage = 0;
+    [HideInInspector] public bool GodsBaneUsed = false;
+    [HideInInspector] public bool SteppeAmbush = false;
+    [HideInInspector] public bool NomadicTactics = false;
+    [HideInInspector] public int NomadsLand = 0;
+    [HideInInspector] public int AsgardQuestion = 0;
+    [HideInInspector] public int DeadCardCount = 0;
+    [HideInInspector] public int DeckCardCount = 0;
+    [HideInInspector] public float Mana = 3;
+    [HideInInspector] public int DeadMonsterCound = 0;
 
     public List<string> DeadMyCardName = null;
 
@@ -645,6 +646,49 @@ public class PlayerController : MonoBehaviour
                 {
                     OdinCardFuns.EinherjarCallerFun(this);
                 }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Norn Weaver" )
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        Vector3[] positions = new Vector3[3];
+                        float yPosition = 2.7f;
+                        float zPosition = -2.7f;
+
+                        Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
+                        Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
+                        Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+
+                        positions[0] = screenPos1;
+                        positions[1] = screenPos2;
+                        positions[2] = screenPos3;
+
+                        for (int i = 0; i < positions.Length; i++)
+                        {
+                            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                            GameObject Card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), positions[i], rotation);
+                            Card.tag = "SelectCard";
+                            Card.AddComponent<Button>();
+                            CreateCard(Card);
+
+                            Card.GetComponent<Button>().onClick.AddListener(() => {
+                                foreach (GameObject card in GameObject.FindGameObjectsWithTag("SelectCard"))
+                                {
+                                    Destroy(card);
+                                }
+                                if (UnityEngine.Random.Range(0, 2) == 0)
+                                {
+                                    print("run");
+                                    GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                                    OdinCardFuns.NornWeaverFun(CardCurrent, this);
+                                }
+                            });
+                        }
+                    }
+                    else
+                        print("DesrenDolu");
+                    
+                    
+                }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Winter's Chill")
                 {
                     OdinCardFuns.WintersChillFun(selectedCard, this);
@@ -675,9 +719,42 @@ public class PlayerController : MonoBehaviour
                     Destroy(selectedCard);
                     return;
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Rune Magic")
+                {
+                    OdinCardFuns.RuneMagicFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "The Allfather’s Decree")
+                {
+                    OdinCardFuns.TheAllfathersDecreeFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Mimir's Wisdom")
+                {
+                    int maxNewCards = 10 - GameObject.Find("Deck").transform.childCount+1;
+                    int cardsToCreate = Mathf.Min(3, maxNewCards);
+                    print(cardsToCreate);
+                    for (int i=0; i< cardsToCreate; i++)
+                    {
+                        GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                        OdinCardFuns.MimirsWisdomFun(selectedCard,CardCurrent, this);
+                        print("run");
+                    }
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
 
 
-                    ManaCountText.text = Mana.ToString() + "/10";
+
+                ManaCountText.text = Mana.ToString() + "/10";
                 OwnManaBar.fillAmount = Mana / 10f;
                 CompetitorManaBar.fillAmount = _GameManager.ManaCount / 10;
                 CompetitorManaCountText.text = (_GameManager.ManaCount) + "/10".ToString();
@@ -1620,7 +1697,7 @@ public class PlayerController : MonoBehaviour
                 SpellsExtraDamage -= 1;
             }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
-            DeadCardCountMy++;
+            DeadCardCount++;
             Destroy(DeadCard);
 
             CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_DeleteMyCard", RpcTarget.All, TargetCardIndex);
@@ -1633,7 +1710,7 @@ public class PlayerController : MonoBehaviour
         if (!PV.IsMine)
             return;
 
-        DeadCardCountEnemy++;
+        DeadCardCount++;
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
     }
 
@@ -1646,7 +1723,7 @@ public class PlayerController : MonoBehaviour
 
             GameObject DeadCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject;
             Destroy(DeadCard);
-            DeadCardCountEnemy++;
+            DeadCardCount++;
             string DeadCardName = DeadCard.GetComponent<CardInformation>().CardName;
 
             if (DeadCardName == "Centaur Archer" || DeadCardName == "Minotaur Warrior" || DeadCardName == "Siren" || DeadCardName == "Gorgon" || DeadCardName == "Nemean Lion" || DeadCardName == "Chimera") // ÖLEN KART MONSTER MI?
@@ -1777,7 +1854,7 @@ public class PlayerController : MonoBehaviour
 
         GameObject DeadCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject;
         DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
-        DeadCardCountMy++;
+        DeadCardCount++;
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
 
     }
@@ -2265,6 +2342,40 @@ public class PlayerController : MonoBehaviour
         }
 
       
+    }
+
+    public void RuneMagic()
+    {
+        if(PV.IsMine)
+        {
+            healthTextObject.SetActive(true);
+            attackTextObject.SetActive(true);
+            drawCardTextObject.SetActive(true);
+
+            healthTextObject.GetComponent<Button>().onClick.AddListener(() => OnTextClicked(healthTextObject));
+            attackTextObject.GetComponent<Button>().onClick.AddListener(() => OnTextClicked(attackTextObject));
+            drawCardTextObject.GetComponent<Button>().onClick.AddListener(() => OnTextClicked(drawCardTextObject));
+        }
+    }
+
+    void OnTextClicked(GameObject clickedTextObject)
+    {
+        if (clickedTextObject == healthTextObject)
+        {
+            GetComponent<CardController>().AddHealCard(2, !PV.Owner.IsMasterClient);
+        }
+        else if (clickedTextObject == attackTextObject)
+        {
+            GetComponent<CardController>().UsedCard(2, GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+        }
+        else if (clickedTextObject == drawCardTextObject)
+        {
+            SpawnAndReturnGameObject();
+        }
+
+        healthTextObject.SetActive(false);
+        attackTextObject.SetActive(false);
+        drawCardTextObject.SetActive(false);
     }
 
     public void SetMana(GameObject attackercard)
@@ -2869,6 +2980,14 @@ public class PlayerController : MonoBehaviour
                         break;
                     }
                 }
+                if(CardCurrent.GetComponent<CardInformation>().CardName == "Naglfar")
+                {
+                    if(DeadCardCount >= 6)
+                    {
+                        CardCurrent.GetComponent<CardInformation>().CardMana -= 3;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                    }
+                }
                 break;
         }
     }
@@ -2885,7 +3004,6 @@ public class PlayerController : MonoBehaviour
                     CardInformation cardInfo = deckObject.transform.GetChild(i).GetComponent<CardInformation>();
                     if (cardInfo != null && cardInfo.CardName == "Draugr Warrior")
                     {
-                        Debug.Log("DraugrWarrior found in your Deck.");
                         cardInfo.CardMana = 5 - GameObject.Find("CompetitorDeck").transform.childCount;
                         if (cardInfo.CardMana < 0)
                         {
@@ -2895,7 +3013,6 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning("DraugrWarrior not found in your Deck.");
                     }
                 }
             }
@@ -2939,7 +3056,6 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning("Gjallarhorn Call not found in your Deck.");
                     }
                 }
             }
@@ -3005,7 +3121,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void StackCompetitorDeck()
+    public void StackCompetitorDeck()
     {
 
         for (int i = 0; i < GameObject.Find("CompetitorDeck").transform.childCount; i++)

@@ -24,6 +24,7 @@ public class CardInformation : MonoBehaviour
     public bool CanAttackBehind = false;
     public bool EternalShield = false;
     public bool Gallop = false;                    //tur sonunda eline geri verir kartı
+    public bool Invulnerable = false;               //saldırırken yaralanmaz
     public int ChargeBrokandSindri = 0;             
 
 

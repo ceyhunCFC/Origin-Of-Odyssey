@@ -476,9 +476,152 @@ public class OdinCardFuns
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
-    public static void NornWeaverFun(PlayerController PC)
+    public static void NornWeaverFun(GameObject selectedCard, PlayerController PC)
     {
+        float xPos = PC.DeckCardCount * 0.8f - 0.8f; 
+        selectedCard.transform.localPosition = new Vector3(xPos, 0, 0);
+        selectedCard.tag = "Card";
+        CreateCard(selectedCard,PC);
+        PC.StackDeck();
+        PC.StackCompetitorDeck();
+        PC.DeckCardCount++;
 
+        PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+
+    }
+
+    public static void RuneMagicFun(GameObject selectedCard, PlayerController PC)
+    {
+        PC.ManaCountText.text = PC.Mana.ToString() + "/10";
+        PC.OwnManaBar.fillAmount = PC.Mana / 10f;
+        PC.CompetitorManaBar.fillAmount = PC._GameManager.ManaCount / 10;
+        PC.CompetitorManaCountText.text = (PC._GameManager.ManaCount) + "/10".ToString();
+        PC.DeckCardCount--;
+
+        PC.StackDeck();
+
+        if (PC.PV.IsMine)
+        {
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+            PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+        }
+        PC.RuneMagic();
+
+        selectedCard.SetActive(false);
+        selectedCard = null;
+        PC.lastHoveredCard = null;
+
+        PC.UsedSpell();
+        Debug.LogError("USSEEDD A SPEEELLL");
+        
+    }
+
+    public static void TheAllfathersDecreeFun(GameObject selectedCard, PlayerController PC)
+    {
+        PC.ManaCountText.text = PC.Mana.ToString() + "/10";
+        PC.OwnManaBar.fillAmount = PC.Mana / 10f;
+        PC.CompetitorManaBar.fillAmount = PC._GameManager.ManaCount / 10;
+        PC.CompetitorManaCountText.text = (PC._GameManager.ManaCount) + "/10".ToString();
+        PC.DeckCardCount--;
+
+        PC.StackDeck();
+
+        if (PC.PV.IsMine)
+        {
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+            PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+        }
+
+        List<int> emptyFrontCells = new List<int>();
+        List<int> emptyBackCells = new List<int>();
+
+        GameObject CreatedCard;
+
+        for (int i = 7; i < 14; i++)
+        {
+            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+            {
+                emptyFrontCells.Add(i);
+            }
+        }
+
+        if (emptyFrontCells.Count > 0)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+            int index = emptyFrontCells[randomIndex];
+            CreatedCard = PC.CreateSpecialCard("Gungnir", "4", 2, 0, index, true);
+            CreatedCard.GetComponent<CardInformation>().Invulnerable = true;
+            CanFirstRauntAttack(CreatedCard);
+        }
+        else
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    emptyBackCells.Add(i);
+                }
+            }
+
+            if (emptyBackCells.Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                int index = emptyBackCells[randomIndex];
+                CreatedCard = PC.CreateSpecialCard("Gungnir", "4", 2, 0, index, true);
+                CreatedCard.GetComponent<CardInformation>().Invulnerable = true;
+                CanFirstRauntAttack(CreatedCard);
+            }
+            else
+            {
+                Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+            }
+        }
+
+        
+
+        selectedCard.SetActive(false);
+        selectedCard = null;
+        PC.lastHoveredCard = null;
+
+        PC.UsedSpell();
+        Debug.LogError("USSEEDD A SPEEELLL");
+    }
+
+    public static void MimirsWisdomFun(GameObject selectedCard,GameObject Card, PlayerController PC)
+    {
+        PC.ManaCountText.text = PC.Mana.ToString() + "/10";
+        PC.OwnManaBar.fillAmount = PC.Mana / 10f;
+        PC.CompetitorManaBar.fillAmount = PC._GameManager.ManaCount / 10;
+        PC.CompetitorManaCountText.text = (PC._GameManager.ManaCount) + "/10".ToString();
+        PC.DeckCardCount--;
+
+        PC.StackDeck();
+
+        if (PC.PV.IsMine)
+        {
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+            PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+        }
+        float xPos = PC.DeckCardCount * 0.8f - 0.8f;
+        Card.transform.localPosition = new Vector3(xPos, 0, 0);
+        Card.tag = "Card";
+        CreateCard(Card, PC);
+        PC.StackDeck();
+        PC.StackCompetitorDeck();
+        PC.DeckCardCount++;
+
+        PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+
+
+        selectedCard.SetActive(false);
+        selectedCard = null;
+        PC.lastHoveredCard = null;
+
+        PC.UsedSpell();
+        Debug.LogError("USSEEDD A SPEEELLL");
     }
 
     public static void CanFirstRauntAttack(GameObject selectedCard)
@@ -489,5 +632,144 @@ public class OdinCardFuns
         green.gameObject.SetActive(true);
     }
 
+    static void CreateCard(GameObject CardCurrent,PlayerController PC)
+    {
+
+        switch (PC.CompetitorMainCard)
+        {
+            case "Zeus":
+                ZeusCard zeusCard = new ZeusCard();
+
+
+                int CardIndex = UnityEngine.Random.Range(1, PC.CompetitorDeck.Length); // 1 DEN BAÞLIYOR ÇÜNKÐ ÝNDEX 0 HEROMUZ
+                string targetCardName = PC.CompetitorDeck[CardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduðunu belirle daha sonra özelliklerini getir.
+
+                int targetIndex = -1;
+
+
+
+                for (int i = 0; i < zeusCard.minions.Count; i++)
+                {
+                    if (zeusCard.minions[i].name == targetCardName)
+                    {
+                        targetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = zeusCard.minions[targetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.minions[targetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = zeusCard.minions[targetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.minions[targetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < zeusCard.spells.Count; i++)
+                {
+                    if (zeusCard.spells[i].name == targetCardName)
+                    {
+                        targetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = zeusCard.spells[targetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.spells[targetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.spells[targetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                break;
+
+            case "Genghis":
+                GenghisCard genghisCard = new GenghisCard();
+
+                int GenghisCardIndex = UnityEngine.Random.Range(1, PC.CompetitorDeck.Length); // 1 DEN BAÞLIYOR ÇÜNKÐ ÝNDEX 0 HEROMUZ
+                string GenghistargetCardName = PC.CompetitorDeck[GenghisCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduðunu belirle daha sonra özelliklerini getir.
+
+                int GenghistargetIndex = -1;
+
+                for (int i = 0; i < genghisCard.minions.Count; i++)
+                {
+                    if (genghisCard.minions[i].name == GenghistargetCardName)
+                    {
+                        GenghistargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.minions[GenghistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.minions[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = genghisCard.minions[GenghistargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = genghisCard.minions[GenghistargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.minions[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < genghisCard.spells.Count; i++)
+                {
+                    if (genghisCard.spells[i].name == GenghistargetCardName)
+                    {
+                        GenghistargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.spells[GenghistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.spells[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.spells[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                break;
+            case "Odin":
+                OdinCard odinCard = new OdinCard();
+
+                int OdinCardIndex = UnityEngine.Random.Range(1, PC.CompetitorDeck.Length); // 1 DEN BAÞLIYOR ÇÜNKÐ ÝNDEX 0 HEROMUZ
+                string OdintargetCardName = PC.CompetitorDeck[OdinCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduðunu belirle daha sonra özelliklerini getir.
+
+                int OdintargetIndex = -1;
+
+                for (int i = 0; i < odinCard.minions.Count; i++)
+                {
+                    if (odinCard.minions[i].name == OdintargetCardName)
+                    {
+                        GenghistargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.minions[GenghistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[GenghistargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[GenghistargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < odinCard.spells.Count; i++)
+                {
+                    if (odinCard.spells[i].name == OdintargetCardName)
+                    {
+                        GenghistargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.spells[GenghistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.spells[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                if (CardCurrent.GetComponent<CardInformation>().CardName == "Naglfar")
+                {
+                    if (PC.DeadCardCount >= 6)
+                    {
+                        CardCurrent.GetComponent<CardInformation>().CardMana -= 3;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                    }
+                }
+                break;
+        }
+    }
 
 }

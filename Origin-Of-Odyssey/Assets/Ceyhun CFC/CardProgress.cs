@@ -1387,16 +1387,27 @@ public class CardProgress : MonoBehaviourPunCallbacks
             green.gameObject.SetActive(false);
         }
         CloseEnemyAllCard();
-
         int mycardindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, AttackerCard.transform.parent.gameObject);
-        GetComponent<PlayerController>().CreateTextAtTargetIndex(mycardindex, TargetInfo.CardDamage,true);
-        GetComponent<PlayerController>().RefreshMyCard(mycardindex, AttackerInfo.CardHealth, AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
-        if (int.Parse(AttackerInfo.CardHealth) <= 0)
+        if (AttackerInfo.Invulnerable)
         {
-            GetComponent<PlayerController>().DeleteMyCard(mycardindex);
-            GetComponent<PlayerController>().RefreshLog(-TargetInfo.CardDamage, true, TargetInfo.CardName, AttackerInfo.CardName, Color.red);
+            GetComponent<PlayerController>().CreateTextAtTargetIndex(mycardindex, 0, true);
+            GetComponent<PlayerController>().RefreshMyCard(mycardindex, AttackerInfo.CardHealth, AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
+            GetComponent<PlayerController>().RefreshLog(0, true, TargetInfo.CardName, AttackerInfo.CardName, Color.red);
+            AttackerInfo.Invulnerable = false;
         }
         else
-            GetComponent<PlayerController>().RefreshLog(-TargetInfo.CardDamage, false, TargetInfo.CardName, AttackerInfo.CardName, Color.red);
+        {
+            GetComponent<PlayerController>().CreateTextAtTargetIndex(mycardindex, TargetInfo.CardDamage, true);
+            GetComponent<PlayerController>().RefreshMyCard(mycardindex, AttackerInfo.CardHealth, AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
+            if (int.Parse(AttackerInfo.CardHealth) <= 0)
+            {
+                GetComponent<PlayerController>().DeleteMyCard(mycardindex);
+                GetComponent<PlayerController>().RefreshLog(-TargetInfo.CardDamage, true, TargetInfo.CardName, AttackerInfo.CardName, Color.red);
+            }
+            else
+                GetComponent<PlayerController>().RefreshLog(-TargetInfo.CardDamage, false, TargetInfo.CardName, AttackerInfo.CardName, Color.red);
+        }
+        
+        
     }
 }
