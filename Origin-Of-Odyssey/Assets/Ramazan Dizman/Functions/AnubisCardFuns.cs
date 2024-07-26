@@ -334,6 +334,8 @@ public class AnubisCardFuns
             PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
         }
 
+        selectedCard.tag = "Card";
+
         List<GameObject> usedCards = new List<GameObject>();
         foreach (GameObject card in GameObject.FindGameObjectsWithTag("UsedCard"))
         {

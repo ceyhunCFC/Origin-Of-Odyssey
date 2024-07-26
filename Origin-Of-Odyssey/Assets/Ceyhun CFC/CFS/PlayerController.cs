@@ -760,7 +760,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Sphinx Riddler")
                 {
-                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    if (GameObject.Find("Deck").transform.childCount < 11)
                     {
                         Vector3[] positions = new Vector3[3];
                         float yPosition = 2.7f;
@@ -835,7 +835,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Scroll of Death")
                 {
-                    AnubisCardFuns.BookoftheDeadFun(selectedCard, this);
+                    AnubisCardFuns.ScrollofDeathFun(selectedCard, this);
                     GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     Destroy(selectedCard);
@@ -867,6 +867,7 @@ public class PlayerController : MonoBehaviour
                     AnubisCardFuns.RiversBlessingFun(selectedCard, this);
                     GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Pyramid's Might")
@@ -1217,7 +1218,7 @@ public class PlayerController : MonoBehaviour
             CardCurrent.transform.localScale = new Vector3(1,1,0.04f);
             CardCurrent.transform.localPosition = Vector3.zero;
             CardCurrent.transform.localEulerAngles = new Vector3(45,0,180);
-            if(CardCurrent.GetComponent<CardInformation>().CardName == "Crypt Warden" || CardCurrent.GetComponent<CardInformation>().CardName == "Chaos Scarab")
+            if(name == "Crypt Warden" || name == "Chaos Scarab")
             {
                 CardCurrent.SetActive(false);
             }
@@ -1233,15 +1234,15 @@ public class PlayerController : MonoBehaviour
     }
     public void SetActiveCard(int index)
     {
-        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_SetAvtiveCard", RpcTarget.All, index);
+        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_SetActiveCard", RpcTarget.All, index);
     }
 
     [PunRPC]
-    void RPC_SetAvtiveCard(int index)
+    void RPC_SetActiveCard(int index)
     {
         if (PV.IsMine)
         {
-            GameObject CardCurrent = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform.GetChild(0).gameObject;
+            GameObject CardCurrent = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform.GetChild(0).transform.gameObject;;
 
             if (CardCurrent.GetComponent<CardInformation>().CardName == "Crypt Warden" ||
                 CardCurrent.GetComponent<CardInformation>().CardName == "Chaos Scarab")
@@ -2071,8 +2072,8 @@ public class PlayerController : MonoBehaviour
         if(DeadCard.GetComponent<CardInformation>().SunDiskRadiance == true)
         {
             CardInformation deadcard = DeadCard.GetComponent<CardInformation>();
-            string name = deadcard.name;
-            string health = deadcard.CardHealth;
+            string name = deadcard.CardName;
+            string health = deadcard.MaxHealth;
             int damage = deadcard.CardDamage;
             int mana = deadcard.CardMana;
             CreateDeckCard(name,health,damage,mana);
@@ -2732,8 +2733,8 @@ public class PlayerController : MonoBehaviour
             Freeze.SetActive(true);
             Mummies.SetActive(true);
 
-            Freeze.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked(healthTextObject));
-            Mummies.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked(attackTextObject));
+            Freeze.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked(Freeze));
+            Mummies.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked(Mummies));
         }
     }
 

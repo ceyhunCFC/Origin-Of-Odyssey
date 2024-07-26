@@ -1668,8 +1668,8 @@ MonoBehaviour:
   healthTextObject: {fileID: 5830529532445790768}
   attackTextObject: {fileID: 4796682917157738137}
   drawCardTextObject: {fileID: 4869143969194734796}
-  Freeze: {fileID: 0}
-  Mummies: {fileID: 0}
+  Freeze: {fileID: 4805320598793381359}
+  Mummies: {fileID: 8099887875025035068}
   DamageText: {fileID: 2708687466921094310, guid: da4c45b7bfd2f93439b698c14d3ed7c0, type: 3}
   LogsPrefab: {fileID: 8933364326339670385, guid: d52218ebb7512404cab289c84c33d427, type: 3}
   finishButton: {fileID: 674516608038796289}
