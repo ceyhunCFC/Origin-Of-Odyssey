@@ -95,6 +95,7 @@ MonoBehaviour:
   - RPC_CreateTextAtTargetIndex
   - RPC_RefreshLog
   - RPC_RefreshCompetitorMana
+  - RPC_SetAvtiveCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

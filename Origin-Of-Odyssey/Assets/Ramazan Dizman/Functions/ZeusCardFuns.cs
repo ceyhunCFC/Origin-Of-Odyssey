@@ -132,7 +132,7 @@ public class ZeusCardFuns
 
     public static void GorgonFun( PlayerController PC)
     {
-        PC._CardProgress.FreezeAllEnemyMinions();
+        PC._CardProgress.FreezeAllEnemyMinions("Gorgon");
 
     }
 

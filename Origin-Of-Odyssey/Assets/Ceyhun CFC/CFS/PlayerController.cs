@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
     public GameObject healthTextObject;
     public GameObject attackTextObject;
     public GameObject drawCardTextObject;
+    public GameObject Freeze;
+    public GameObject Mummies;
 
     public GameObject DamageText;
     public GameObject LogsPrefab;
@@ -83,7 +85,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float Mana = 3;
     [HideInInspector] public int DeadMonsterCound = 0;
 
-    public List<string> DeadMyCardName = null;
+    [HideInInspector] public List<string> DeadMyCardName = null;
 
     void Start()
     {
@@ -677,7 +679,6 @@ public class PlayerController : MonoBehaviour
                                 }
                                 if (UnityEngine.Random.Range(0, 2) == 0)
                                 {
-                                    print("run");
                                     GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
                                     OdinCardFuns.NornWeaverFun(CardCurrent, this);
                                 }
@@ -739,18 +740,159 @@ public class PlayerController : MonoBehaviour
                 {
                     int maxNewCards = 10 - GameObject.Find("Deck").transform.childCount+1;
                     int cardsToCreate = Mathf.Min(3, maxNewCards);
-                    print(cardsToCreate);
                     for (int i=0; i< cardsToCreate; i++)
                     {
                         GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
                         OdinCardFuns.MimirsWisdomFun(selectedCard,CardCurrent, this);
-                        print("run");
                     }
                     GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     Destroy(selectedCard);
                     return;
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Necropolis Acolyte")                                         //anubis card
+                {
+                    AnubisCardFuns.NecropolisAcolyteFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Desert Bowman")
+                {
+                    AnubisCardFuns.DesertBowmanFun(selectedCard, this);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Sphinx Riddler")
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        Vector3[] positions = new Vector3[3];
+                        float yPosition = 2.7f;
+                        float zPosition = -2.7f;
+
+                        Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
+                        Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
+                        Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+
+                        positions[0] = screenPos1;
+                        positions[1] = screenPos2;
+                        positions[2] = screenPos3;
+
+                        int correctCardIndex = UnityEngine.Random.Range(0, positions.Length);
+
+                        for (int i = 0; i < positions.Length; i++)
+                        {
+                            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                            GameObject Card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), positions[i], rotation);
+                            Card.tag = "SelectCard";
+                            Card.AddComponent<Button>();
+                            CreateCard(Card);
+
+                            Card.GetComponent<Button>().onClick.AddListener(() => {
+                                foreach (GameObject card in GameObject.FindGameObjectsWithTag("SelectCard"))
+                                {
+                                    Destroy(card);
+                                }
+
+                                if (i == correctCardIndex)
+                                {
+                                    SpawnAndReturnGameObject();
+                                }
+                            });
+                        }
+                    }
+                    else
+                    {
+                        print("Deck is Full");
+                    }
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Osiris’ Bannerman")
+                {
+                    AnubisCardFuns.OsirisBannermanFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Sun Charioteer")
+                {
+                    AnubisCardFuns.CanFirstRauntAttack(selectedCard);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Tomb Protector")
+                {
+                    AnubisCardFuns.TombProtectorFun(selectedCard,this);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Falcon-Eyed Hunter")
+                {
+                    AnubisCardFuns.FalconEyedHunterFun(selectedCard, this);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Canopic Preserver")
+                {
+                    AnubisCardFuns.CanopicPreserverFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Sandstone Scribe")
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                        AnubisCardFuns.SandstoneScribeFun(CardCurrent, this);
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+                    }
+
+                    
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Scroll of Death")
+                {
+                    AnubisCardFuns.BookoftheDeadFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Book of the Dead")
+                {
+                    AnubisCardFuns.BookoftheDeadFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Sun Disk Radiance")
+                {
+                    AnubisCardFuns.SunDiskRadianceFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Plague of Locusts")
+                {
+                    AnubisCardFuns.PlagueofLocustsFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "River's Blessing")
+                {
+                    AnubisCardFuns.RiversBlessingFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Pyramid's Might")
+                {
+                    AnubisCardFuns.PyramidsMightFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Scales of Anubis")
+                {
+                    AnubisCardFuns.ScalesofAnubisFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Gates of Duat")
+                {
+                    AnubisCardFuns.GatesofDuatFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+
+
 
 
 
@@ -780,6 +922,15 @@ public class PlayerController : MonoBehaviour
                      (int.Parse( selectedCard.GetComponent<CardInformation>().CardHealth) + (2 * DeadMonsterCound)).ToString(),
                       selectedCard.GetComponent<CardInformation>().CardDamage + (2 * DeadMonsterCound),
                       selectedCard.GetComponent<CardInformation>().CardMana);
+                    }
+                    else if(selectedCard.GetComponent<CardInformation>().CardName == "Tomb Protector")
+                    {
+                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
+                     selectedCard.GetComponent<CardInformation>().CardName,
+                     selectedCard.GetComponent<CardInformation>().CardDes,
+                    (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + CheckUndeadCards()).ToString(),
+                     selectedCard.GetComponent<CardInformation>().CardDamage,
+                     selectedCard.GetComponent<CardInformation>().CardMana);
                     }
                     else
                     {
@@ -815,6 +966,20 @@ public class PlayerController : MonoBehaviour
     {
         GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
         TalkCloud.transform.GetChild(0).GetComponent<Text>().text = text;
+    }
+
+    public int CheckUndeadCards()
+    {
+        GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
+        int count = 0;
+        foreach (var card in AllOwnCards)
+        {
+            if(card.GetComponent<CardInformation>().CardName == "Royal Mummy" || card.GetComponent<CardInformation>().CardName == "Mummy")
+            {
+                count++;
+            }
+        }
+        return count;
     }
     public void SelectedCard(GameObject Card)
     {
@@ -1052,7 +1217,10 @@ public class PlayerController : MonoBehaviour
             CardCurrent.transform.localScale = new Vector3(1,1,0.04f);
             CardCurrent.transform.localPosition = Vector3.zero;
             CardCurrent.transform.localEulerAngles = new Vector3(45,0,180);
-
+            if(CardCurrent.GetComponent<CardInformation>().CardName == "Crypt Warden" || CardCurrent.GetComponent<CardInformation>().CardName == "Chaos Scarab")
+            {
+                CardCurrent.SetActive(false);
+            }
             CardCurrent.GetComponent<CardInformation>().CardName = name;
             CardCurrent.GetComponent<CardInformation>().CardDes = des;
             CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
@@ -1063,6 +1231,31 @@ public class PlayerController : MonoBehaviour
 
         }
     }
+    public void SetActiveCard(int index)
+    {
+        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_SetAvtiveCard", RpcTarget.All, index);
+    }
+
+    [PunRPC]
+    void RPC_SetAvtiveCard(int index)
+    {
+        if (PV.IsMine)
+        {
+            GameObject CardCurrent = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform.GetChild(0).gameObject;
+
+            if (CardCurrent.GetComponent<CardInformation>().CardName == "Crypt Warden" ||
+                CardCurrent.GetComponent<CardInformation>().CardName == "Chaos Scarab")
+            {
+                if (!CardCurrent.activeSelf)
+                {
+                    CardCurrent.SetActive(true);
+                }
+            }
+
+            CardCurrent.GetComponent<CardInformation>().SetInformation();
+        }
+    }
+
 
 
     [PunRPC]
@@ -1764,6 +1957,26 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+            else if(DeadCardName == "Royal Mummy")
+            {
+                if (_CardProgress.AttackerCard != null)
+                {
+                    AnubisCardFuns.RoyalMummyFun(_CardProgress.AttackerCard.GetComponent<CardInformation>().CardName, this);
+                }
+                    
+            }
+            else if(DeadCardName== "Crypt Warden")
+            {
+                for (int i = 7; i < 14; i++)
+                {
+
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        CreateSpecialCard("Mummy", "1", 1, 0, i, false);
+                    }
+
+                }
+            }
             if (_CardProgress.AttackerCard != null)
             {
                 if (_CardProgress.AttackerCard.GetComponent<CardInformation>().CardName == "Zeus")
@@ -1855,8 +2068,32 @@ public class PlayerController : MonoBehaviour
         GameObject DeadCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject;
         DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
         DeadCardCount++;
+        if(DeadCard.GetComponent<CardInformation>().SunDiskRadiance == true)
+        {
+            CardInformation deadcard = DeadCard.GetComponent<CardInformation>();
+            string name = deadcard.name;
+            string health = deadcard.CardHealth;
+            int damage = deadcard.CardDamage;
+            int mana = deadcard.CardMana;
+            CreateDeckCard(name,health,damage,mana);
+        }
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
 
+    }
+
+    public void CreateDeckCard(string name,string health,int damage,int mana)
+    {
+        GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+        CardCurrent.GetComponent<CardInformation>().CardName = name;
+        CardCurrent.GetComponent<CardInformation>().CardHealth = health;
+        CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
+        CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+
+        StackDeck();
+        StackCompetitorDeck();
+        DeckCardCount++;
+
+        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
     }
 
     public void CreateHoplitesCard(int CreateCardIndex)
@@ -2027,6 +2264,43 @@ public class PlayerController : MonoBehaviour
         int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, CardCurrent.transform.parent.gameObject);
         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_DeleteMyCard", RpcTarget.All, index);
 
+    }
+
+    public void ScalesOfAnubis(int index)
+    {
+        GameObject DeadCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform.GetChild(0).transform.gameObject;
+        DeleteAreaCard(index);
+
+        GameObject deckObject = GameObject.Find("CompetitorDeck");
+        if (deckObject.transform.childCount < 10)
+        {
+            string cardName = DeadCard.GetComponent<CardInformation>().CardName;
+            string cardDes = cardName + " POWWERRRRR!!!";
+            string cardHealth = DeadCard.GetComponent<CardInformation>().CardHealth.ToString();
+            int cardDamage = DeadCard.GetComponent<CardInformation>().CardDamage;
+            int cardMana = DeadCard.GetComponent<CardInformation>().CardMana;
+
+
+            GameObject CardCurrent = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
+
+            float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+            CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+
+            CardCurrent.GetComponent<CardInformation>().CardName = cardName;
+            CardCurrent.GetComponent<CardInformation>().CardDes = cardDes;
+            CardCurrent.GetComponent<CardInformation>().CardHealth = cardHealth;
+            CardCurrent.GetComponent<CardInformation>().CardDamage = cardDamage;
+            CardCurrent.GetComponent<CardInformation>().CardMana = cardMana;
+            CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+
+            StackDeck();
+            StackCompetitorDeck();
+            DeckCardCount++;
+
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_LabyrinthMaze", RpcTarget.Others, cardName, cardDes, cardHealth, cardDamage, cardMana);
+        }
     }
 
     public void LabyrinthMaze()
@@ -2246,7 +2520,80 @@ public class PlayerController : MonoBehaviour
                             print("mana yetersiz");
                         }
                         break;
-                        
+                    case "Anubis":
+                        existingObject.GetComponent<CardInformation>().CardName = "Zeus";
+                        existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
+
+                        List<int> emptyFrontCells = new List<int>();
+                        List<int> emptyBackCells = new List<int>();
+
+                        for (int i = 7; i < 14; i++)
+                        {
+                            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                            {
+                                emptyFrontCells.Add(i);
+                            }
+                        }
+
+                        if (emptyFrontCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
+                            if(DeadMyCardName.Count > 4)
+                            {
+                                string targetCardName = "Mummy";
+                                string cardHealth = "2";
+                                int cardDamage = 2;
+                                CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                            }
+                            else
+                            {
+                                string targetCardName = "Worker";
+                                string cardHealth = "1";
+                                int cardDamage = 1;
+                                CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                            }
+                            emptyFrontCells.RemoveAt(randomIndex);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < 7; i++)
+                            {
+                                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                {
+                                    emptyBackCells.Add(i);
+                                }
+                            }
+
+                            if (emptyBackCells.Count > 0)
+                            {
+                                int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                                int index = emptyBackCells[randomIndex];
+                                if (DeadMyCardName.Count > 4)
+                                {
+                                    string targetCardName = "Mummy";
+                                    string cardHealth = "2";
+                                    int cardDamage = 2;
+                                    CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                }
+                                else
+                                {
+                                    string targetCardName = "Worker";
+                                    string cardHealth = "1";
+                                    int cardDamage = 1;
+                                    CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                }
+                                emptyBackCells.RemoveAt(randomIndex);
+                            }
+                            else
+                            {
+                                Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                            }
+                        }
+                        break;
+
                 }
 
              
@@ -2376,6 +2723,43 @@ public class PlayerController : MonoBehaviour
         healthTextObject.SetActive(false);
         attackTextObject.SetActive(false);
         drawCardTextObject.SetActive(false);
+    }
+
+    public void GatesofDuat()
+    {
+        if (PV.IsMine)
+        {
+            Freeze.SetActive(true);
+            Mummies.SetActive(true);
+
+            Freeze.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked(healthTextObject));
+            Mummies.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked(attackTextObject));
+        }
+    }
+
+    void OnGameobjectClicked(GameObject clickedTextObject)
+    {
+        if (clickedTextObject == Freeze)
+        {
+            _CardProgress.FreezeAllEnemyMinions("Gates of Duat");
+        }
+        else if (clickedTextObject == Mummies)
+        {
+            int createdCardCount = 0;
+
+            for (int i = 7; i < 14 && createdCardCount < 6; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    CreateSpecialCard("Mummy", "1", 1, 0, i, true);
+                    createdCardCount++;
+                }
+            }
+
+        }
+
+        Freeze.SetActive(false);
+        Mummies.SetActive(false);
     }
 
     public void SetMana(GameObject attackercard)
@@ -2953,13 +3337,13 @@ public class PlayerController : MonoBehaviour
                 {
                     if (odinCard.minions[i].name == OdintargetCardName)
                     {
-                        GenghistargetIndex = i;
+                        OdintargetIndex = i;
 
-                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.minions[GenghistargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[GenghistargetIndex].name + " POWWERRRRR!!!";
-                        CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[GenghistargetIndex].health.ToString();
-                        CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[GenghistargetIndex].attack;
-                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.minions[OdintargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[OdintargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[OdintargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[OdintargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[OdintargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -2970,12 +3354,12 @@ public class PlayerController : MonoBehaviour
                 {
                     if (odinCard.spells[i].name == OdintargetCardName)
                     {
-                        GenghistargetIndex = i;
-                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.spells[GenghistargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        OdintargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.spells[OdintargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[OdintargetIndex].name + " POWWERRRRR!!!";
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
-                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.spells[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.spells[OdintargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
                     }
@@ -2986,6 +3370,46 @@ public class PlayerController : MonoBehaviour
                     {
                         CardCurrent.GetComponent<CardInformation>().CardMana -= 3;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
+                    }
+                }
+                break;
+            case "Anubis":
+                AnubisCard anubisCard = new AnubisCard();
+
+                int AnubisCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
+                string AnubistargetCardName = OwnDeck[AnubisCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
+
+                int AnubistargetIndex = -1;
+
+                for (int i = 0; i < anubisCard.minions.Count; i++)
+                {
+                    if (anubisCard.minions[i].name == AnubistargetCardName)
+                    {
+                        AnubistargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.minions[AnubistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.minions[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = anubisCard.minions[AnubistargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = anubisCard.minions[AnubistargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.minions[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < anubisCard.spells.Count; i++)
+                {
+                    if (anubisCard.spells[i].name == AnubistargetCardName)
+                    {
+                        AnubistargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.spells[AnubistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.spells[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.spells[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
                     }
                 }
                 break;

@@ -18,7 +18,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
     CardInformation TargetInfo = null;
 
     public bool ForMyCard = false;
-    public bool ForHealMongolShaman = false;
+    public bool ForHeal = false;
     public bool WindFury = true;
 
     private void Update()
@@ -216,15 +216,22 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
     void SecondTargetUsedCard()                     //kendi kartlarımı seçebilmek için
     {
-        if (ForHealMongolShaman)
+        if (ForHeal)
         {
             TargetInfo = TargetCard.GetComponent<CardInformation>();
-            TargetInfo.CardHealth = TargetInfo.MaxHealth;
+            if(AttackerInfo.CardName == "Mongol Shaman")
+            {
+                TargetInfo.CardHealth = TargetInfo.MaxHealth;
+            }
+            else if(AttackerInfo.CardName == "Necropolis Acolyte")
+            {
+                TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 2).ToString();
+            }
             RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
-            GetComponent<PlayerController>().RefreshLog(0, true, "Mongol Shaman", TargetInfo.CardName, Color.magenta);
+            GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.magenta);
             SecoundTargetCard = false;
             AttackerCard = null;
-            ForHealMongolShaman = false;
+            ForHeal = false;
             CloseMyCardSign();
             return;
         }
@@ -320,6 +327,42 @@ public class CardProgress : MonoBehaviourPunCallbacks
             TargetInfo.Gallop = true;
             RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
         }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Sun Disk Radiance")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            TargetInfo.CardDamage += 3;
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 3).ToString();
+            TargetInfo.SunDiskRadiance = true;
+            RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Sun Disk Radiance";
+        }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Pyramid's Might")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            TargetInfo.CardDamage += 4;
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 4).ToString();
+            PyramidsMight();
+            RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Pyramid's Might";
+        }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Canopic Preserver")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+            AttackerInfo.CardDamage += TargetInfo.CardDamage;
+            AttackerInfo.CardHealth = (int.Parse(AttackerInfo.CardHealth) + int.Parse(TargetInfo.CardHealth)).ToString();
+            GetComponent<PlayerController>().DeleteMyCard(TargetCardIndex);
+            RefreshMyCardDatas(AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
+            GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Properties Retrieved";
+            CloseMyCardSign();
+            ForMyCard = false;
+            SecoundTargetCard = false;
+            AttackerCard = null;
+            TargetCard = null;
+            TargetCardIndex = -1;
+            return;
+        }
         Destroy(AttackerCard);
         CloseMyCardSign();
         ForMyCard = false;
@@ -370,6 +413,39 @@ public class CardProgress : MonoBehaviourPunCallbacks
             }
             else
                 GetComponent<PlayerController>().RefreshLog(-damage, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            Destroy(AttackerCard);
+        }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Scales of Anubis")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            if (UnityEngine.Random.Range(0, 2) == 0)
+            {
+                GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Destroyed Card";
+            }
+            else
+            {
+                GetComponent<PlayerController>().ScalesOfAnubis(TargetCardIndex);
+                GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Destroy and ReturnCard";
+            }
+        }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Falcon-Eyed Hunter")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 3).ToString();
+            GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 3, false);
+            if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+            {
+
+                GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                GetComponent<PlayerController>().RefreshLog(-3, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            }
+            else
+                GetComponent<PlayerController>().RefreshLog(-3, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
+            AttackerCard.GetComponent<CardInformation>().isAttacked = true;
         }
         ForMyCard = false;
         SecoundTargetCard = false;
@@ -594,6 +670,37 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     }
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
+                case "Desert Bowman":
+                    if(AttackerInfo.isItFirstRaound)
+                    {
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 1).ToString();
+                        RefreshCardDatas();
+                        AttackerCard = null;
+                        TargetCard = null;
+                        SecoundTargetCard = false;
+                        TargetCardIndex = -1;
+                        return;
+                    }
+                    else
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
+                    break;
+                case "Sun Charioteer":
+                    DamageAround(AttackerInfo.CardDamage);
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
+                    break;
+                case "Chaos Scarab":
+                    GetComponent<PlayerController>().SetActiveCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, AttackerCard));
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
+                    RefreshCardDatas();
+                    AttackerCard = null;
+                    TargetCard = null;
+                    SecoundTargetCard = false;
+                    TargetCardIndex = -1;
+                    return;
+                case "Crypt Warden":
+                    GetComponent<PlayerController>().SetActiveCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, AttackerCard));
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
+                    break;
                 default:
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
                     break;
@@ -658,6 +765,28 @@ public class CardProgress : MonoBehaviourPunCallbacks
             case "Sleipnir’s Gallop":
                 OpenMyCardSign();
                 break;
+            case "Necropolis Acolyte":
+                if (AttackerCard.GetComponent<CardInformation>().isItFirstRaound)
+                {
+                    OpenMyCardSign();
+                }
+                else
+                    EnemyAllCard();
+                break;
+            case "Sun Disk Radiance":
+                OpenMyCardSign();
+                break;
+            case "Pyramid's Might":
+                OpenMyCardSign();
+                break;
+            case "Falcon-Eyed Hunter":
+                if (AttackerCard.GetComponent<CardInformation>().isItFirstRaound)
+                {
+                    EnemyBackCard();
+                }
+                else
+                    EnemyAllCard();
+                break;
             default:
                 EnemyAllCard();
                 break;
@@ -700,6 +829,23 @@ public class CardProgress : MonoBehaviourPunCallbacks
     public void EnemyAllCard()
     {
         for (int i = 0; i < 14; i++)
+        {
+            Transform area = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].transform;
+
+            if (area.childCount > 0)
+            {
+                Transform red = area.GetChild(0).Find("Red");
+                if (red != null)
+                {
+                    red.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+
+    public void EnemyBackCard()
+    {
+        for (int i = 0; i < 7; i++)
         {
             Transform area = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].transform;
 
@@ -908,7 +1054,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
         
     }
 
-    public void FreezeAllEnemyMinions()
+    public void FreezeAllEnemyMinions(string name)
     {
         GameObject[] allTargets = GameObject.FindGameObjectsWithTag("CompetitorCard"); // RAKİBİN BÜTÜN KARTLARINI AL
 
@@ -921,7 +1067,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 int CardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, Card.transform.parent.gameObject);
                 Card.GetComponent<CardInformation>().CardFreeze = true;
                 GetComponent<PlayerController>().RefreshCompotitorCard(CardIndex, Card.GetComponent<CardInformation>().FirstTakeDamage, Card.GetComponent<CardInformation>().CardFreeze);
-                GetComponent<PlayerController>().RefreshLog(0, true, "Gorgon", Card.GetComponent<CardInformation>().CardName,Color.blue);
+                GetComponent<PlayerController>().RefreshLog(0, true, name, Card.GetComponent<CardInformation>().CardName,Color.blue);
             }
         }
     }
@@ -1302,6 +1448,45 @@ public class CardProgress : MonoBehaviourPunCallbacks
         CloseMyCardSign();
     }
 
+    public void PyramidsMight()
+    {
+        GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+
+        foreach (GameObject target in mycards)
+        {
+            if (target != TargetCard)
+            {
+                float distance = Vector3.Distance(TargetCard.transform.position, target.transform.position);
+                if (distance <= 1f)
+                {
+                    Vector3 directionToTarget = (target.transform.position - TargetCard.transform.position).normalized;
+
+                    float dotProductForward = Vector3.Dot(TargetCard.transform.up, directionToTarget);
+                    float dotProductRight = Vector3.Dot(TargetCard.transform.right, directionToTarget);
+                    float dotProductLeft = Vector3.Dot(-TargetCard.transform.right, directionToTarget);
+                    float dotProductBackward = Vector3.Dot(-TargetCard.transform.up, directionToTarget);
+
+                    if (dotProductForward > 0.5f || dotProductRight > 0.5f || dotProductLeft > 0.5f || dotProductBackward > 0.5f)
+                    {
+                        TargetInfo = target.GetComponent<CardInformation>();
+
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 1).ToString();
+                        TargetInfo.CardDamage += 1;
+                        TargetInfo.SetInformation();
+                        TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, target.transform.parent.gameObject);
+                        RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                        GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.black);
+                        SecoundTargetCard = false;
+                        ForMyCard = false;
+                        AttackerCard = null;
+
+                    }
+                }
+            }
+        }
+        CloseMyCardSign();
+    }
+
     public void MongolFury()
     {
         GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
@@ -1328,6 +1513,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
             card.GetComponent<CardInformation>().CanAttackBehind = true;
             GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.gray);
         }
+        Destroy(AttackerCard);
         AttackerCard = null;
     }
 

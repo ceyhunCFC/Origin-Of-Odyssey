@@ -82,8 +82,9 @@ public class GenghisCardFun
     {
         int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
         PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.SecoundTargetCard = true;
-        PC._CardProgress.ForHealMongolShaman = true;
+        PC._CardProgress.ForHeal= true;
         PC._CardProgress.OpenMyCardSign();
     }
     public static void EagleHunterFun( PlayerController PC)
@@ -247,6 +248,7 @@ public class GenghisCardFun
         int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
         PC._CardProgress.SecoundTargetCard = true;
         PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
         PC.UsedSpell();
@@ -271,6 +273,7 @@ public class GenghisCardFun
         }
         int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
         PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.MongolFury();
 
         selectedCard.SetActive(false);
@@ -300,6 +303,7 @@ public class GenghisCardFun
         int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
         PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.AroundtheGreatWall();
 
         selectedCard.SetActive(false);
@@ -330,6 +334,7 @@ public class GenghisCardFun
 
         PC._CardProgress.SecoundTargetCard = true;
         PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
         selectedCard.SetActive(false);

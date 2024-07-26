@@ -733,13 +733,13 @@ public class OdinCardFuns
                 {
                     if (odinCard.minions[i].name == OdintargetCardName)
                     {
-                        GenghistargetIndex = i;
+                        OdintargetIndex = i;
 
-                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.minions[GenghistargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[GenghistargetIndex].name + " POWWERRRRR!!!";
-                        CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[GenghistargetIndex].health.ToString();
-                        CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[GenghistargetIndex].attack;
-                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.minions[OdintargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[OdintargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[OdintargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[OdintargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[OdintargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -750,12 +750,12 @@ public class OdinCardFuns
                 {
                     if (odinCard.spells[i].name == OdintargetCardName)
                     {
-                        GenghistargetIndex = i;
-                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.spells[GenghistargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        OdintargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.spells[OdintargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[OdintargetIndex].name + " POWWERRRRR!!!";
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
-                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.spells[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.spells[OdintargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
                     }
@@ -766,6 +766,46 @@ public class OdinCardFuns
                     {
                         CardCurrent.GetComponent<CardInformation>().CardMana -= 3;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
+                    }
+                }
+                break;
+            case "Anubis":
+                AnubisCard anubisCard = new AnubisCard();
+
+                int AnubisCardIndex = UnityEngine.Random.Range(1, PC.CompetitorDeck.Length); // 1 DEN BAÞLIYOR ÇÜNKÐ ÝNDEX 0 HEROMUZ
+                string AnubistargetCardName = PC.CompetitorDeck[AnubisCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduðunu belirle daha sonra özelliklerini getir.
+
+                int AnubistargetIndex = -1;
+
+                for (int i = 0; i < anubisCard.minions.Count; i++)
+                {
+                    if (anubisCard.minions[i].name == AnubistargetCardName)
+                    {
+                        AnubistargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.minions[AnubistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.minions[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = anubisCard.minions[AnubistargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = anubisCard.minions[AnubistargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.minions[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < anubisCard.spells.Count; i++)
+                {
+                    if (anubisCard.spells[i].name == AnubistargetCardName)
+                    {
+                        AnubistargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.spells[AnubistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.spells[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.spells[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
                     }
                 }
                 break;

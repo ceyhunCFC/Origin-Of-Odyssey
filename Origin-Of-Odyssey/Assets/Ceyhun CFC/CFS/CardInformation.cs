@@ -25,6 +25,7 @@ public class CardInformation : MonoBehaviour
     public bool EternalShield = false;
     public bool Gallop = false;                    //tur sonunda eline geri verir kartı
     public bool Invulnerable = false;               //saldırırken yaralanmaz
+    public bool SunDiskRadiance = false;
     public int ChargeBrokandSindri = 0;             
 
 
