@@ -1692,6 +1692,9 @@ MonoBehaviour:
   DeckCardCount: 0
   Mana: 3
   DeadMonsterCound: 0
+  AugmentCount: 0
+  CanAttackMainCard: 1
+  DoubleDamage: 1
   DeadMyCardName: []
   HeroAnimator: {fileID: 2961789529435728672}
 --- !u!114 &6638573949623686288

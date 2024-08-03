@@ -266,7 +266,15 @@ public class GameManager : MonoBehaviourPunCallbacks
             case "Genghis":
                 GenghisCard genghisCard = new GenghisCard();
                 return (int) genghisCard.hpValue;
-
+            case "Odin":
+                OdinCard odinCard = new OdinCard();
+                return (int) odinCard.hpValue;
+            case "Anubis":
+                AnubisCard anubisCard = new AnubisCard();
+                return (int) anubisCard.hpValue;
+            case "Leonardo Da Vinci":
+                LeonardoCard leonardoCard = new LeonardoCard();
+                return (int) leonardoCard.hpValue;
 
         }
 
@@ -285,7 +293,15 @@ public class GameManager : MonoBehaviourPunCallbacks
             case "Genghis":
                 GenghisCard genghisCard = new GenghisCard();
                 return (int)genghisCard.attackValue;
-
+            case "Odin":
+                OdinCard odinCard = new OdinCard();
+                return (int)odinCard.attackValue;
+            case "Anubis":
+                AnubisCard anubisCard = new AnubisCard();
+                return (int)anubisCard.attackValue;
+            case "Leonardo Da Vinci":
+                LeonardoCard leonardoCard = new LeonardoCard();
+                return (int)leonardoCard.attackValue;
 
         }
 

@@ -26,6 +26,7 @@ public class CardInformation : MonoBehaviour
     public bool Gallop = false;                    //tur sonunda eline geri verir kartı
     public bool Invulnerable = false;               //saldırırken yaralanmaz
     public bool SunDiskRadiance = false;
+    public bool ArtisticInspiration = false;        //öldükten sonra kahraman gücü yenileme
     public int ChargeBrokandSindri = 0;             
 
 

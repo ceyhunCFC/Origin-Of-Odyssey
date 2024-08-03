@@ -46,7 +46,7 @@ public class CardCtrl : MonoBehaviour
             case "Genghis":
                 ConfirmGenghis();
                 break;
-            case "DaVinci":
+            case "Leonardo Da Vinci":
                 ConfirmDaVinci();
                 break;
             case "Dustin":
@@ -65,13 +65,13 @@ public class CardCtrl : MonoBehaviour
         cardSets.Add("Odin", new OdinCard().minions);
         cardSets.Add("Anubis", new AnubisCard().minions);
         cardSets.Add("Genghis", new GenghisCard().minions);
-        cardSets.Add("DaVinci", new LeonardoCard().minions);
+        cardSets.Add("Leonardo Da Vinci", new LeonardoCard().minions);
         cardSets.Add("Dustin", new DustinCard().minions);
         spellSets.Add("Zeus", new ZeusCard().spells);
         spellSets.Add("Odin", new OdinCard().spells);
         spellSets.Add("Anubis", new AnubisCard().spells);
         spellSets.Add("Genghis", new GenghisCard().spells);
-        spellSets.Add("DaVinci", new LeonardoCard().spells);
+        spellSets.Add("Leonardo Da Vinci", new LeonardoCard().spells);
         spellSets.Add("Dustin", new DustinCard().spells);
 
     }
@@ -344,7 +344,7 @@ public class CardCtrl : MonoBehaviour
         AnubisBtn.interactable = true;
         GenghisBtn.interactable = true;
         DustinBtn.interactable = true;
-        AddCardSet("DaVinci");
+        AddCardSet("Leonardo Da Vinci");
         StandartCard();
         ResetButtonColors();
         DaVinciBtn.image.color = Color.blue;
@@ -365,7 +365,7 @@ public class CardCtrl : MonoBehaviour
                 }
             }
         }
-        SpawnCard("DaVinci");
+        SpawnCard("Leonardo Da Vinci");
     }
 
     public void ConfirmDustin()

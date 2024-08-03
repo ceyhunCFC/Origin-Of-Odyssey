@@ -84,6 +84,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public int DeckCardCount = 0;
     [HideInInspector] public float Mana = 3;
     [HideInInspector] public int DeadMonsterCound = 0;
+    [HideInInspector] public int AugmentCount = 0;
+    [HideInInspector] public bool CanAttackMainCard = true;
+    [HideInInspector] public int DoubleDamage = 1;
 
     [HideInInspector] public List<string> DeadMyCardName = null;
 
@@ -892,6 +895,63 @@ public class PlayerController : MonoBehaviour
                     Destroy(selectedCard);
                     return;
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Codex Guardian")                                                 //leonardocard
+                {
+                   LeonardoCardFuns.CodexGuardianFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Piscean Diver")
+                {
+                    LeonardoCardFuns.PisceanDiverFun(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Da Vinci's Helix Engineer")
+                {
+                    LeonardoCardFuns.DaVincisHelixEngineerFun(this);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Vitruvian Firstborn")
+                {
+                    LeonardoCardFuns.VitruvianFirstbornFun();
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Da Vinci's Glider")
+                {
+                    LeonardoCardFuns.DaVincisGliderFun();
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Mechanical Lion")
+                {
+                    LeonardoCardFuns.MechanicalLionFun(selectedCard, this);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Da Vinci’s Blueprint")
+                {
+                    LeonardoCardFuns.DaVincisBlueprintFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Tabula Aeterna")
+                {
+                    LeonardoCardFuns.TabulaAeternaFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Artistic Inspiration")
+                {
+                    LeonardoCardFuns.ArtisticInspirationFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Anatomical Insight")
+                {
+                    LeonardoCardFuns.AnatomicalInsightFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+
 
 
 
@@ -1218,7 +1278,7 @@ public class PlayerController : MonoBehaviour
             CardCurrent.transform.localScale = new Vector3(1,1,0.04f);
             CardCurrent.transform.localPosition = Vector3.zero;
             CardCurrent.transform.localEulerAngles = new Vector3(45,0,180);
-            if(name == "Crypt Warden" || name == "Chaos Scarab")
+            if(name == "Crypt Warden" || name == "Chaos Scarab" ||name== "Gyrocopter" || name == "Piscean Diver")
             {
                 CardCurrent.SetActive(false);
             }
@@ -1245,7 +1305,8 @@ public class PlayerController : MonoBehaviour
             GameObject CardCurrent = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[index].transform.GetChild(0).transform.gameObject;;
 
             if (CardCurrent.GetComponent<CardInformation>().CardName == "Crypt Warden" ||
-                CardCurrent.GetComponent<CardInformation>().CardName == "Chaos Scarab")
+                CardCurrent.GetComponent<CardInformation>().CardName == "Chaos Scarab" ||
+                CardCurrent.GetComponent<CardInformation>().CardName == "Piscean Diver")
             {
                 if (!CardCurrent.activeSelf)
                 {
@@ -1615,7 +1676,7 @@ public class PlayerController : MonoBehaviour
         Timer.text = "00:60";
         elapsedTime = 60;
         finishButton.interactable = false;
-
+        CanAttackMainCard = true;
         foreach (GameObject obj in objects)
         {
             if (obj.name == "PlayerController(Clone)")
@@ -1676,6 +1737,35 @@ public class PlayerController : MonoBehaviour
             {
                 card.GetComponent<CardInformation>().Gallop = false;
                 DestroyAndCreateMyDeck(card);
+            }
+            if(card.GetComponent<CardInformation>().CardName == "Codex Guardian")
+            {
+                GetComponent<CardController>().AddHealCard(2, !PV.Owner.IsMasterClient);
+            }
+            if(card.GetComponent<CardInformation>().CardName == "Grand Cannon")
+            {
+                GameObject[] AllEnemyCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                if (AllEnemyCards.Length > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, AllEnemyCards.Length);
+                    GameObject randomEnemyCard = AllEnemyCards[randomIndex];
+                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomEnemyCard.transform.parent.gameObject);
+                    randomEnemyCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomEnemyCard.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+                    RefreshUsedCard(TargetCardIndex, randomEnemyCard.GetComponent<CardInformation>().CardHealth, randomEnemyCard.GetComponent<CardInformation>().CardDamage);
+                    CreateTextAtTargetIndex(TargetCardIndex, 2, false);
+                    if (int.Parse(randomEnemyCard.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+                    {
+
+                        GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                        GetComponent<PlayerController>().RefreshLog(-2, true, "Grand Cannon", randomEnemyCard.GetComponent<CardInformation>().CardName, Color.red);
+                    }
+                    else
+                        GetComponent<PlayerController>().RefreshLog(-2, false, "Grand Cannon",  randomEnemyCard.GetComponent<CardInformation>().CardName, Color.red);
+                }
+                else
+                {
+                    Debug.LogWarning("Hiç düşman kartı bulunamadı.");
+                }
             }
         }
         if(AsgardQuestion >= 3)
@@ -1889,6 +1979,10 @@ public class PlayerController : MonoBehaviour
             if(DeadCard.GetComponent<CardInformation>().CardName=="Stormcaller")
             {
                 SpellsExtraDamage -= 1;
+            }
+            if(DeadCard.GetComponent<CardInformation>().ArtisticInspiration)
+            {
+                CanAttackMainCard = true;
             }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
             DeadCardCount++;
@@ -2238,7 +2332,7 @@ public class PlayerController : MonoBehaviour
         {
             string cardName =CardCurrent.GetComponent<CardInformation>().CardName;
             string cardDes = cardName + " POWWERRRRR!!!";
-            string cardHealth =CardCurrent.GetComponent<CardInformation>().CardHealth.ToString();
+            string cardHealth = CardCurrent.GetComponent<CardInformation>().CardHealth;
             int cardDamage =CardCurrent.GetComponent<CardInformation>().CardDamage;
             int cardMana =CardCurrent.GetComponent<CardInformation>().CardMana;
 
@@ -2404,7 +2498,7 @@ public class PlayerController : MonoBehaviour
                 {
 
                     case "Zeus":
-                        if (Mana >= 2)
+                        if (Mana >= 2 && CanAttackMainCard)
                         {
                             existingObject.GetComponent<CardInformation>().CardName = "Zeus";
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
@@ -2418,7 +2512,7 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
                     case "Genghis":
-                        if (Mana >= 2)
+                        if (Mana >= 2 && CanAttackMainCard)
                         {
                             existingObject.GetComponent<CardInformation>().CardName = "Genghis";
                             existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
@@ -2470,7 +2564,7 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
                     case "Odin":
-                        if(AsgardQuestion >= 3 && Mana >= 1 )
+                        if(AsgardQuestion >= 3 && Mana >= 1 && CanAttackMainCard)
                         {
                             existingObject.GetComponent<CardInformation>().CardMana = 1;
                             existingObject.GetComponent<CardInformation>().CardName = "Odin";
@@ -2493,7 +2587,7 @@ public class PlayerController : MonoBehaviour
                                 TalkCloud("Odin created a minion..");
                             }
                         }
-                        else if(AsgardQuestion < 3 && Mana >= 2)
+                        else if(AsgardQuestion < 3 && Mana >= 2 && CanAttackMainCard)
                         {
                             existingObject.GetComponent<CardInformation>().CardMana = 2;
                             existingObject.GetComponent<CardInformation>().CardName = "Odin";
@@ -2522,7 +2616,7 @@ public class PlayerController : MonoBehaviour
                         }
                         break;
                     case "Anubis":
-                        existingObject.GetComponent<CardInformation>().CardName = "Zeus";
+                        existingObject.GetComponent<CardInformation>().CardName = "Anubis";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         existingObject.GetComponent<CardInformation>().CardMana = 2;
                         HeroAnimator.SetTrigger("Ulti");
@@ -2592,6 +2686,22 @@ public class PlayerController : MonoBehaviour
                             {
                                 Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
                             }
+                        }
+                        break;
+                    case "Leonardo Da Vinci":
+                        if (Mana >= 2 && CanAttackMainCard)
+                        {
+                            existingObject.GetComponent<CardInformation>().CardName = "Leonardo Da Vinci";
+                            existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
+                            existingObject.GetComponent<CardInformation>().CardMana = 2;
+                            HeroAnimator.SetTrigger("Ulti");
+                            _CardProgress.SetMainAttackerCard(existingObject);
+                            _CardProgress.SecoundTargetCard = true;
+                            _CardProgress.ForMyCard = true;
+                        }
+                        else
+                        {
+                            print("mana yetersiz");
                         }
                         break;
 
@@ -2765,10 +2875,10 @@ public class PlayerController : MonoBehaviour
 
     public void SetMana(GameObject attackercard)
     {
-        if(attackercard.GetComponent<CardInformation>().CardName=="Zeus" || attackercard.GetComponent<CardInformation>().CardName == "Genghis" || attackercard.GetComponent<CardInformation>().CardName == "Odin")
+        if(attackercard.GetComponent<CardInformation>().CardName=="Zeus" || attackercard.GetComponent<CardInformation>().CardName == "Genghis" || attackercard.GetComponent<CardInformation>().CardName == "Odin" || attackercard.GetComponent<CardInformation>().CardName == "Leonardo Da Vinci" || attackercard.GetComponent<CardInformation>().CardName == "Anubis")
         {
             Mana -= attackercard.GetComponent<CardInformation>().CardMana;
-
+            CanAttackMainCard = false;
             ManaCountText.text = Mana.ToString() + "/10";
             OwnManaBar.fillAmount = Mana / 10f;
         }
@@ -3047,6 +3157,40 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     Debug.LogWarning("No empty cells available to place the horse archer card.");
+                }
+            }
+        }
+        GameObject[] myCards = GameObject.FindGameObjectsWithTag("UsedCard"); // RAKİBİN BÜTÜN KARTLARINI AL
+
+
+        foreach (var Card in myCards)
+        {
+            if(Card.GetComponent<CardInformation>().CardName == "Anatomist of the Unknown")
+            {
+                if (myCards.Length > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, myCards.Length);
+                    GameObject randomCard = myCards[randomIndex];
+                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, randomCard.transform.parent.gameObject);
+                    randomCard.GetComponent<CardInformation>().CardDamage += 2;
+                    randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                    RefreshMyCard(TargetCardIndex,
+                                randomCard.GetComponent<CardInformation>().CardHealth,
+                                randomCard.GetComponent<CardInformation>().HaveShield,
+                                randomCard.GetComponent<CardInformation>().CardDamage,
+                                randomCard.GetComponent<CardInformation>().DivineSelected,
+                                randomCard.GetComponent<CardInformation>().FirstTakeDamage,
+                                randomCard.GetComponent<CardInformation>().FirstDamageTaken,
+                                randomCard.GetComponent<CardInformation>().EternalShield);
+                }
+                else if(Card.GetComponent<CardInformation>().CardName == "Automaton Apprentice")
+                {
+                    Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                    Card.GetComponent<CardInformation>().SetInformation();
+                }
+                else
+                {
+                    Debug.LogWarning("Hiç kart bulunamadı.");
                 }
             }
         }
@@ -3409,6 +3553,46 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.spells[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                break;
+            case "Leonardo Da Vinci":
+                LeonardoCard leonardoCard = new LeonardoCard();
+
+                int LeonardoCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
+                string LeonardoTargetCardName = OwnDeck[LeonardoCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
+
+                int LeonardotargetIndex = -1;
+
+                for (int i = 0; i < leonardoCard.minions.Count; i++)
+                {
+                    if (leonardoCard.minions[i].name == LeonardoTargetCardName)
+                    {
+                        LeonardotargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = leonardoCard.minions[LeonardotargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.minions[LeonardotargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = leonardoCard.minions[LeonardotargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = leonardoCard.minions[LeonardotargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.minions[LeonardotargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < leonardoCard.spells.Count; i++)
+                {
+                    if (leonardoCard.spells[i].name == LeonardoTargetCardName)
+                    {
+                        LeonardotargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = leonardoCard.spells[LeonardotargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.spells[LeonardotargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.spells[LeonardotargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
                     }
