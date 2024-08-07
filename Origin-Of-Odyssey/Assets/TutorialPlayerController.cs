@@ -9,7 +9,7 @@ public class TutorialPlayerController : MonoBehaviour
    string OwnName = "";
     public string[] OwnDeck;
     string OwnMainCard = "";
-    float OwnHealth = 0;
+    public float OwnHealth = 0;
     float OwnHeroAttackDamage = 0;
 
 
@@ -17,7 +17,7 @@ public class TutorialPlayerController : MonoBehaviour
     string[] CompetitorDeck;
     string CompetitorMainCard = "";
     public float CompetitorHealth = 0;
-    float CompetitorHeroAttackDamage = 0;
+    public float CompetitorHeroAttackDamage = 0;
 
     public Text OwnNameText;
     public Text OwnHealthText;
@@ -45,7 +45,7 @@ public class TutorialPlayerController : MonoBehaviour
 
     public int DeadMonsterCound = 0;
 
-    int DeckCardCount = 0;
+    public int DeckCardCount = 0;
 
     int CompetitorDeckCardCount = 0;
     public float Mana = 3;
@@ -81,6 +81,7 @@ public class TutorialPlayerController : MonoBehaviour
 
     void Start()
     {
+        Mana = 1;
         SetUIData();
 
         for (int i = 0; i < 3; i++)
@@ -88,7 +89,7 @@ public class TutorialPlayerController : MonoBehaviour
            CreateAnCard();
         }
 
-
+        LogsContainerContent = GameObject.Find("Container");
     }
 
     void Update()
@@ -136,6 +137,7 @@ public class TutorialPlayerController : MonoBehaviour
             {
                 ReleaseCard();
             }
+
 
         }
     }
@@ -425,8 +427,60 @@ public class TutorialPlayerController : MonoBehaviour
         // Rakip oyuncular için RPC çağrısı yap
     }
 
+    private void UpdateDamageText(GameObject logsObject, int damage)
+    {
+        Text logsDamageText = logsObject.transform.Find("Damage").GetComponent<Text>();
+        logsDamageText.text = damage != 0 ? damage.ToString() : null;
+    }
 
-    
+    private void UpdateDeadObject(GameObject logsObject, bool isDead, Color color)
+    {
+        Transform deadObject = logsObject.transform.Find("Dead");
+        if (deadObject != null)
+        {
+            deadObject.gameObject.SetActive(isDead);
+            if (isDead)
+            {
+                Image deadImage = deadObject.GetComponent<Image>();
+                deadImage.color = color;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Dead object not found in LogsPrefab.");
+        }
+    }
+
+    private void UpdateCardImage(GameObject logsObject, string objectName, string cardName)
+    {
+        Transform cardObject = logsObject.transform.Find(objectName);
+        if (cardObject != null)
+        {
+            Sprite foundSprite = LoadCardSprite(cardName);
+            Image cardImage = cardObject.GetComponent<Image>();
+            if (cardImage != null)
+            {
+                cardImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"{objectName} object not found in LogsPrefab.");
+        }
+    }
+
+    private Sprite LoadCardSprite(string cardName)
+    {
+        Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + cardName);
+        if (foundSprite == null)
+        {
+            Debug.LogWarning("Sprite not found: " + cardName);
+            foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+        }
+        return foundSprite;
+    }
+
+
     public GameObject SpawnAndReturnGameObject()
     {
 
@@ -533,7 +587,7 @@ public class TutorialPlayerController : MonoBehaviour
     }
 
 
-     void CreateSpecialCard(string name, string health, int damage,int mana,int index,bool front)
+     public void CreateSpecialCard(string name, string health, int damage,int mana,int index,bool front)
     {
         
             GameObject CardCurrent;
@@ -1410,20 +1464,49 @@ public class TutorialPlayerController : MonoBehaviour
             {
                 // _CardFunction.SelectFirstCard(hit.collider.gameObject);
                 Debug.LogError(hit.collider.gameObject.transform.parent);
-                if(hit.collider.gameObject.GetComponent<CardInformation>().CardFreeze == false && hit.collider.gameObject.GetComponent<CardInformation>().isItFirstRaound == false && hit.collider.gameObject.GetComponent<CardInformation>().isAttacked==false)
+                if (hit.collider.gameObject.GetComponent<CardInformation>().CardFreeze == false && hit.collider.gameObject.GetComponent<CardInformation>().isItFirstRaound == false && hit.collider.gameObject.GetComponent<CardInformation>().isAttacked == false)
                 {
                     _TutorialCardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject));
                 }
                 else
                 {
                     Debug.Log("CardFreeze or firstraund or isattacked");
-                   GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                   TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "CardFreeze or firstraund or isattacked.";
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "CardFreeze or firstraund or isattacked.";
                 }
-            }
 
+            }
+            else if (hit.collider.gameObject.tag == "AreaBox" && _TutorialCardProgress.ForMyCard == false)
+            {
+                if (hit.collider.gameObject.transform.childCount > 0)
+                {
+                    Transform firstChild = hit.collider.gameObject.transform.GetChild(0);
+
+                    if (firstChild.tag == "UsedCard")
+                    {
+                        if (firstChild.GetComponent<CardInformation>().CardFreeze == false &&
+                            firstChild.GetComponent<CardInformation>().isItFirstRaound == false &&
+                            firstChild.GetComponent<CardInformation>().isAttacked == false)
+                        {
+                            _TutorialCardProgress.CloseBlueSign();
+
+                            _TutorialCardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject));
+                            Transform blue = firstChild.Find("Blue");
+                            blue.gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            Debug.Log("nocard");
+                        }
+                    }
+                }
+
+            }
         }
-    }
+     }
+
+        
+    
 
     public void BeginerFunction() // Tur bize geçtiğinde çalışan fonksion
     {
@@ -1555,33 +1638,54 @@ public class TutorialPlayerController : MonoBehaviour
 
     }
 
-    void CreateAnCard()
+    public void CreateAnCard()
     {
+        GameObject deckObject = GameObject.Find("Deck");
 
-        GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
-        card.tag = "Card";
-        float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
-        card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         
-        CreateInfoCard(card);
-        StackOwnDeck();
-       
-        DeckCardCount++;
+        // Kart sayısını kontrol ediyoruz
+        if (deckObject.transform.childCount < 10)
+        {
+            GameObject card = Instantiate(CardPrefabSolo, deckObject.transform);
+            card.tag = "Card";
 
+            float xPos = deckObject.transform.childCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+            card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+            CreateInfoCard(card);
+            StackOwnDeck();
+
+            DeckCardCount++;
+        }
+        else
+        {
+            Debug.Log("Kart Sınırına Ulaştınız.");
+        }
     }
+
 
     public void CreateAnCompetitorCard()
     {
+        GameObject deckObject = GameObject.Find("CompetitorDeck");
 
-        GameObject card = Instantiate(Resources.Load<GameObject>("TutorialCompetitorCard"), GameObject.Find("CompetitorDeck").transform);
-        card.tag = "CompetitorDeckCard";
-        float xPos = CompetitorDeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
-        card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
-        
-        StackCompetitorDeck();
        
-        CompetitorDeckCardCount++;
+        // Kart sayısını kontrol ediyoruz
+        if (deckObject.transform.childCount < 10)
+        {
+            GameObject card = Instantiate(Resources.Load<GameObject>("TutorialCompetitorCard"), deckObject.transform);
+            card.tag = "CompetitorDeckCard";
 
+            float xPos = deckObject.transform.childCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+            card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+            StackCompetitorDeck();
+
+            CompetitorDeckCardCount++;
+        }
+        else
+        {
+            Debug.Log("Bot Kart Sınırına Ulaştı");
+        }
     }
 
     public void RemoveAnCompetitorCard()
@@ -1710,11 +1814,8 @@ public class TutorialPlayerController : MonoBehaviour
                 TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
             }
          
-
-        
-
-      
     }
+    
 
     public void CreateUsedCard(int boxindex, string name, string des, string heatlh, int damage, int mana)
     {
@@ -1920,6 +2021,7 @@ public class TutorialPlayerController : MonoBehaviour
     {
 
      
+
         ManaCountText.text = Mana.ToString() + "/10";  
         OwnManaBar.fillAmount = Mana / 10;   
 
