@@ -27,8 +27,9 @@ public class CardInformation : MonoBehaviour
     public bool Invulnerable = false;               //saldırırken yaralanmaz
     public bool SunDiskRadiance = false;
     public bool ArtisticInspiration = false;        //öldükten sonra kahraman gücü yenileme
-    public int ChargeBrokandSindri = 0;             
-
+    public int ChargeBrokandSindri = 0;
+    public bool IsImmuneToAttacks { get; set; }
+    public bool HasAttacked { get; set; } = false;
 
     public Text CardNameText;
     public Text CardDesText;
