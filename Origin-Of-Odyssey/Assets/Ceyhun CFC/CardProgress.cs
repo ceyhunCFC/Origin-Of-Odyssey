@@ -438,6 +438,13 @@ public class CardProgress : MonoBehaviourPunCallbacks
             GetComponent<PlayerController>().DoubleDamage = 1;
             return;
         }
+        else if (AttackerCard.GetComponent<CardInformation>().CardName == "Scrap Shield")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            TargetInfo.MaxHealth = (int.Parse(TargetInfo.MaxHealth) + 3).ToString();
+            TargetInfo.CardHealth = TargetInfo.MaxHealth;
+            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Scrap Shield";
+        }
         Destroy(AttackerCard);
         CloseMyCardSign();
         ForMyCard = false;
@@ -519,6 +526,25 @@ public class CardProgress : MonoBehaviourPunCallbacks
             }
             else
                 GetComponent<PlayerController>().RefreshLog(-3, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
+            AttackerCard.GetComponent<CardInformation>().isAttacked = true;
+        }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Wasteland Sniper")
+        {
+            AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 2).ToString();
+            GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 2, false);
+            if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+            {
+
+                GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                GetComponent<PlayerController>().RefreshLog(-2, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            }
+            else
+                GetComponent<PlayerController>().RefreshLog(-2, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+
             AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
             AttackerCard.GetComponent<CardInformation>().isAttacked = true;
         }
@@ -942,6 +968,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 }
                 else
                     EnemyAllCard();
+                break;
+            case "Scrap Shield":
+                OpenMyCardSign();
                 break;
             default:
                 EnemyAllCard();

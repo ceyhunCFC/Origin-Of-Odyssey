@@ -11,6 +11,7 @@ public class CardInformation : MonoBehaviour
     public int CardDamage;
     public int CardMana;
     public string MaxHealth;
+    public int MaxAttack;
    // public Sprite CardVisual;
     public bool CardFreeze=false;
     public bool isItFirstRaound = true;
@@ -27,6 +28,7 @@ public class CardInformation : MonoBehaviour
     public bool Invulnerable = false;               //saldırırken yaralanmaz
     public bool SunDiskRadiance = false;
     public bool ArtisticInspiration = false;        //öldükten sonra kahraman gücü yenileme
+    public bool Behemot = false;                    //carddamagi 2 azalan kartları tekrar aarttırmak için
     public int ChargeBrokandSindri = 0;
     public bool IsImmuneToAttacks { get; set; }
     public bool HasAttacked { get; set; } = false;
@@ -68,6 +70,7 @@ public class CardInformation : MonoBehaviour
     public void SetMaxHealth()
     {
         MaxHealth = CardHealth;
+        MaxAttack = CardDamage;
     }
 
 }

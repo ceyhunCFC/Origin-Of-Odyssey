@@ -849,6 +849,46 @@ public class OdinCardFuns
                     }
                 }
                 break;
+            case "Dustin":
+                DustinCard dustinCard = new DustinCard();
+
+                int DustinCardIndex = UnityEngine.Random.Range(1, PC.CompetitorDeck.Length); // 1 DEN BAÞLIYOR ÇÜNKÐ ÝNDEX 0 HEROMUZ
+                string DustinTargetCardName = PC.CompetitorDeck[DustinCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduðunu belirle daha sonra özelliklerini getir.
+
+                int DustinTargetIndex = -1;
+
+                for (int i = 0; i < dustinCard.minions.Count; i++)
+                {
+                    if (dustinCard.minions[i].name == DustinTargetCardName)
+                    {
+                        DustinTargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.minions[DustinTargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.minions[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = dustinCard.minions[DustinTargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = dustinCard.minions[DustinTargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.minions[DustinTargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < dustinCard.spells.Count; i++)
+                {
+                    if (dustinCard.spells[i].name == DustinTargetCardName)
+                    {
+                        DustinTargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.spells[DustinTargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.spells[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.spells[DustinTargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                break;
         }
     }
 

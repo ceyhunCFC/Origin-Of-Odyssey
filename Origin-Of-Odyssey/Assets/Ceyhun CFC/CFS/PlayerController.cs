@@ -951,6 +951,49 @@ public class PlayerController : MonoBehaviour
                     Destroy(selectedCard);
                     return;
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Wasteland Sniper")
+                {
+                    DustinCardFuns.WastelandSniperFun(selectedCard,this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Engineer of the Ruins")
+                {
+                    DustinCardFuns.EngineeroftheRuinsFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Rogue AI Drone")
+                {
+                    DustinCardFuns.RogueAIDroneFun(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Mutant Behemoth")
+                {
+                    DustinCardFuns.MutantBehemothFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Lone Cyborg")
+                {
+                    DustinCardFuns.LoneCyborgFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Scrap Shield")
+                {
+                    DustinCardFuns.ScrapShieldFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Shockwave/Impulse")
+                {
+                    DustinCardFuns.ShockwaveImpulseFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Garage Raid")
+                {
+                    DustinCardFuns.GarageRaidFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
 
 
 
@@ -1767,6 +1810,12 @@ public class PlayerController : MonoBehaviour
                     Debug.LogWarning("Hiç düşman kartı bulunamadı.");
                 }
             }
+            if(card.GetComponent<CardInformation>().Behemot)
+            {
+                card.GetComponent<CardInformation>().Behemot = false;
+                card.GetComponent<CardInformation>().CardDamage = card.GetComponent<CardInformation>().MaxAttack;
+                card.GetComponent<CardInformation>().SetInformation();
+            }
         }
         if(AsgardQuestion >= 3)
         {
@@ -1984,6 +2033,10 @@ public class PlayerController : MonoBehaviour
             {
                 CanAttackMainCard = true;
             }
+            if(DeadCard.GetComponent<CardInformation>().CardName == "Engineer of the Ruins")
+            {
+                DustinCardFuns.EngineeroftheRuinsFun(this);
+            }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
             DeadCardCount++;
             Destroy(DeadCard);
@@ -2172,6 +2225,114 @@ public class PlayerController : MonoBehaviour
             int mana = deadcard.CardMana;
             CreateDeckCard(name,health,damage,mana);
         }
+        if(DeadCard.GetComponent<CardInformation>().CardName== "Engineer of the Ruins")
+        {
+            DustinCardFuns.EngineeroftheRuinsFun(this);
+        }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Rogue AI Drone")
+        {
+            DestroyAndCreateMyDeck(DeadCard);
+        }
+        if (DeadCard.GetComponent<CardInformation>().CardName == "Dune Raider")
+        {
+            List<int> emptyFrontCells = new List<int>();
+            List<int> emptyBackCells = new List<int>();
+
+            for (int i = 7; i < 14; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    emptyFrontCells.Add(i);
+                }
+            }
+
+            if (emptyFrontCells.Count >= 2)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                    int index = emptyFrontCells[randomIndex];
+                    CreateSpecialCard("Scavenger", "1", 1, 0, index, true);
+                    emptyFrontCells.RemoveAt(randomIndex);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyBackCells.Add(i);
+                    }
+                }
+
+                if (emptyBackCells.Count >= 2)
+                {
+                    for (int j = 0; j < 2; j++)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                        int index = emptyBackCells[randomIndex];
+                        CreateSpecialCard("Scavenger", "1", 1, 0, index, true);
+                        emptyBackCells.RemoveAt(randomIndex);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("No empty cells available to place the Scavenger card.");
+                }
+            }
+        }
+
+        if (DeadCard.GetComponent<CardInformation>().CardName == "Warlord")
+        {
+            List<int> emptyFrontCells = new List<int>();
+            List<int> emptyBackCells = new List<int>();
+
+            for (int i = 7; i < 14; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    emptyFrontCells.Add(i);
+                }
+            }
+
+            if (emptyFrontCells.Count >= 3)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                    int index = emptyFrontCells[randomIndex];
+                    CreateSpecialCard("Wasteland Warrior", "3", 3, 0, index, true);
+                    emptyFrontCells.RemoveAt(randomIndex);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyBackCells.Add(i);
+                    }
+                }
+
+                if (emptyBackCells.Count >= 3)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                        int index = emptyBackCells[randomIndex];
+                        CreateSpecialCard("Wasteland Warrior", "3", 3, 0, index, true);
+                        emptyBackCells.RemoveAt(randomIndex);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("No empty cells available to place the Wasteland Warrior card.");
+                }
+            }
+        }
+
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
 
     }
@@ -2262,6 +2423,18 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
             CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
             CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+        }
+    }
+
+    [PunRPC]
+    public void RPC_RefreshMaxDamage(int boxindex,bool behemot)
+    {
+        if (PV.IsMine)
+        {
+            GameObject CardCurrent = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject;
+
+            CardCurrent.GetComponent<CardInformation>().Behemot = behemot;
 
         }
     }
@@ -3593,6 +3766,46 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.spells[LeonardotargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                break;
+            case "Dustin":
+                DustinCard dustinCard = new DustinCard();
+
+                int DustinCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
+                string DustinTargetCardName = OwnDeck[DustinCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
+
+                int DustinTargetIndex = -1;
+
+                for (int i = 0; i < dustinCard.minions.Count; i++)
+                {
+                    if (dustinCard.minions[i].name == DustinTargetCardName)
+                    {
+                        DustinTargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.minions[DustinTargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.minions[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = dustinCard.minions[DustinTargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = dustinCard.minions[DustinTargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.minions[DustinTargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < dustinCard.spells.Count; i++)
+                {
+                    if (dustinCard.spells[i].name == DustinTargetCardName)
+                    {
+                        DustinTargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.spells[DustinTargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.spells[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.spells[DustinTargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
                     }
