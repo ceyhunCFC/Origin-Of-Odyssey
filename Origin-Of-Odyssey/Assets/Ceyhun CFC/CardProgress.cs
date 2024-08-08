@@ -445,6 +445,28 @@ public class CardProgress : MonoBehaviourPunCallbacks
             TargetInfo.CardHealth = TargetInfo.MaxHealth;
             Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Scrap Shield";
         }
+        else if (AttackerCard.GetComponent<CardInformation>().CardName == "Mutated Blood Sample")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) -1 ).ToString();
+
+            GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 1, true);
+            if (int.Parse(TargetInfo.CardHealth) <= 0) 
+            {
+
+                GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                GetComponent<PlayerController>().RefreshLog(-1, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            }
+            else
+            {
+                GetComponent<PlayerController>().RefreshLog(-1, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                TargetInfo.CardDamage += 2;
+                TargetInfo.MutatedBlood = true;
+                RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Scrap Shield";
+            }
+        }
         Destroy(AttackerCard);
         CloseMyCardSign();
         ForMyCard = false;
@@ -525,7 +547,10 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 GetComponent<PlayerController>().RefreshLog(-3, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
             }
             else
+            {
                 GetComponent<PlayerController>().RefreshLog(-3, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage);
+            }
             AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
             AttackerCard.GetComponent<CardInformation>().isAttacked = true;
         }
@@ -543,7 +568,11 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 GetComponent<PlayerController>().RefreshLog(-2, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
             }
             else
+            {
                 GetComponent<PlayerController>().RefreshLog(-2, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage);
+            }
+
 
             AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
             AttackerCard.GetComponent<CardInformation>().isAttacked = true;
@@ -970,6 +999,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     EnemyAllCard();
                 break;
             case "Scrap Shield":
+                OpenMyCardSign();
+                break;
+            case "Mutated Blood Sample":
                 OpenMyCardSign();
                 break;
             default:

@@ -96,6 +96,8 @@ MonoBehaviour:
   - RPC_RefreshLog
   - RPC_RefreshCompetitorMana
   - RPC_SetActiveCard
+  - RPC_RefreshMaxDamage
+  - RPC_ShuffleCells
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

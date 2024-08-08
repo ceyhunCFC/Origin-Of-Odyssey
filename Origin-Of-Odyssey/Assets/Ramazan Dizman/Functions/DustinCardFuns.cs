@@ -1,7 +1,6 @@
 using Photon.Pun;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 public class DustinCardFuns
@@ -128,19 +127,17 @@ public class DustinCardFuns
     {
         for (int i = 7; i < 14; i++)
         {
-            var cardsAreaCreator = GameObject.Find("Area").GetComponent<CardsAreaCreator>();
-            var backAreaCollision = cardsAreaCreator.BackAreaCollisions[i];
 
-            if (backAreaCollision.gameObject.transform.childCount != 0)
+            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].gameObject.transform.childCount != 0)
             {
-                var cardInfo = backAreaCollision.gameObject.GetComponent<CardInformation>();
+                GameObject CurrentCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].gameObject.transform.GetChild(0).gameObject;
 
-                int cardIndex = Array.IndexOf(cardsAreaCreator.BackAreaCollisions, backAreaCollision.gameObject.transform.parent.gameObject);
-                cardInfo.CardDamage -= 2;
-                cardInfo.Behemot = true;
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, CurrentCard.transform.parent.gameObject);
+                CurrentCard.GetComponent<CardInformation>().CardDamage -= 2;
+                CurrentCard.GetComponent<CardInformation>().Behemot = true;
 
-                PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshMaxDamage", RpcTarget.All, cardIndex,cardInfo.Behemot);
-                PC.RefreshLog(0, true, selectedCard.GetComponent<CardInformation>().CardName, cardInfo.CardName, Color.magenta);
+                PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshMaxDamage", RpcTarget.All, index, CurrentCard.GetComponent<CardInformation>().Behemot);
+                PC.RefreshLog(0, true, selectedCard.GetComponent<CardInformation>().CardName, CurrentCard.GetComponent<CardInformation>().CardName, Color.magenta);
             }
         }
 
@@ -159,7 +156,7 @@ public class DustinCardFuns
                 cardscount++;
             }
         }
-        if(cardscount > 0)
+        if(cardscount == 1)
         {
             selectedCard.GetComponent<CardInformation>().CardDamage += 3;
             selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 3).ToString();
@@ -178,15 +175,26 @@ public class DustinCardFuns
 
     }
 
-    public static void ChimeraFun(PlayerController PC)
+    public static void ScavengerRaiderFun(PlayerController PC)
     {
-        PC._CardProgress.DamageToAlLOtherMinions(2, "Chimera");
+        PC.ScavengerRaider();
 
     }
 
-    public static void AthenaFun(PlayerController PC)
+    public static void ClaireFun(GameObject selectedCard,PlayerController PC)
     {
-        PC._CardProgress.FillWithHoplites();
+        PC._CardProgress.DamageToAlLOtherMinions(selectedCard.GetComponent<CardInformation>().CardDamage, selectedCard.GetComponent<CardInformation>().CardName);
+        selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+        PC.CreateTextAtTargetIndex(index,2, true);
+        PC.RefreshMyCard(index,
+                    selectedCard.GetComponent<CardInformation>().CardHealth,
+                    selectedCard.GetComponent<CardInformation>().HaveShield,
+                    selectedCard.GetComponent<CardInformation>().CardDamage,
+                    selectedCard.GetComponent<CardInformation>().DivineSelected,
+                    selectedCard.GetComponent<CardInformation>().FirstTakeDamage,
+                    selectedCard.GetComponent<CardInformation>().FirstDamageTaken,
+                    selectedCard.GetComponent<CardInformation>().EternalShield);
 
     }
 
@@ -226,7 +234,7 @@ public class DustinCardFuns
     }
 
 
-    public static void OlympianFavorFun(GameObject selectedCard, PlayerController PC)
+    public static void RadioactiveFalloutFun(GameObject selectedCard, PlayerController PC)
     {
         PC.ManaCountText.text = PC.Mana.ToString() + "/10";
         PC.OwnManaBar.fillAmount = PC.Mana / 10f;
@@ -242,12 +250,44 @@ public class DustinCardFuns
             PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
             PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
         }
-        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
-        PC._CardProgress.SecoundTargetCard = true;
-        PC._CardProgress.SetAttackerCard(index);
-        PC._CardProgress.AttackerCard = selectedCard;
-        PC._CardProgress.ForMyCard = true;
+        List<Transform> allCells = new List<Transform>();
+        List<Transform> cardTransforms = new List<Transform>();
+
+        for (int i = 0; i < 14; i++)
+        {
+            var backAreaCollision = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].transform;
+            allCells.Add(backAreaCollision);
+
+            if (backAreaCollision.childCount != 0)
+            {
+                cardTransforms.Add(backAreaCollision.GetChild(0));
+            }
+        }
+
+        List<Transform> shuffledCells = new List<Transform>(allCells);
+        for (int i = 0; i < shuffledCells.Count; i++)
+        {
+            Transform temp = shuffledCells[i];
+            int randomIndex = UnityEngine.Random.Range(i, shuffledCells.Count);
+            shuffledCells[i] = shuffledCells[randomIndex];
+            shuffledCells[randomIndex] = temp;
+        }
+
+        List<int> shuffledIndexes = new List<int>();
+        int cardIndex = 0;
+        for (int i = 0; i < shuffledCells.Count; i++)
+        {
+            shuffledIndexes.Add(allCells.IndexOf(shuffledCells[i]));
+
+            if (shuffledCells[i].childCount == 0 && cardIndex < cardTransforms.Count)
+            {
+                cardTransforms[cardIndex].SetParent(shuffledCells[i]);
+                cardTransforms[cardIndex].localPosition = Vector3.zero;
+                cardIndex++;
+            }
+        }
+        PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_ShuffleCells", RpcTarget.All, shuffledIndexes.ToArray());
 
         selectedCard.SetActive(false);
         selectedCard = null;
@@ -256,7 +296,7 @@ public class DustinCardFuns
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
-    public static void AegisShieldFun(GameObject selectedCard, PlayerController PC)
+    public static void MutatedBloodSampleFun(GameObject selectedCard, PlayerController PC)
     {
         PC.ManaCountText.text = PC.Mana.ToString() + "/10";
         PC.OwnManaBar.fillAmount = PC.Mana / 10f;

@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour
     public GameObject drawCardTextObject;
     public GameObject Freeze;
     public GameObject Mummies;
+    public GameObject TakeGun;
 
     public GameObject DamageText;
     public GameObject LogsPrefab;
@@ -971,6 +972,14 @@ public class PlayerController : MonoBehaviour
                 {
                     DustinCardFuns.LoneCyborgFun(selectedCard, this);
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Scavenger Raider")
+                {
+                    DustinCardFuns.ScavengerRaiderFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Claire")
+                {
+                    DustinCardFuns.ClaireFun(selectedCard, this);
+                }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Scrap Shield")
                 {
                     DustinCardFuns.ScrapShieldFun(selectedCard, this);
@@ -992,6 +1001,21 @@ public class PlayerController : MonoBehaviour
                     GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     Destroy(selectedCard);
+                    return;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Radioactive Fallout")
+                {
+                    DustinCardFuns.RadioactiveFalloutFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Mutated Blood Sample")
+                {
+                    DustinCardFuns.MutatedBloodSampleFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
 
@@ -2037,6 +2061,14 @@ public class PlayerController : MonoBehaviour
             {
                 DustinCardFuns.EngineeroftheRuinsFun(this);
             }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Salvage Colossus")
+            {
+                CreateDeckCard("Salvaged Weapon", "5", 2, 0);
+            }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Claire")
+            {
+                DeadCard.GetComponent<CardController>().UsedCard(5, !GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+            }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
             DeadCardCount++;
             Destroy(DeadCard);
@@ -2332,6 +2364,14 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Salvage Colossus")
+        {
+            CreateDeckCard("Salvaged Weapon", "5", 2, 0);
+        }
+        if (DeadCard.GetComponent<CardInformation>().CardName == "Claire")
+        {
+            DeadCard.GetComponent<CardController>().UsedCard(5, !GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+        }
 
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
 
@@ -2494,6 +2534,37 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().EternalShield=eternalshield;
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
+        }
+    }
+
+    [PunRPC]
+    public void RPC_ShuffleCells(int[] shuffledIndexes)
+    {
+        List<Transform> allCells = new List<Transform>();
+        List<Transform> cardTransforms = new List<Transform>();
+
+        for (int i = 0; i < 14; i++)
+        {
+            var backAreaCollision = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].transform;
+            allCells.Add(backAreaCollision);
+
+            if (backAreaCollision.childCount != 0)
+            {
+                cardTransforms.Add(backAreaCollision.GetChild(0));
+            }
+        }
+
+        int cardIndex = 0;
+        for (int i = 0; i < shuffledIndexes.Length; i++)
+        {
+            Transform targetCell = allCells[shuffledIndexes[i]];
+
+            if (targetCell.childCount == 0 && cardIndex < cardTransforms.Count)
+            {
+                cardTransforms[cardIndex].SetParent(targetCell);
+                cardTransforms[cardIndex].localPosition = Vector3.zero;
+                cardIndex++;
+            }
         }
     }
 
@@ -3046,6 +3117,34 @@ public class PlayerController : MonoBehaviour
         Mummies.SetActive(false);
     }
 
+    public void ScavengerRaider()
+    {
+        if (PV.IsMine)
+        {
+            drawCardTextObject.SetActive(true);
+            TakeGun.SetActive(true);
+
+            drawCardTextObject.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked2(drawCardTextObject));
+            TakeGun.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked2(TakeGun));
+        }
+    }
+
+    void OnGameobjectClicked2(GameObject clickedTextObject)
+    {
+        if (clickedTextObject == drawCardTextObject)
+        {
+            SpawnAndReturnGameObject();
+        }
+        else if (clickedTextObject == TakeGun)
+        {
+            CreateDeckCard("Gun", "2", 2, 0);
+
+        }
+
+        drawCardTextObject.SetActive(false);
+        TakeGun.SetActive(false);
+    }
+
     public void SetMana(GameObject attackercard)
     {
         if(attackercard.GetComponent<CardInformation>().CardName=="Zeus" || attackercard.GetComponent<CardInformation>().CardName == "Genghis" || attackercard.GetComponent<CardInformation>().CardName == "Odin" || attackercard.GetComponent<CardInformation>().CardName == "Leonardo Da Vinci" || attackercard.GetComponent<CardInformation>().CardName == "Anubis")
@@ -3164,6 +3263,16 @@ public class PlayerController : MonoBehaviour
                         if(card.GetComponent<CardInformation>().ChargeBrokandSindri == 3)
                         {
                             _CardProgress.CharceBrokandSindri();
+                        }
+                    }
+                    if(card.GetComponent<CardInformation>().MutatedBlood == true)
+                    {
+                        GameObject[] RandomEnemyCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                        if (RandomEnemyCards.Length > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, RandomEnemyCards.Length);
+                            GameObject selectedEnemyCard = RandomEnemyCards[randomIndex];
+                            _CardProgress.StandartDamage(card, selectedEnemyCard);
                         }
                     }
 

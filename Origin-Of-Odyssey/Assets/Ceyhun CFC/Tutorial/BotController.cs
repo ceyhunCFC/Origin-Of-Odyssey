@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class BotController : MonoBehaviour

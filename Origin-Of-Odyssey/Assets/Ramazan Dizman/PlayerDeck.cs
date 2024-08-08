@@ -70,7 +70,7 @@ public class PlayerDeck : MonoBehaviour
         }
 
         string jsonData = "[" + string.Join(",", cardNames.ConvertAll(name => "\"" + name + "\"").ToArray()) + "]";
-
+        Debug.Log(cardNames.Count + jsonData);
         if (cardNames.Count == 40)
         {
             RestClient.Put(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken, jsonData)

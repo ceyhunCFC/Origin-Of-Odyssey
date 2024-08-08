@@ -29,6 +29,7 @@ public class CardInformation : MonoBehaviour
     public bool SunDiskRadiance = false;
     public bool ArtisticInspiration = false;        //öldükten sonra kahraman gücü yenileme
     public bool Behemot = false;                    //carddamagi 2 azalan kartları tekrar aarttırmak için
+    public bool MutatedBlood = false;                // tur başında rastgele bir rakibe saldırır
     public int ChargeBrokandSindri = 0;
     public bool IsImmuneToAttacks { get; set; }
     public bool HasAttacked { get; set; } = false;
