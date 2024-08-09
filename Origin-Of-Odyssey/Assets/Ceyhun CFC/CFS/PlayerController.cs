@@ -1018,6 +1018,20 @@ public class PlayerController : MonoBehaviour
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Mechanical Reinforcement")
+                {
+                    LeonardoCardFuns.MechanicalReinforcementFun(selectedCard, this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Tome of Confusion")
+                {
+                    LeonardoCardFuns.TomeofConfusionFun(selectedCard,this);
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
 
 
 
@@ -1840,6 +1854,20 @@ public class PlayerController : MonoBehaviour
                 card.GetComponent<CardInformation>().CardDamage = card.GetComponent<CardInformation>().MaxAttack;
                 card.GetComponent<CardInformation>().SetInformation();
             }
+            if(card.GetOrAddComponent<CardInformation>().CardName == "Eques Automaton")
+            {
+                card.GetComponent<CardInformation>().CardHealth = card.GetComponent<CardInformation>().MaxHealth;
+                card.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                RefreshMyCard(index,
+                    card.GetComponent<CardInformation>().CardHealth,
+                    card.GetComponent<CardInformation>().HaveShield,
+                    card.GetComponent<CardInformation>().CardDamage,
+                    card.GetComponent<CardInformation>().DivineSelected,
+                    card.GetComponent<CardInformation>().FirstTakeDamage,
+                    card.GetComponent<CardInformation>().FirstDamageTaken,
+                    card.GetComponent<CardInformation>().EternalShield);
+            }
         }
         if(AsgardQuestion >= 3)
         {
@@ -1861,6 +1889,20 @@ public class PlayerController : MonoBehaviour
                 card.GetComponent<CardInformation>().DivineSelected = true;
             }
         }
+        if (AugmentCount >= 4)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                if (GameObject.Find("Deck").transform.childCount < 10)
+                {
+                    int health = UnityEngine.Random.Range(1, 3); 
+                    int damage = UnityEngine.Random.Range(1, 3); 
+
+                    CreateDeckCard("Mechanical Reinforcement", health.ToString(), damage, 1);
+                }
+            }
+        }
+
         _CardProgress.WindFury = true;
         _CardProgress.ResetAllSign();
 

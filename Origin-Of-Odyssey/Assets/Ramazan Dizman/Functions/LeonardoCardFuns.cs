@@ -279,6 +279,70 @@ public class LeonardoCardFuns
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
+    public static void MechanicalReinforcementFun(GameObject selectedCard, PlayerController PC)
+    {
+        PC.ManaCountText.text = PC.Mana.ToString() + "/10";
+        PC.OwnManaBar.fillAmount = PC.Mana / 10f;
+        PC.CompetitorManaBar.fillAmount = PC._GameManager.ManaCount / 10;
+        PC.CompetitorManaCountText.text = (PC._GameManager.ManaCount) + "/10".ToString();
+        PC.DeckCardCount--;
 
+        PC.StackDeck();
+
+        if (PC.PV.IsMine)
+        {
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+            PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+        }
+
+        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+        PC._CardProgress.SecoundTargetCard = true;
+        PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
+        PC._CardProgress.ForMyCard = true;
+
+
+        selectedCard.SetActive(false);
+        selectedCard = null;
+        PC.lastHoveredCard = null;
+
+        PC.UsedSpell();
+        Debug.LogError("USSEEDD A SPEEELLL");
+    }
+
+    public static void TomeofConfusionFun(GameObject selectedCard, PlayerController PC)
+    {
+        PC.ManaCountText.text = PC.Mana.ToString() + "/10";
+        PC.OwnManaBar.fillAmount = PC.Mana / 10f;
+        PC.CompetitorManaBar.fillAmount = PC._GameManager.ManaCount / 10;
+        PC.CompetitorManaCountText.text = (PC._GameManager.ManaCount) + "/10".ToString();
+        PC.DeckCardCount--;
+
+        PC.StackDeck();
+
+        if (PC.PV.IsMine)
+        {
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
+            PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+            PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+        }
+        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+        PC._CardProgress.SecoundTargetCard = true;
+        PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
+
+
+        selectedCard.SetActive(false);
+
+
+        selectedCard = null;
+        PC.lastHoveredCard = null;
+
+        PC.UsedSpell();
+        Debug.LogError("USSEEDD A SPEEELLL");
+    }
 
 }

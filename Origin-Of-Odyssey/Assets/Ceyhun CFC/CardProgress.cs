@@ -390,11 +390,19 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     {
                         TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 4).ToString();
                         TargetInfo.CardDamage += 4;
+                        if(TargetInfo.CardName == "Eques Automaton")
+                        {
+                            TargetInfo.MaxHealth += 4;
+                        }
                     }
                     else
                     {
                         TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 2).ToString();
                         TargetInfo.CardDamage += 2;
+                        if (TargetInfo.CardName == "Eques Automaton")
+                        {
+                            TargetInfo.MaxHealth += 2;
+                        }
                     }
                     GetComponent<PlayerController>().AugmentCount++;
                 }
@@ -467,6 +475,16 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Scrap Shield";
             }
         }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Mechanical Reinforcement")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + int.Parse(AttackerInfo.CardHealth)).ToString();
+            TargetInfo.CardDamage += AttackerInfo.CardDamage;
+            TargetInfo.SetInformation();
+            RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Mechanical Reinforcement";
+        }
         Destroy(AttackerCard);
         CloseMyCardSign();
         ForMyCard = false;
@@ -489,7 +507,6 @@ public class CardProgress : MonoBehaviourPunCallbacks
             AttackerInfo = AttackerCard.GetComponent<CardInformation>();
             TargetInfo = TargetCard.GetComponent<CardInformation>();
             LightningBolt(AttackerInfo, TargetInfo);
-            Destroy(AttackerCard);
             Debug.LogError("LİGHTİNG BOLLLLTT");
 
             Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "LIGHTING BOLLLLTT!";
@@ -517,7 +534,6 @@ public class CardProgress : MonoBehaviourPunCallbacks
             }
             else
                 GetComponent<PlayerController>().RefreshLog(-damage, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
-            Destroy(AttackerCard);
         }
         else if(AttackerCard.GetComponent<CardInformation>().CardName == "Scales of Anubis")
         {
@@ -577,6 +593,47 @@ public class CardProgress : MonoBehaviourPunCallbacks
             AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
             AttackerCard.GetComponent<CardInformation>().isAttacked = true;
         }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Tome of Confusion")
+        {
+            AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            if (UnityEngine.Random.value <= 0.5f)
+            {
+                int randomChoice = UnityEngine.Random.Range(0, 2);
+
+                if (randomChoice == 0)
+                {
+                    GameObject[] AllCompetitorCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                    if (AllCompetitorCard.Length > 0)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, AllCompetitorCard.Length);
+                        GameObject selectedCard = AllCompetitorCard[randomIndex];
+
+                        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                        selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(AttackerInfo.CardHealth) - TargetInfo.CardDamage).ToString();
+                        GetComponent<PlayerController>().RefreshUsedCard(index, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, false);
+                    }
+                }
+                else
+                {
+                    GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                    if (AllMyCard.Length > 0)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, AllMyCard.Length);
+                        GameObject selectedCard = AllMyCard[randomIndex];
+
+                        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                        selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(AttackerInfo.CardHealth) - TargetInfo.CardDamage).ToString();
+                        GetComponent<PlayerController>().RefreshUsedCard(index, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, true);
+                    }
+                }
+            }
+        }
+        Destroy(AttackerCard);
         ForMyCard = false;
         SecoundTargetCard = false;
         AttackerCard = null;
@@ -600,7 +657,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     AttackerInfo.CardHealth = (int.Parse(AttackerInfo.CardHealth) - 1).ToString();
                     int attackerindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, Attacker.transform.parent.gameObject);
                     GetComponent<PlayerController>().RefreshUsedCard(attackerindex, AttackerInfo.CardHealth, AttackerInfo.CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-                    GetComponent<PlayerController>().CreateTextAtTargetIndex(attackerindex, 1, true);
+                    GetComponent<PlayerController>().CreateTextAtTargetIndex(attackerindex, 1, false);
 
                     if (int.Parse(AttackerInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
                     {
@@ -900,9 +957,6 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     RefreshMyCardDatas(AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
                     break;
-                case "Leonardo Da Vinci":
-                    
-                    return;
                 default:
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
                     break;
@@ -1002,6 +1056,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 OpenMyCardSign();
                 break;
             case "Mutated Blood Sample":
+                OpenMyCardSign();
+                break;
+            case "Mechanical Reinforcement":
                 OpenMyCardSign();
                 break;
             default:
