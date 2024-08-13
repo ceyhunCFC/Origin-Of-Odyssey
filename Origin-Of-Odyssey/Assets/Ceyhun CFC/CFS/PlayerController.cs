@@ -1854,7 +1854,7 @@ public class PlayerController : MonoBehaviour
                 card.GetComponent<CardInformation>().CardDamage = card.GetComponent<CardInformation>().MaxAttack;
                 card.GetComponent<CardInformation>().SetInformation();
             }
-            if(card.GetOrAddComponent<CardInformation>().CardName == "Eques Automaton")
+            if(card.GetComponent<CardInformation>().CardName == "Eques Automaton")
             {
                 card.GetComponent<CardInformation>().CardHealth = card.GetComponent<CardInformation>().MaxHealth;
                 card.GetComponent<CardInformation>().SetInformation();
