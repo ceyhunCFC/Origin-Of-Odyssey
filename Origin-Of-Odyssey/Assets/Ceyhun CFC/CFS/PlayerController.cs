@@ -88,6 +88,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public int AugmentCount = 0;
     [HideInInspector] public bool CanAttackMainCard = true;
     [HideInInspector] public int DoubleDamage = 1;
+    [HideInInspector] public bool EchoofTomorrow = false;
+    [HideInInspector] public bool NaiadProtector = false;     //true ise büyü kullandığında +1 sağlık kazanıyoruz
+    [HideInInspector] public bool PlayedSpell = false;          //bu tur büyü oynandımı diye kontrol
 
     [HideInInspector] public List<string> DeadMyCardName = null;
 
@@ -1032,6 +1035,113 @@ public class PlayerController : MonoBehaviour
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Echo of Tomorrow")
+                {
+                    StandartCardFuns.EchoofTomorrowFun(this);
+                }      
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Templar Knight")
+                {
+                    StandartCardFuns.TemplarKnightFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Cerberus Spawn")
+                {
+                    StandartCardFuns.CerberusSpawnFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Arcane Scholar")
+                {
+                    StandartCardFuns.ArcaneScholarFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Rebel Outcast")
+                {
+                    StandartCardFuns.RebelOutcastFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Naiad Protector")
+                {
+                    StandartCardFuns.NaiadProtectorFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Ruined City Scout")
+                {
+                    StandartCardFuns.RuinedCityScoutFun(this);  
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Gladiator Champion")
+                {
+                    StandartCardFuns.GladiatorChampionFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Urban Ranger")
+                {
+                    StandartCardFuns.UrbanRangerFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Byzantine Fire Slinger")
+                {
+                    StandartCardFuns.ByzantineFireSlingerFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Shadow Assassin")
+                {
+                    StandartCardFuns.ShadowAssassinFun(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Radiated Marauder")
+                {
+                    StandartCardFuns.CanFirstRauntAttack(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Rogue Mech-Pilot")
+                {
+                    StandartCardFuns.RogueMechPilotFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Rubble Raider")
+                {
+                    StandartCardFuns.CanFirstRauntAttack(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Desert Conjurer")
+                {
+                    StandartCardFuns.DesertConjurerFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Sandstorm")
+                {
+                    StandartCardFuns.SandstormFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Gaelic Warrior")
+                {
+                    StandartCardFuns.CanFirstRauntAttack(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Oasis Guardian")
+                {
+                    StandartCardFuns.OasisGuardianFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Battle Mage")
+                {
+                   StandartCardFuns.BattleMageFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Roving Merchant")
+                {
+                    StandartCardFuns.RovingMerchantFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Nomadic Hunter")
+                {
+                    StandartCardFuns.NomadicHunterFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Raiding Party")
+                {
+                    StandartCardFuns.RaidingPartyFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Tavern Brawler")
+                {
+                    StandartCardFuns.CanFirstRauntAttack(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Pyromaniac Wizard")
+                {
+                    StandartCardFuns.PyromaniacWizardFun(this);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Frontline Militia")
+                {
+                    StandartCardFuns.FrontlineMilitiaFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Wandering Healer")
+                {
+                    StandartCardFuns.WanderingHealerFun(selectedCard, this);
+                }
+
+
+
 
 
 
@@ -1359,7 +1469,7 @@ public class PlayerController : MonoBehaviour
             CardCurrent.transform.localScale = new Vector3(1,1,0.04f);
             CardCurrent.transform.localPosition = Vector3.zero;
             CardCurrent.transform.localEulerAngles = new Vector3(45,0,180);
-            if(name == "Crypt Warden" || name == "Chaos Scarab" ||name== "Gyrocopter" || name == "Piscean Diver")
+            if(name == "Crypt Warden" || name == "Chaos Scarab" ||name== "Gyrocopter" || name == "Piscean Diver" || name == "Rebel Outcast" || name == "Urban Ranger" || name == "Shadow Assassin" || name == "Elven Tracker")
             {
                 CardCurrent.SetActive(false);
             }
@@ -1387,7 +1497,8 @@ public class PlayerController : MonoBehaviour
 
             if (CardCurrent.GetComponent<CardInformation>().CardName == "Crypt Warden" ||
                 CardCurrent.GetComponent<CardInformation>().CardName == "Chaos Scarab" ||
-                CardCurrent.GetComponent<CardInformation>().CardName == "Piscean Diver")
+                CardCurrent.GetComponent<CardInformation>().CardName == "Piscean Diver"||
+                CardCurrent.GetComponent<CardInformation>().CardName == "Rebel Outcast")
             {
                 if (!CardCurrent.activeSelf)
                 {
@@ -1868,6 +1979,60 @@ public class PlayerController : MonoBehaviour
                     card.GetComponent<CardInformation>().FirstDamageTaken,
                     card.GetComponent<CardInformation>().EternalShield);
             }
+            if(card.GetComponent<CardInformation>().CardName == "Scrapyard Engineer")
+            {
+                GameObject randomCard = AllOwnCards[UnityEngine.Random.Range(0, AllOwnCards.Length)];
+                randomCard.GetComponent<CardInformation>().CardDamage += 2;
+                randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                randomCard.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, randomCard.transform.parent.gameObject);
+                RefreshMyCard(index,
+                    randomCard.GetComponent<CardInformation>().CardHealth,
+                    randomCard.GetComponent<CardInformation>().HaveShield,
+                    randomCard.GetComponent<CardInformation>().CardDamage,
+                    randomCard.GetComponent<CardInformation>().DivineSelected,
+                    randomCard.GetComponent<CardInformation>().FirstTakeDamage,
+                    randomCard.GetComponent<CardInformation>().FirstDamageTaken,
+                    randomCard.GetComponent<CardInformation>().EternalShield);
+            }
+            if(card.GetComponent<CardInformation>().CardName == "Forest Nymph")
+            {
+                GameObject[] MyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                foreach (GameObject cards in MyCard)
+                {
+                    if(cards.GetComponent<CardInformation>().CardName != "Forest Nymph")
+                    {
+                        cards.GetComponent<CardInformation>().CardHealth = (int.Parse(cards.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                        cards.GetComponent<CardInformation>().SetInformation();
+                        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, cards.transform.parent.gameObject);
+                        RefreshMyCard(index,
+                            cards.GetComponent<CardInformation>().CardHealth,
+                            cards.GetComponent<CardInformation>().HaveShield,
+                            cards.GetComponent<CardInformation>().CardDamage,
+                            cards.GetComponent<CardInformation>().DivineSelected,
+                            cards.GetComponent<CardInformation>().FirstTakeDamage,
+                            cards.GetComponent<CardInformation>().FirstDamageTaken,
+                            cards.GetComponent<CardInformation>().EternalShield);
+                    }
+                }
+            }
+            if(card.GetComponent<CardInformation>().CardName == "Scrap Collector")
+            {
+                GameObject randomCard = AllOwnCards[UnityEngine.Random.Range(0, AllOwnCards.Length)];
+                randomCard.GetComponent<CardInformation>().CardDamage += 1;
+                randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                randomCard.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, randomCard.transform.parent.gameObject);
+                RefreshMyCard(index,
+                    randomCard.GetComponent<CardInformation>().CardHealth,
+                    randomCard.GetComponent<CardInformation>().HaveShield,
+                    randomCard.GetComponent<CardInformation>().CardDamage,
+                    randomCard.GetComponent<CardInformation>().DivineSelected,
+                    randomCard.GetComponent<CardInformation>().FirstTakeDamage,
+                    randomCard.GetComponent<CardInformation>().FirstDamageTaken,
+                    randomCard.GetComponent<CardInformation>().EternalShield);
+            }
+
         }
         if(AsgardQuestion >= 3)
         {
@@ -1902,7 +2067,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
+        PlayedSpell = false;
         _CardProgress.WindFury = true;
         _CardProgress.ResetAllSign();
 
@@ -2111,6 +2276,68 @@ public class PlayerController : MonoBehaviour
             {
                 DeadCard.GetComponent<CardController>().UsedCard(5, !GetComponent<PlayerController>().PV.Owner.IsMasterClient);
             }
+            if(DeadCard.GetComponent<CardInformation>().CardName == "Arcane Scholar")
+            {
+                SpellsExtraDamage -= 2;
+            }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Naiad Protector")
+            {
+                NaiadProtector = false;
+            }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Labyrinth Guardian")
+            {
+                CreateSpecialCard("Labyrinth Guardian", "5", 6, 6, TargetCardIndex, true);
+            }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Radiated Marauder")
+            {
+                DeadCard.GetComponent<CardController>().UsedCard(2, !GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+            }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Norse Axeman")
+            {
+                _CardProgress.DamageToAlLOtherMinions(1, "Norse Axeman");
+            }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Sewer Rat")
+            {
+                List<int> emptyFrontCells = new List<int>();
+                List<int> emptyBackCells = new List<int>();
+
+                for (int i = 7; i < 14; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyFrontCells.Add(i);
+                    }
+                }
+                for (int i = 0; i < 7; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyBackCells.Add(i);
+                    }
+                }
+
+
+                if (emptyFrontCells.Count > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                    int index = emptyFrontCells[randomIndex];
+                    GameObject Card = CreateSpecialCard("Rat", "1", 1, 0, index, true);
+                }
+                else if (emptyBackCells.Count > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                    int index = emptyBackCells[randomIndex];
+                    GameObject Card = CreateSpecialCard("Rat", "1", 1, 0, index, true);
+                }
+                else
+                {
+                    Debug.LogWarning("No empty cells available to place the Rat card.");
+                }
+            }
+            if (DeadCard.GetComponent<CardInformation>().CardName == "Battle Mage")
+            {
+                SpellsExtraDamage -= 1;
+            }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
             DeadCardCount++;
             Destroy(DeadCard);
@@ -2197,6 +2424,18 @@ public class PlayerController : MonoBehaviour
                         CreateSpecialCard("Mummy", "1", 1, 0, i, false);
                     }
 
+                }
+            }
+            else if (DeadCardName == "Arcane Scholar")
+            {
+                PlayerController[] objects = PlayerController.FindObjectsOfType<PlayerController>();
+                foreach (PlayerController obj in objects)
+                {
+                    if (obj.name == "PlayerController(Clone)" && obj.GetComponent<PlayerController>().PV != this.PV)
+                    {
+                        // RPC çağrısı yap
+                        obj.GetComponent<PlayerController>().PV.RPC("RPC_SetSpellsExtraDamage", RpcTarget.All, -2);
+                    }
                 }
             }
             if (_CardProgress.AttackerCard != null)
@@ -2413,6 +2652,113 @@ public class PlayerController : MonoBehaviour
         if (DeadCard.GetComponent<CardInformation>().CardName == "Claire")
         {
             DeadCard.GetComponent<CardController>().UsedCard(5, !GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+        }
+        if (DeadCard.GetComponent<CardInformation>().CardName == "Dune Raider")
+        {
+            List<int> emptyFrontCells = new List<int>();
+            List<int> emptyBackCells = new List<int>();
+
+            for (int i = 7; i < 14; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    emptyFrontCells.Add(i);
+                }
+            }
+
+            if (emptyFrontCells.Count >= 2)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                    int index = emptyFrontCells[randomIndex];
+                    CreateSpecialCard("Frost Drakes", "4", 5, 0, index, true);
+                    emptyFrontCells.RemoveAt(randomIndex);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyBackCells.Add(i);
+                    }
+                }
+
+                if (emptyBackCells.Count >= 2)
+                {
+                    for (int j = 0; j < 2; j++)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                        int index = emptyBackCells[randomIndex];
+                        CreateSpecialCard("Frost Drakes", "4", 5, 0, index, true);
+                        emptyBackCells.RemoveAt(randomIndex);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("No empty cells available to place the Scavenger card.");
+                }
+            }
+        }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Naiad Protector")
+        {
+            NaiadProtector = false;
+        }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Labyrinth Guardian")
+        {
+            CreateSpecialCard("Labyrinth Guardian", "5", 6, 6, TargetCardIndex, true);
+        }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Radiated Marauder")
+        {
+            DeadCard.GetComponent<CardController>().UsedCard(2, !GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+        }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Norse Axeman")
+        {
+            _CardProgress.DamageToAlLOtherMinions(1, "Norse Axeman");
+        }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Sewer Rat")
+        {
+            List<int> emptyFrontCells = new List<int>();
+            List<int> emptyBackCells = new List<int>();
+
+            for (int i = 7; i < 14; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    emptyFrontCells.Add(i);
+                }
+            }
+            for (int i = 0; i < 7; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    emptyBackCells.Add(i);
+                }
+            }
+
+
+            if (emptyFrontCells.Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                int index = emptyFrontCells[randomIndex];
+                GameObject Card = CreateSpecialCard("Rat", "1", 1, 0, index, true);
+            }
+            else if (emptyBackCells.Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                int index = emptyBackCells[randomIndex];
+                GameObject Card = CreateSpecialCard("Rat", "1", 1, 0, index, true);
+            }
+            else
+            {
+                Debug.LogWarning("No empty cells available to place the Rat card.");
+            }
+        }
+        if(DeadCard.GetComponent<CardInformation>().CardName == "Battle Mage")
+        {
+            SpellsExtraDamage -= 1;
         }
 
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
@@ -3317,6 +3663,43 @@ public class PlayerController : MonoBehaviour
                             _CardProgress.StandartDamage(card, selectedEnemyCard);
                         }
                     }
+                    if(card.GetComponent<CardInformation>().CardName == "Siege Master Urban")
+                    {
+                        StandartCardFuns.SiegeMasterUrbanFun(this);
+                    }
+                    if(card.GetComponent<CardInformation>().CardName == "Gaelic Warrior")
+                    {
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                        DeleteAreaCard(TargetCardIndex);
+                    }
+                    if(card.GetComponent<CardInformation>().CardName == "Wall Builder")
+                    {
+                        card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                        card.GetComponent<CardInformation>().SetInformation();
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);           
+                        RefreshMyCard(TargetCardIndex,
+                            card.GetComponent<CardInformation>().CardHealth,
+                            card.GetComponent<CardInformation>().HaveShield,
+                            card.GetComponent<CardInformation>().CardDamage,
+                            card.GetComponent<CardInformation>().DivineSelected,
+                            card.GetComponent<CardInformation>().FirstTakeDamage,
+                            card.GetComponent<CardInformation>().FirstDamageTaken,
+                            card.GetComponent<CardInformation>().EternalShield);
+                    }
+                    if (card.GetComponent<CardInformation>().CardName == "Tavern Brawler")
+                    {
+                        card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                        card.GetComponent<CardInformation>().SetInformation();
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                        RefreshMyCard(TargetCardIndex,
+                            card.GetComponent<CardInformation>().CardHealth,
+                            card.GetComponent<CardInformation>().HaveShield,
+                            card.GetComponent<CardInformation>().CardDamage,
+                            card.GetComponent<CardInformation>().DivineSelected,
+                            card.GetComponent<CardInformation>().FirstTakeDamage,
+                            card.GetComponent<CardInformation>().FirstDamageTaken,
+                            card.GetComponent<CardInformation>().EternalShield);
+                    }
 
                 }
 
@@ -3519,6 +3902,13 @@ public class PlayerController : MonoBehaviour
             }
         }
         AsgardQuestion++;
+
+        if(NaiadProtector)
+        {
+            GetComponent<CardController>().AddHealCard(1, !PV.Owner.IsMasterClient);
+        }
+
+        PlayedSpell = true;
     }
     [PunRPC]
     void RPC_NomadicTactics(bool nomadictactics)
@@ -3618,6 +4008,26 @@ public class PlayerController : MonoBehaviour
             OdinCard odinCard = new OdinCard();
             spells = odinCard.spells;
         }
+        else if (OwnMainCard == "Genghis")
+        {
+            GenghisCard genghisCard = new GenghisCard();
+            spells = genghisCard.spells;
+        }
+        else if (OwnMainCard == "Anubis")
+        {
+            AnubisCard anubisCard = new AnubisCard();
+            spells = anubisCard.spells;
+        }
+        else if (OwnMainCard == "Dustin")
+        {
+            DustinCard dustinCard = new DustinCard();
+            spells = dustinCard.spells;
+        }
+        else if (OwnMainCard == "Leonardo Da Vinci")
+        {
+            LeonardoCard leonardoCard = new LeonardoCard();
+            spells = leonardoCard.spells;
+        }
 
         if (spells != null && spells.Count > 0)
         {
@@ -3716,7 +4126,6 @@ public class PlayerController : MonoBehaviour
 
                 int CardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string targetCardName = OwnDeck[CardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int targetIndex = -1;
 
 
@@ -3752,6 +4161,8 @@ public class PlayerController : MonoBehaviour
                         break;
                     }
                 }
+
+                CreateStandartCards(CardCurrent, targetCardName);
                 break;
 
             case "Genghis":
@@ -3759,7 +4170,6 @@ public class PlayerController : MonoBehaviour
 
                 int GenghisCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string GenghistargetCardName = OwnDeck[GenghisCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int GenghistargetIndex = -1;
 
                 for (int i = 0; i < genghisCard.minions.Count; i++)
@@ -3793,13 +4203,13 @@ public class PlayerController : MonoBehaviour
                           break;
                       }
                   }
+                CreateStandartCards(CardCurrent, GenghistargetCardName);
                 break;
             case "Odin":
                 OdinCard odinCard = new OdinCard();
 
                 int OdinCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string OdintargetCardName = OwnDeck[OdinCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int OdintargetIndex = -1;
 
                 for (int i = 0; i < odinCard.minions.Count; i++)
@@ -3841,13 +4251,13 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                     }
                 }
+                CreateStandartCards(CardCurrent, OdintargetCardName);
                 break;
             case "Anubis":
                 AnubisCard anubisCard = new AnubisCard();
 
                 int AnubisCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string AnubistargetCardName = OwnDeck[AnubisCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int AnubistargetIndex = -1;
 
                 for (int i = 0; i < anubisCard.minions.Count; i++)
@@ -3881,13 +4291,13 @@ public class PlayerController : MonoBehaviour
                         break;
                     }
                 }
+                CreateStandartCards(CardCurrent, AnubistargetCardName);
                 break;
             case "Leonardo Da Vinci":
                 LeonardoCard leonardoCard = new LeonardoCard();
 
                 int LeonardoCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string LeonardoTargetCardName = OwnDeck[LeonardoCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int LeonardotargetIndex = -1;
 
                 for (int i = 0; i < leonardoCard.minions.Count; i++)
@@ -3921,13 +4331,13 @@ public class PlayerController : MonoBehaviour
                         break;
                     }
                 }
+                CreateStandartCards(CardCurrent, LeonardoTargetCardName);
                 break;
             case "Dustin":
                 DustinCard dustinCard = new DustinCard();
 
                 int DustinCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string DustinTargetCardName = OwnDeck[DustinCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int DustinTargetIndex = -1;
 
                 for (int i = 0; i < dustinCard.minions.Count; i++)
@@ -3961,7 +4371,32 @@ public class PlayerController : MonoBehaviour
                         break;
                     }
                 }
+                CreateStandartCards(CardCurrent, DustinTargetCardName);
                 break;
+        }
+    }
+
+    void CreateStandartCards(GameObject CardCurrent ,string name)
+    {
+        StandartCards standartCard = new StandartCards();
+
+        int StandartCardTargetIndex = -1;
+
+        for (int i = 0; i < standartCard.standartcards.Count; i++)
+        {
+            if (standartCard.standartcards[i].name == name)
+            {
+                StandartCardTargetIndex = i;
+
+                CardCurrent.GetComponent<CardInformation>().CardName = standartCard.standartcards[StandartCardTargetIndex].name;
+                CardCurrent.GetComponent<CardInformation>().CardDes = standartCard.standartcards[StandartCardTargetIndex].name + " POWWERRRRR!!!";
+                CardCurrent.GetComponent<CardInformation>().CardHealth = standartCard.standartcards[StandartCardTargetIndex].health.ToString();
+                CardCurrent.GetComponent<CardInformation>().CardDamage = standartCard.standartcards[StandartCardTargetIndex].attack;
+                CardCurrent.GetComponent<CardInformation>().CardMana = standartCard.standartcards[StandartCardTargetIndex].mana;
+                CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                CardCurrent.GetComponent<CardInformation>().SetInformation();
+                break;
+            }
         }
     }
 

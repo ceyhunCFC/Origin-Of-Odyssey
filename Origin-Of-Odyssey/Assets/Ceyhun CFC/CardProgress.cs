@@ -957,6 +957,38 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     RefreshMyCardDatas(AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
                     break;
+                case "Frost Wyrm Fafnir":
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
+                    TargetInfo.CardFreeze = true;
+                    GetComponent<PlayerController>().RefreshCompotitorCard(TargetCardIndex,TargetInfo.FirstTakeDamage,TargetInfo.CardFreeze);
+                    GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName,TargetInfo.CardName, Color.blue);
+                    break;
+                case "Piscean Diver":
+                    GetComponent<PlayerController>().SetActiveCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, AttackerCard.transform.parent.gameObject));
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
+                    break;
+                case "Rebel Outcast":
+                    GetComponent<PlayerController>().SetActiveCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, AttackerCard.transform.parent.gameObject));
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
+                    break;
+                case "Urban Ranger":
+                    GetComponent<PlayerController>().SetActiveCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, AttackerCard.transform.parent.gameObject));
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
+                    break;
+                case "Shadow Assassin":
+                    GetComponent<PlayerController>().SetActiveCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, AttackerCard.transform.parent.gameObject));
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
+                    break;
+                case "Elven Tracker":
+                    GetComponent<PlayerController>().SetActiveCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, AttackerCard.transform.parent.gameObject));
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
+                    break;
+                case "Minor Glacial Elemental":
+                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
+                    TargetInfo.CardFreeze = true;
+                    GetComponent<PlayerController>().RefreshCompotitorCard(TargetCardIndex, TargetInfo.FirstTakeDamage, TargetInfo.CardFreeze);
+                    GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.blue);
+                    break;
                 default:
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage * GetComponent<PlayerController>().DoubleDamage).ToString();
                     break;
