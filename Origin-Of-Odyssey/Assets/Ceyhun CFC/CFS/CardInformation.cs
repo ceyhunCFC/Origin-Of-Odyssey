@@ -30,6 +30,8 @@ public class CardInformation : MonoBehaviour
     public bool ArtisticInspiration = false;        //öldükten sonra kahraman gücü yenileme
     public bool Behemot = false;                    //carddamagi 2 azalan kartları tekrar aarttırmak için
     public bool MutatedBlood = false;                // tur başında rastgele bir rakibe saldırır
+    public bool PlagueCarrier = false;                  //bir sonraki tura kadar -2 damage aldı demek
+    public bool ToxicRainmaker = false;                 //1 damage azalıyor
     public int ChargeBrokandSindri = 0;
     public bool IsImmuneToAttacks { get; set; }
     public bool HasAttacked { get; set; } = false;

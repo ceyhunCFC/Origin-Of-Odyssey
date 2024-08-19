@@ -633,6 +633,34 @@ public class CardProgress : MonoBehaviourPunCallbacks
                 }
             }
         }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Plague Carrier")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            TargetInfo.CardDamage -= 2;
+            TargetInfo.SetInformation();
+            TargetInfo.PlagueCarrier = true;
+            GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage);
+
+        }
+        else if (AttackerCard.GetComponent<CardInformation>().CardName == "Mystic Archer")
+        {
+            TargetInfo = TargetCard.GetComponent<CardInformation>();
+            TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 2).ToString();
+            GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 2, false);
+            if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+            {
+
+                GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                GetComponent<PlayerController>().RefreshLog(-2, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+            }
+            else
+            {
+                GetComponent<PlayerController>().RefreshLog(-2, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage);
+            }
+            AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
+            AttackerCard.GetComponent<CardInformation>().isAttacked = true;
+        }
         Destroy(AttackerCard);
         ForMyCard = false;
         SecoundTargetCard = false;
@@ -684,11 +712,56 @@ public class CardProgress : MonoBehaviourPunCallbacks
         }
 
         AttackerInfo.isAttacked = true;
-        if (WindFury == true && AttackerInfo.CardName == "General Subutai" || WindFury == true && AttackerInfo.CardName == "Einherjar Champion")
+        if (WindFury == true && AttackerInfo.CardName == "General Subutai" || WindFury == true && AttackerInfo.CardName == "Einherjar Champion" || WindFury == true && AttackerInfo.CardName == "Saxon Bowman")
         {
-            Debug.Log("General Subutai");
             AttackerCard.GetComponent<CardInformation>().isAttacked = false;
             WindFury = false;
+        }
+
+        if(TargetInfo.CardName == "Wasteland Giant")
+        {
+            GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+            if (AllMyCard.Length > 0)
+            {
+                foreach (var MyCard in AllMyCard)
+                {
+                    MyCard.GetComponent<CardInformation>().CardHealth = (int.Parse(MyCard.GetComponent<CardInformation>().CardHealth) - 3).ToString();
+                    MyCard.GetComponent<CardInformation>().SetInformation();
+                    int Index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, MyCard.transform.parent.gameObject);
+                    GetComponent<PlayerController>().CreateTextAtTargetIndex(Index, 3, true);
+
+                    if (int.Parse(MyCard.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+                    {
+
+                        GetComponent<PlayerController>().DeleteMyCard(Index);
+                        GetComponent<PlayerController>().RefreshLog(-3, true, TargetInfo.CardName,MyCard.GetComponent<CardInformation>().CardName , Color.red);
+                    }
+                    else
+                        GetComponent<PlayerController>().RefreshLog(-3, false, TargetInfo.CardName, MyCard.GetComponent<CardInformation>().CardName, Color.red);
+                    GetComponent<PlayerController>().RefreshMyCard(Index,
+                                MyCard.GetComponent<CardInformation>().CardHealth,
+                                MyCard.GetComponent<CardInformation>().HaveShield,
+                                MyCard.GetComponent<CardInformation>().CardDamage,
+                                MyCard.GetComponent<CardInformation>().DivineSelected,
+                                MyCard.GetComponent<CardInformation>().FirstTakeDamage,
+                                MyCard.GetComponent<CardInformation>().FirstDamageTaken,
+                                MyCard.GetComponent<CardInformation>().EternalShield);
+                    GetComponent<PlayerController>().DoubleDamage = 1;
+                    AttackerCard = null;
+                    TargetCard = null;
+                    SecoundTargetCard = false;
+                    TargetCardIndex = -1;
+                    return;
+                }
+                
+            }
+        }
+        
+        if(TargetInfo.CardName == "Minotaur Labyrinth Keeper")
+        {
+            TargetInfo.CardDamage++;
+            TargetInfo.SetInformation();
+            GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage);
         }
 
         if (TargetInfo.CardName == "Nemean Lion")
@@ -995,7 +1068,16 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
             }
         }
+        if (TargetInfo.CardName == "Catacomb Guardian")
+        {
+            if (int.Parse(TargetInfo.CardHealth) >= 0)
+            {
+                TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 1).ToString();
+                TargetInfo.SetInformation();
+                GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
+            }
 
+        }
 
         if (GetComponent<PlayerController>().PV.IsMine)
         {

@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
     public GameObject Freeze;
     public GameObject Mummies;
     public GameObject TakeGun;
+    public GameObject Minion;
+    public GameObject Spell;
 
     public GameObject DamageText;
     public GameObject LogsPrefab;
@@ -91,6 +93,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool EchoofTomorrow = false;
     [HideInInspector] public bool NaiadProtector = false;     //true ise büyü kullandığında +1 sağlık kazanıyoruz
     [HideInInspector] public bool PlayedSpell = false;          //bu tur büyü oynandımı diye kontrol
+    [HideInInspector] public bool PlagueCarrierBool = false;    //ikinci sefer çalışması için
 
     [HideInInspector] public List<string> DeadMyCardName = null;
 
@@ -1139,6 +1142,34 @@ public class PlayerController : MonoBehaviour
                 {
                     StandartCardFuns.WanderingHealerFun(selectedCard, this);
                 }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Horse Archer")
+                {
+                    StandartCardFuns.CanFirstRauntAttack(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Viking Shield-Maiden")
+                {
+                     StandartCardFuns.VikingShieldMaidenFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Plague Carrier")
+                {
+                      StandartCardFuns.PlagueCarrierFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Dune Scout")
+                {
+                    StandartCardFuns.DuneScoutFun(selectedCard);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Scavenger's Daughter")
+                {
+                    StandartCardFuns.ScavengersDaughterFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Mystic Archer")
+                {
+                      StandartCardFuns.MysticArcherFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Toxic Rainmaker")
+                {
+                    StandartCardFuns.ToxicRainmakerFun(this);
+                }
 
 
 
@@ -2032,6 +2063,32 @@ public class PlayerController : MonoBehaviour
                     randomCard.GetComponent<CardInformation>().FirstDamageTaken,
                     randomCard.GetComponent<CardInformation>().EternalShield);
             }
+            if(card.GetComponent<CardInformation>().PlagueCarrier && PlagueCarrierBool)
+            {
+                card.GetComponent<CardInformation>().PlagueCarrier = false;
+                PlagueCarrierBool = false;
+                card.GetComponent<CardInformation>().CardDamage += 2;
+                card.GetComponent<CardInformation>().SetInformation() ;
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, card.transform.parent.gameObject);
+                RefreshUsedCard(index, card.GetComponent<CardInformation>().CardHealth, card.GetComponent<CardInformation>().CardDamage);
+            }
+            else
+            {
+                PlagueCarrierBool = true;
+            }
+            if (card.GetComponent<CardInformation>().ToxicRainmaker && PlagueCarrierBool)
+            {
+                card.GetComponent<CardInformation>().ToxicRainmaker = false;
+                PlagueCarrierBool = false;
+                card.GetComponent<CardInformation>().CardDamage += 1;
+                card.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, card.transform.parent.gameObject);
+                RefreshUsedCard(index, card.GetComponent<CardInformation>().CardHealth, card.GetComponent<CardInformation>().CardDamage);
+            }
+            else
+            {
+                PlagueCarrierBool = true;
+            }
 
         }
         if(AsgardQuestion >= 3)
@@ -2337,6 +2394,11 @@ public class PlayerController : MonoBehaviour
             if (DeadCard.GetComponent<CardInformation>().CardName == "Battle Mage")
             {
                 SpellsExtraDamage -= 1;
+            }
+            if(DeadCard.GetComponent<CardInformation>().CardName == "Dwarven Miner")
+            {
+                Mana++;
+                ManaCountText.text = Mana + "/10".ToString();
             }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
             DeadCardCount++;
@@ -2761,6 +2823,11 @@ public class PlayerController : MonoBehaviour
             SpellsExtraDamage -= 1;
         }
 
+        if (DeadCard.GetComponent<CardInformation>().CardName == "Dwarven Miner")
+        {
+            Mana++;
+            ManaCountText.text = Mana + "/10".ToString();
+        }
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
 
     }
@@ -3533,6 +3600,50 @@ public class PlayerController : MonoBehaviour
         TakeGun.SetActive(false);
     }
 
+    public void MinorOracleofDelphi()
+    {
+        if (PV.IsMine)
+        {
+            Minion.SetActive(true);
+            Spell.SetActive(true);
+
+            Minion.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked3(Minion));
+            Spell.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked3(Spell));
+        }
+    }
+
+    void OnGameobjectClicked3(GameObject clickedTextObject)
+    {
+        int randomValue = UnityEngine.Random.Range(0, 2); 
+
+        if (randomValue == 0)
+        {
+            if (clickedTextObject == Minion)
+            {
+                if (GameObject.Find("Deck").transform.childCount < 10)
+                {
+                    GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                    CardCurrent.tag = "Card";
+                    float xPos = DeckCardCount * 0.8f - 0.8f; 
+                    CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); 
+                    CreateCard(CardCurrent);
+                    DeckCardCount++;
+                }
+            }
+        }
+        else if (randomValue == 1)
+        {
+            if (clickedTextObject == Spell)
+            {
+                CreateRandomCard();
+            }
+        }
+
+        Minion.SetActive(false);
+        Spell.SetActive(false);
+    }
+
+
     public void SetMana(GameObject attackercard)
     {
         if(attackercard.GetComponent<CardInformation>().CardName=="Zeus" || attackercard.GetComponent<CardInformation>().CardName == "Genghis" || attackercard.GetComponent<CardInformation>().CardName == "Odin" || attackercard.GetComponent<CardInformation>().CardName == "Leonardo Da Vinci" || attackercard.GetComponent<CardInformation>().CardName == "Anubis")
@@ -3699,6 +3810,16 @@ public class PlayerController : MonoBehaviour
                             card.GetComponent<CardInformation>().FirstTakeDamage,
                             card.GetComponent<CardInformation>().FirstDamageTaken,
                             card.GetComponent<CardInformation>().EternalShield);
+                    }
+                    if(card.GetComponent<CardInformation>().CardName == "Berserker Thrall")
+                    {
+                        GameObject[] RandomEnemyCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                        if (RandomEnemyCards.Length > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, RandomEnemyCards.Length);
+                            GameObject selectedEnemyCard = RandomEnemyCards[randomIndex];
+                            _CardProgress.StandartDamage(card, selectedEnemyCard);
+                        }
                     }
 
                 }

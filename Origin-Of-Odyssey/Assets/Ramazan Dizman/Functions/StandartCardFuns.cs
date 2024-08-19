@@ -413,6 +413,95 @@ public class StandartCardFuns
             }
         }
     }
+
+    public static void VikingShieldMaidenFun(GameObject selectedCard,PlayerController PC)
+    {
+        GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+        foreach (GameObject Card in AllMyCard)
+        {
+            if(Card.GetComponent<CardInformation>().CardName == "Viking Raider" || Card.GetComponent<CardInformation>().CardName == "Viking" || Card.GetComponent<CardInformation>().CardName == "Viking Spirit")
+            {
+                selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                selectedCard.GetComponent<CardInformation>().CardDamage++;
+                selectedCard.GetComponent<CardInformation>().SetInformation();
+                int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                PC.RefreshMyCard(TargetCardIndex,
+                            selectedCard.GetComponent<CardInformation>().CardHealth,
+                            selectedCard.GetComponent<CardInformation>().HaveShield,
+                            selectedCard.GetComponent<CardInformation>().CardDamage,
+                            selectedCard.GetComponent<CardInformation>().DivineSelected,
+                            selectedCard.GetComponent<CardInformation>().FirstTakeDamage,
+                            selectedCard.GetComponent<CardInformation>().FirstDamageTaken,
+                            selectedCard.GetComponent<CardInformation>().EternalShield);
+                return;
+            }
+        }
+
+
+    }
+
+    public static void PlagueCarrierFun(GameObject selectedCard, PlayerController PC)
+    {
+        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+        PC._CardProgress.SecoundTargetCard = true;
+        PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
+    }
+
+    public static void DuneScoutFun(GameObject selectedCard)
+    {
+        GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+        if(AllEnemyCard.Length == 0)
+        {
+            CanFirstRauntAttack(selectedCard);
+        }
+    }
+
+    public static void ScavengersDaughterFun(GameObject selectedCard,PlayerController PC)
+    {
+        GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+        foreach (GameObject Card in AllMyCard)
+        {
+            if(Card!=selectedCard)
+            {
+                Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                Card.GetComponent<CardInformation>().SetInformation();
+                int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, Card.transform.parent.gameObject);
+                PC.RefreshMyCard(TargetCardIndex,
+                            Card.GetComponent<CardInformation>().CardHealth,
+                            Card.GetComponent<CardInformation>().HaveShield,
+                            Card.GetComponent<CardInformation>().CardDamage,
+                            Card.GetComponent<CardInformation>().DivineSelected,
+                            Card.GetComponent<CardInformation>().FirstTakeDamage,
+                            Card.GetComponent<CardInformation>().FirstDamageTaken,
+                            Card.GetComponent<CardInformation>().EternalShield);
+            }
+            
+        }
+    }
+
+    public static void MysticArcherFun(GameObject selectedCard,PlayerController PC)
+    {
+        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+        PC._CardProgress.SecoundTargetCard = true;
+        PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
+    }
+
+    public static void ToxicRainmakerFun(PlayerController PC)
+    {
+        GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+        foreach (GameObject card in AllEnemyCard)
+        {
+            card.GetComponent<CardInformation>().CardDamage -= 1;
+            card.GetComponent<CardInformation>().SetInformation();
+            card.GetComponent<CardInformation>().ToxicRainmaker = true;
+            int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, card.transform.parent.gameObject);
+            PC.RefreshUsedCard(index, card.GetComponent<CardInformation>().CardHealth, card.GetComponent<CardInformation>().CardDamage);
+        }
+    }
     public static void CanFirstRauntAttack(GameObject selectedCard)
     {
         selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
