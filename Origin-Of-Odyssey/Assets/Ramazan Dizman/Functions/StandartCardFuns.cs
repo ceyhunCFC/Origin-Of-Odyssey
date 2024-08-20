@@ -51,10 +51,7 @@ public class StandartCardFuns
 
     }
 
-    public static void EchoofTomorrowFun(PlayerController PC)
-    {
-        PC.EchoofTomorrow = true;
-    }
+
 
     public static void TemplarKnightFun(GameObject selectedCard,PlayerController PC)
     {
@@ -502,6 +499,104 @@ public class StandartCardFuns
             PC.RefreshUsedCard(index, card.GetComponent<CardInformation>().CardHealth, card.GetComponent<CardInformation>().CardDamage);
         }
     }
+
+    public static void DesertWarlockFun(PlayerController PC)
+    {
+        List<int> emptyFrontCells = new List<int>();
+        List<int> emptyBackCells = new List<int>();
+
+        for (int i = 7; i < 14; i++)
+        {
+            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+            {
+                emptyFrontCells.Add(i);
+            }
+        }
+
+        if (emptyFrontCells.Count >= 2)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                int index = emptyFrontCells[randomIndex];
+                GameObject currentcard = PC.CreateSpecialCard("Sand Elementals", "2", 2, 0, index, true);
+                CanFirstRauntAttack(currentcard);
+                emptyFrontCells.RemoveAt(randomIndex);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                {
+                    emptyBackCells.Add(i);
+                }
+            }
+
+            if (emptyBackCells.Count >= 2)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                    int index = emptyBackCells[randomIndex];
+                    GameObject currentcard = PC.CreateSpecialCard("Sand Elementals", "2", 2, 0, index, true);
+                    CanFirstRauntAttack(currentcard);
+                    emptyBackCells.RemoveAt(randomIndex);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("No empty cells available to place the Sand Elementals card.");
+            }
+        }
+        PC.LessSpellCost += 1;
+    }
+
+    public static void StreetThugFun(GameObject selectedCard,PlayerController PC)
+    {
+        GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+        if(AllEnemyCard.Length == 1)
+        {
+            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+            selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+            selectedCard.GetComponent<CardInformation>().SetInformation();
+            int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+            PC.RefreshMyCard(TargetCardIndex,
+                        selectedCard.GetComponent<CardInformation>().CardHealth,
+                        selectedCard.GetComponent<CardInformation>().HaveShield,
+                        selectedCard.GetComponent<CardInformation>().CardDamage,
+                        selectedCard.GetComponent<CardInformation>().DivineSelected,
+                        selectedCard.GetComponent<CardInformation>().FirstTakeDamage,
+                        selectedCard.GetComponent<CardInformation>().FirstDamageTaken,
+                        selectedCard.GetComponent<CardInformation>().EternalShield);
+        }
+    }
+
+    public static void AncientLibrarianFun(GameObject selectedCard,PlayerController PC)
+    {
+        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+        PC._CardProgress.SecoundTargetCard = true;
+        PC._CardProgress.SetAttackerCard(index);
+        PC._CardProgress.AttackerCard = selectedCard;
+    }
+
+    public static void ApprenticeSorcererFun(PlayerController PC)
+    {
+        GameObject CurrentCard;
+
+        do
+        {
+            CurrentCard = PC.CreateRandomCard();
+            if (CurrentCard.GetComponent<CardInformation>().CardMana > 3)
+            {
+                PC.CreateSpell(CurrentCard);
+            }
+        }
+        while (CurrentCard.GetComponent<CardInformation>().CardMana > 3);
+    }
+
     public static void CanFirstRauntAttack(GameObject selectedCard)
     {
         selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;

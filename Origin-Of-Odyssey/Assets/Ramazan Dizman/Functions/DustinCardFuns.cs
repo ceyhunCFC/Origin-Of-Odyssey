@@ -53,13 +53,11 @@ public class DustinCardFuns
 
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
-
-
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
 
         // GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
@@ -116,10 +114,10 @@ public class DustinCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -225,11 +223,11 @@ public class DustinCardFuns
             PC.CreateDeckCard("Dune Raider", "5", 4, 5);
         }
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -289,10 +287,10 @@ public class DustinCardFuns
         }
         PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_ShuffleCells", RpcTarget.All, shuffledIndexes.ToArray());
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -319,11 +317,11 @@ public class DustinCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -350,11 +348,11 @@ public class DustinCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -376,11 +374,11 @@ public class DustinCardFuns
         }
         PC.LabyrinthMaze();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
     public static void DivineAscentionFun(GameObject selectedCard, PlayerController PC)
@@ -406,11 +404,11 @@ public class DustinCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 

@@ -661,6 +661,11 @@ public class CardProgress : MonoBehaviourPunCallbacks
             AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
             AttackerCard.GetComponent<CardInformation>().isAttacked = true;
         }
+        else if(AttackerCard.GetComponent<CardInformation>().CardName == "Ancient Librarian")
+        {
+            GetComponent<PlayerController>().RefreshEnemyAllBuff(TargetCardIndex);
+
+}
         Destroy(AttackerCard);
         ForMyCard = false;
         SecoundTargetCard = false;
@@ -763,6 +768,34 @@ public class CardProgress : MonoBehaviourPunCallbacks
             TargetInfo.SetInformation();
             GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage);
         }
+        if(TargetInfo.CardName == "Spartan Hoplite")
+        {
+            GameObject[] allTargets = GameObject.FindGameObjectsWithTag("CompetitorCard");
+
+            foreach (GameObject target in allTargets)
+            {
+                if (target != TargetCard)
+                {
+                    float distance = Vector3.Distance(TargetCard.transform.position, target.transform.position);
+                    if (distance <= 1f)
+                    {
+                        Vector3 directionToTarget = (target.transform.position - TargetCard.transform.position).normalized;
+
+                        float dotProductRight = Vector3.Dot(TargetCard.transform.right, directionToTarget);
+                        float dotProductLeft = Vector3.Dot(-TargetCard.transform.right, directionToTarget);
+
+                        if (dotProductRight > 0.5f || dotProductLeft > 0.5f)
+                        {
+                            Debug.Log("Nearobject" + " " + target.GetComponent<CardInformation>().CardName);
+                            target.GetComponent<CardInformation>().CardDamage++;
+                            int NearbyCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, target.transform.parent.gameObject);
+
+                            GetComponent<PlayerController>().RefreshUsedCard(NearbyCardIndex, target.GetComponent<CardInformation>().CardHealth, target.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
+                        }
+                    }
+                }
+            }
+        }
 
         if (TargetInfo.CardName == "Nemean Lion")
         {
@@ -844,6 +877,7 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
             
         }
+
 
         if (TargetCard.name == "CompetitorHeoCard(Clone)")
         {

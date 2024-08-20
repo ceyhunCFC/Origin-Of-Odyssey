@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject CardPrefabSolo; // Tek kart
     public GameObject CardPrefabInGame;
+    GameObject NextCard;
     
    
     string OwnName = "";
@@ -90,17 +91,20 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public int AugmentCount = 0;
     [HideInInspector] public bool CanAttackMainCard = true;
     [HideInInspector] public int DoubleDamage = 1;
-    [HideInInspector] public bool EchoofTomorrow = false;
     [HideInInspector] public bool NaiadProtector = false;     //true ise büyü kullandığında +1 sağlık kazanıyoruz
     [HideInInspector] public bool PlayedSpell = false;          //bu tur büyü oynandımı diye kontrol
     [HideInInspector] public bool PlagueCarrierBool = false;    //ikinci sefer çalışması için
+    [HideInInspector] public int LessSpellCost = 0;             //büyülerin mana değerini 1 azaltıyor
+    [HideInInspector] public bool MerfolkScoutBool = false;     //bir karta bakıyor daha sonra onu çekiyor
 
     [HideInInspector] public List<string> DeadMyCardName = null;
+    [HideInInspector] public List<GameObject> UsedSpellCard = null;
 
     void Start()
     {
         //_CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
         DeadMyCardName = new List<string>();
+        UsedSpellCard = new List<GameObject>();
         PV = GetComponent<PhotonView>();
         _GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _CardProgress = GetComponent<CardProgress>();
@@ -403,6 +407,13 @@ public class PlayerController : MonoBehaviour
                 selectedCard.transform.localEulerAngles = new Vector3(45f, 0f, 180);
 
                 Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
+
+                if(selectedCard.GetComponent<CardInformation>().CardHealth == "")     //spell demek
+                {
+                    Mana += LessSpellCost;
+                    if(Mana > 10 )
+                        Mana= 10;
+                }
                 
                 //////////////////////////////////// DESTEDEN BİR KART MASYA EKLENDİĞİ ZAMAN ///////////////////////////////
                 
@@ -1040,7 +1051,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Echo of Tomorrow")
                 {
-                    StandartCardFuns.EchoofTomorrowFun(this);
+                    EchoOfTomorrow();
                 }      
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Templar Knight")
                 {
@@ -1169,6 +1180,26 @@ public class PlayerController : MonoBehaviour
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Toxic Rainmaker")
                 {
                     StandartCardFuns.ToxicRainmakerFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Desert Warlock")
+                {
+                      StandartCardFuns.DesertWarlockFun(this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Merfolk Scout")
+                {
+                    MerfolkScout();
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Street Thug")
+                {
+                    StandartCardFuns.StreetThugFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Ancient Librarian")
+                {
+                    StandartCardFuns.AncientLibrarianFun(selectedCard, this);
+                }
+                else if(selectedCard.GetComponent<CardInformation>().CardName == "Apprentice Sorcerer")
+                {
+                    StandartCardFuns.ApprenticeSorcererFun(this);
                 }
 
 
@@ -1369,7 +1400,6 @@ public class PlayerController : MonoBehaviour
         float time = 0f;
 
         Vector3 targetPlus = targetPosition + new Vector3(0f, 0.4f, 0.8f);
-
         while (time < duration)
         {
             card.transform.position = Vector3.Lerp(startPosition, targetPlus, time / duration);
@@ -2063,7 +2093,28 @@ public class PlayerController : MonoBehaviour
                     randomCard.GetComponent<CardInformation>().FirstDamageTaken,
                     randomCard.GetComponent<CardInformation>().EternalShield);
             }
-            if(card.GetComponent<CardInformation>().PlagueCarrier && PlagueCarrierBool)
+            if (card.GetComponent<CardInformation>().CardName == "Chronomancer Cleopatra")
+            {
+                if (UsedSpellCard.Count != 0)
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        System.Random random = new System.Random();
+                        int randomIndex = random.Next(UsedSpellCard.Count); 
+                        GameObject selectedSpellCard = UsedSpellCard[randomIndex];
+
+                        GameObject CardCurrent = Instantiate(selectedSpellCard, GameObject.Find("Deck").transform);
+                        CardCurrent.tag = "Card";
+
+                        float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                        CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+                        DeckCardCount++;
+                    }
+                }
+            }
+
+            if (card.GetComponent<CardInformation>().PlagueCarrier && PlagueCarrierBool)
             {
                 card.GetComponent<CardInformation>().PlagueCarrier = false;
                 PlagueCarrierBool = false;
@@ -2172,6 +2223,57 @@ public class PlayerController : MonoBehaviour
         _CardProgress.ForMyCard = false;
 
 
+    }
+
+    public void EchoOfTomorrow()
+    {
+        if (UsedSpellCard.Count > 0)
+        {
+            if (GameObject.Find("Deck").transform.childCount < 10)
+            {
+                // Son büyü kartını seçiyoruz
+                GameObject lastSpellCard = UsedSpellCard[UsedSpellCard.Count - 1];
+
+                // Kartı oluşturuyoruz
+                GameObject CardCurrent = Instantiate(lastSpellCard, GameObject.Find("Deck").transform);
+                CardCurrent.tag = "Card";
+                CardCurrent.GetComponent<CardInformation>().CardMana -= 3;
+                if(CardCurrent.GetComponent<CardInformation>().CardMana < 0)
+                {
+                    CardCurrent.GetComponent<CardInformation>().CardMana = 0;
+                }
+                CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+                float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+                DeckCardCount++;
+            }
+        }
+    }
+
+    public void MerfolkScout()
+    {
+        if (GameObject.Find("Deck").transform.childCount < 10)
+        {
+            Vector3[] positions = new Vector3[3];
+            float yPosition = 2.7f;
+            float zPosition = -2.7f;
+
+            Vector3 screenPos1 = new Vector3(0f, yPosition, zPosition);
+
+            positions[0] = screenPos1;
+
+            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+            GameObject CardCurrent = Instantiate(CardPrefabSolo, positions[0], rotation);
+            CardCurrent.AddComponent<Button>();
+            CreateCard(CardCurrent);
+            MerfolkScoutBool = true;
+            NextCard = CardCurrent;
+            CardCurrent.GetComponent<Button>().onClick.AddListener(() => Destroy(CardCurrent));
+        }
+        else
+            Debug.Log("Desten Dolu");
     }
 
     public void MarcoPolo()
@@ -2399,6 +2501,12 @@ public class PlayerController : MonoBehaviour
             {
                 Mana++;
                 ManaCountText.text = Mana + "/10".ToString();
+            }
+            if(DeadCard.GetComponent<CardInformation>().CardName == "Sand Elementals")
+            {
+                LessSpellCost -= 1;
+                if (LessSpellCost < 0)
+                    LessSpellCost = 0;
             }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
             DeadCardCount++;
@@ -2828,6 +2936,12 @@ public class PlayerController : MonoBehaviour
             Mana++;
             ManaCountText.text = Mana + "/10".ToString();
         }
+        if (DeadCard.GetComponent<CardInformation>().CardName == "Sand Elementals")
+        {
+            LessSpellCost -= 1;
+            if (LessSpellCost < 0)
+                LessSpellCost = 0;
+        }
         Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
 
     }
@@ -2960,6 +3074,45 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
         }
+    }
+
+    public void RefreshEnemyAllBuff(int boxindex)
+    {
+        CardInformation card = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>();
+        card.HaveShield = false;
+        card.DivineSelected = false;
+        card.GerDefense = false;
+        card.MongolFury = false;
+        card.EternalShield = false;
+        card.Gallop = false;
+        card.Invulnerable = false;
+        card.SunDiskRadiance = false;
+        card.ArtisticInspiration = false;
+        card.Behemot = false;
+        card.MutatedBlood = false;
+        card.PlagueCarrier = false;
+        card.ToxicRainmaker = false;
+        card.ChargeBrokandSindri = 0;
+    }
+
+    [PunRPC]
+    public void RPC_RefreshEnemyAllBuff(int boxindex)
+    {
+        CardInformation card = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>();
+        card.HaveShield = false;
+        card.DivineSelected = false;
+        card.GerDefense = false;
+        card.MongolFury = false;
+        card.EternalShield = false;
+        card.Gallop = false;
+        card.Invulnerable = false;
+        card.SunDiskRadiance = false;
+        card.ArtisticInspiration = false;
+        card.Behemot = false;
+        card.MutatedBlood = false;
+        card.PlagueCarrier = false;
+        card.ToxicRainmaker = false;
+        card.ChargeBrokandSindri = 0;
     }
 
     public void RefreshMyCard(int boxindex, string heatlh,bool haveshield,int damage,bool divineselected,bool firstdamage,bool firstdamagetaken,bool eternalshield)
@@ -3688,15 +3841,29 @@ public class PlayerController : MonoBehaviour
             }
             else // DIĞER TURLAR
             {
-
+                
                 if(GameObject.Find("Deck").transform.childCount<10)
                 {
-                    GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
-                    CardCurrent.tag = "Card";
-                    float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
-                    CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
-                    CreateCard(CardCurrent);
-                    DeckCardCount++;
+                    if (MerfolkScoutBool && NextCard!=null)
+                    {
+                        GameObject CardCurrent = Instantiate(NextCard, GameObject.Find("Deck").transform);
+                        CardCurrent.tag = "Card";
+                        float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                        CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                        DeckCardCount++;
+                        NextCard = null;
+                        MerfolkScoutBool = false;
+                    }
+                    else
+                    {
+                        GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                        CardCurrent.tag = "Card";
+                        float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                        CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                        CreateCard(CardCurrent);
+                        DeckCardCount++;
+                    }
+                    
                 }
                 
                 StackDeck();
@@ -3957,7 +4124,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void UsedSpell()
+    public void UsedSpell(GameObject SpellCard)
     {
         if (!PV.IsMine)
             return;
@@ -4028,6 +4195,8 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<CardController>().AddHealCard(1, !PV.Owner.IsMasterClient);
         }
+
+        UsedSpellCard.Add(SpellCard);
 
         PlayedSpell = true;
     }
@@ -4116,7 +4285,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    void CreateSpell(GameObject CardCurrent)
+    public void CreateSpell(GameObject CardCurrent)
     {
         List<Spell> spells = null;
         if (OwnMainCard == "Zeus")

@@ -171,11 +171,11 @@ public class AnubisCardFuns
             }
         }
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
         
     }
@@ -235,11 +235,11 @@ public class AnubisCardFuns
         }
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
     public static void SandstoneScribeFun(GameObject CardCurrent, PlayerController PC)
@@ -283,11 +283,11 @@ public class AnubisCardFuns
 
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -310,10 +310,10 @@ public class AnubisCardFuns
         }
         DamageToAlLOtherMinionsForLocust(PC);
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -344,12 +344,12 @@ public class AnubisCardFuns
 
         if (usedCards.Count == 0)
         {
+            PC.UsedSpell(selectedCard);
             Debug.LogWarning("No used cards found.");
             selectedCard.SetActive(false);
             selectedCard = null;
             PC.lastHoveredCard = null;
 
-            PC.UsedSpell();
             Debug.LogError("USSEEDD A SPEEELLL");
             return;
         }
@@ -377,11 +377,11 @@ public class AnubisCardFuns
         }
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -408,11 +408,11 @@ public class AnubisCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -437,11 +437,11 @@ public class AnubisCardFuns
         PC._CardProgress.SetAttackerCard(index);
         PC._CardProgress.AttackerCard = selectedCard;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
     public static void GatesofDuatFun(GameObject selectedCard, PlayerController PC)
@@ -462,11 +462,11 @@ public class AnubisCardFuns
         }
         PC.GatesofDuat();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 

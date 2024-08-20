@@ -98,6 +98,7 @@ MonoBehaviour:
   - RPC_SetActiveCard
   - RPC_RefreshMaxDamage
   - RPC_ShuffleCells
+  - RPC_RefreshEnemyAllBuff
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

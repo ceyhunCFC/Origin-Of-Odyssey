@@ -221,11 +221,11 @@ public class GenghisCardFun
         }
         PC._CardProgress.HorsebackArchery();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -251,7 +251,7 @@ public class GenghisCardFun
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
-        PC.UsedSpell();
+        PC.UsedSpell(selectedCard);
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -276,11 +276,11 @@ public class GenghisCardFun
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.MongolFury();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -306,11 +306,11 @@ public class GenghisCardFun
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.AroundtheGreatWall();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -337,11 +337,11 @@ public class GenghisCardFun
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -364,11 +364,11 @@ public class GenghisCardFun
         PC.GodsBaneUsed = true;
         PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("GodsBane", RpcTarget.All, 2);          //rakibin kartýnýn manasýný 2 arttýrýr
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -391,11 +391,11 @@ public class GenghisCardFun
         PC.SteppeAmbush = true;
         PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_SteppeAmbush", RpcTarget.Others, PC.SteppeAmbush);
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -418,11 +418,11 @@ public class GenghisCardFun
         PC.NomadicTactics = true;
         PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_NomadicTactics", RpcTarget.Others, PC.NomadicTactics);
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 

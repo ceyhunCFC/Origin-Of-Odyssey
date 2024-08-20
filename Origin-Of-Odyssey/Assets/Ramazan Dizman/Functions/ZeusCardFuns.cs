@@ -38,13 +38,13 @@ public class ZeusCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
 
 
-        selectedCard.SetActive(false);
+        PC.UsedSpell(selectedCard);
 
+        selectedCard.SetActive(false);
         
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     
                    // GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
@@ -169,11 +169,11 @@ public class ZeusCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.LightningStorm();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -201,10 +201,10 @@ public class ZeusCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -231,11 +231,11 @@ public class ZeusCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -262,11 +262,11 @@ public class ZeusCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -288,11 +288,11 @@ public class ZeusCardFuns
         }
         PC.LabyrinthMaze();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
     public static void DivineAscentionFun(GameObject selectedCard, PlayerController PC)
@@ -318,11 +318,11 @@ public class ZeusCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 

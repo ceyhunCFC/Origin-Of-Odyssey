@@ -283,11 +283,11 @@ public class OdinCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.EnemyAllCard();
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -353,12 +353,12 @@ public class OdinCardFuns
                 break;
             }
         }
-
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
+        
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -385,12 +385,12 @@ public class OdinCardFuns
         PC._CardProgress.SetAttackerCard(index);
         PC._CardProgress.AttackerCard = selectedCard;
         PC._CardProgress.ForMyCard = true;
-
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
+        
         Debug.LogError("USSEEDD A SPEEELLL");
     }
     public static void GjallarhornCallFun(GameObject selectedCard, PlayerController PC)
@@ -467,12 +467,12 @@ public class OdinCardFuns
         {
             PC.CreateSpecialCard("Einherjar Champion", "5", 5, 0, index, true);
         }
-
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
+        
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -507,12 +507,12 @@ public class OdinCardFuns
             PC.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
         }
         PC.RuneMagic();
-
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
+        
         Debug.LogError("USSEEDD A SPEEELLL");
         
     }
@@ -580,12 +580,12 @@ public class OdinCardFuns
         }
 
         
-
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
+        
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -615,12 +615,12 @@ public class OdinCardFuns
 
         PC.CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
 
-
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
+        
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 

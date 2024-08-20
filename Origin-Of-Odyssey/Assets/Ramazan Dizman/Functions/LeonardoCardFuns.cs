@@ -174,11 +174,11 @@ public class LeonardoCardFuns
         }
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -211,11 +211,11 @@ public class LeonardoCardFuns
         }
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
     public static void ArtisticInspirationFun(GameObject selectedCard, PlayerController PC)
@@ -243,11 +243,11 @@ public class LeonardoCardFuns
         PC._CardProgress.ForMyCard = true;
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -271,11 +271,11 @@ public class LeonardoCardFuns
 
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -304,11 +304,11 @@ public class LeonardoCardFuns
         PC._CardProgress.ForMyCard = true;
 
 
+        PC.UsedSpell(selectedCard);
         selectedCard.SetActive(false);
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
@@ -335,13 +335,13 @@ public class LeonardoCardFuns
         PC._CardProgress.AttackerCard = selectedCard;
 
 
+
+        PC.UsedSpell(selectedCard);
+
         selectedCard.SetActive(false);
-
-
         selectedCard = null;
         PC.lastHoveredCard = null;
 
-        PC.UsedSpell();
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
