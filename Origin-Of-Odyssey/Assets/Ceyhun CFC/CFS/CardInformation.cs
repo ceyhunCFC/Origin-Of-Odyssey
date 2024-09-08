@@ -12,6 +12,7 @@ public class CardInformation : MonoBehaviour
     public int CardMana;
     public string MaxHealth;
     public int MaxAttack;
+    public int MaxMana;
    // public Sprite CardVisual;
     public bool CardFreeze=false;
     public bool isItFirstRaound = true;
@@ -74,6 +75,7 @@ public class CardInformation : MonoBehaviour
     {
         MaxHealth = CardHealth;
         MaxAttack = CardDamage;
+        MaxMana = CardMana;
     }
 
 }

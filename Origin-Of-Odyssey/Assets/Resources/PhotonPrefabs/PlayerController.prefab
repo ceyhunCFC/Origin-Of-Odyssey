@@ -1898,11 +1898,13 @@ MonoBehaviour:
   AugmentCount: 0
   CanAttackMainCard: 1
   DoubleDamage: 1
-  EchoofTomorrow: 0
   NaiadProtector: 0
   PlayedSpell: 0
   PlagueCarrierBool: 0
+  LessSpellCost: 0
+  MerfolkScoutBool: 0
   DeadMyCardName: []
+  UsedSpellCard: []
   HeroAnimator: {fileID: 2961789529435728672}
 --- !u!114 &6638573949623686288
 MonoBehaviour:

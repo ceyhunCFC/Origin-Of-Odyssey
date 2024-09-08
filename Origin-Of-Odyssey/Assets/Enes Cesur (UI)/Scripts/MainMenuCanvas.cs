@@ -8,6 +8,8 @@ public class MainMenuCanvas : MonoBehaviour
 {
     public GameObject playPanel;
     public GameObject mainCardsCanvas;
+    public GameObject settingsCanvas;
+    public GameObject profileCanvas;
 
     void Start()
     {
@@ -21,6 +23,26 @@ public class MainMenuCanvas : MonoBehaviour
     public void CloseCardsCanvas()
     {
         mainCardsCanvas.SetActive(false);
+    }
+
+    public void OpenSettingsCanvas()
+    {
+        settingsCanvas.SetActive(true);
+    }
+
+    public void CloseSettingsCanvas()
+    {
+        settingsCanvas.SetActive(false);
+    }
+
+    public void OpenProfileCanvas()
+    {
+        profileCanvas.SetActive(true);
+    }
+
+    public void CloseProfileCanvas()
+    {
+        profileCanvas?.SetActive(false);
     }
 
     public void OpenRoomPanel()

@@ -101,10 +101,7 @@ public class CardCtrl : MonoBehaviour
     
     public void AddCardSet(string cardSetName)
     {
-        ClearCards();
-        GridLayoutGroup gridLayout = parentTransform.GetComponent<GridLayoutGroup>();
-        gridLayout.spacing = new Vector2(10, 10);
-
+        ClearCards();              
         if (cardSets.ContainsKey(cardSetName))
         {
             List<Minion> minions = cardSets[cardSetName];
@@ -151,8 +148,6 @@ public class CardCtrl : MonoBehaviour
         StandartCards standartcart = new StandartCards();
 
 
-        GridLayoutGroup gridLayout = parentTransform.GetComponent<GridLayoutGroup>();
-        gridLayout.spacing = new Vector2(10, 10);
 
         foreach (StandartCard card in standartcart.standartcards)
 

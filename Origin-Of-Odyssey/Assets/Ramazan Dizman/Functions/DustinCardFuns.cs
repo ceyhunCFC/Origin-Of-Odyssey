@@ -412,6 +412,11 @@ public class DustinCardFuns
         Debug.LogError("USSEEDD A SPEEELLL");
     }
 
+    public static void MutantSwarmFun(GameObject selectedCard,PlayerController PC)
+    {
+
+    }
+
     public static void CanFirstRauntAttack(GameObject selectedCard)
     {
         selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
