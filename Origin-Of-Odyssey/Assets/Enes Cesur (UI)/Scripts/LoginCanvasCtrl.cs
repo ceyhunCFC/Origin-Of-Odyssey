@@ -15,9 +15,19 @@ public class CanvasCtrl : MonoBehaviour
 
     void Start()
     {
-        loginPage.SetActive(true);
+       // loginPage.SetActive(true);
+        StartCoroutine(Intro());
+      
+    }
+
+    IEnumerator Intro()
+    {
+        loginPage.SetActive(false);
         signUpPage.SetActive(false);
         darkPanel.SetActive(false);
+        yield return new WaitForSeconds(2);
+        loginPage.SetActive(true);
+       
     }
 
     public void OpenSignUpPage()

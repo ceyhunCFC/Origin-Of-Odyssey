@@ -83,7 +83,7 @@ public class SecurityCheck : MonoBehaviour
         else
         {
             robotToggle.isOn = false;
-            alignmentText.text = "Invalid CAPTCHA Format";
+            alignmentText.text = "The arrow is not in the right direction!";
             alignmentText.color = Color.red;
 
         }
