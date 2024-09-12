@@ -58,12 +58,15 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        if (string.IsNullOrEmpty(roomNameInputField.text))
-        {
-            return;
-        }
 
-        PhotonNetwork.CreateRoom(roomNameInputField.text);
+        /* if (string.IsNullOrEmpty(roomNameInputField.text))
+         {
+             return;
+         }
+
+         PhotonNetwork.CreateRoom(roomNameInputField.text);*/
+
+        PhotonNetwork.JoinRandomOrCreateRoom();
         MenuManager.Instance.OpenMenu("loading");
     }
 
