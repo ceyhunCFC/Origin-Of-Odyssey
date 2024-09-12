@@ -37,7 +37,7 @@ public class AuthManager : MonoBehaviour
             AccountLogin();
         }
 
-       LoginAccount("test1@test.com", "test1@test.com");
+     //  LoginAccount("test1@test.com", "test1@test.com");
 
     }
 

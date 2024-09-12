@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CompetitorCardSize : MonoBehaviour
 {
-    public RectTransform Arrow;
     
     // Update is called once per frame
     void Update()

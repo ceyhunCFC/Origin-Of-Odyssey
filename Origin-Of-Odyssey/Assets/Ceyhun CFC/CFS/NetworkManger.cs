@@ -19,6 +19,9 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerListItemPrefab;
     [SerializeField] GameObject startGameButton;
 
+    [SerializeField] GameObject CompetitorCard;
+    [SerializeField] GameObject CompetitorSlot;
+
     string PlayerDeckTotal = "";
 
     private ExitGames.Client.Photon.Hashtable _myCustomPlayer = new ExitGames.Client.Photon.Hashtable();
@@ -86,10 +89,32 @@ public class NetworkManger : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Count(); i++)
         {
             Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
+
+           
+           
         }
 
 
        
+
+
+
+        if (players.Count() == 2)
+        {
+
+            CompetitorSlot.GetComponent<Animator>().SetBool("Stop", true);
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[1]);
+            }
+            else
+            {
+                CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[0]);
+            }
+        }
+
+
 
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
@@ -111,8 +136,6 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     public void StartGame()
     {
             PhotonNetwork.LoadLevel("BattleMap");
-        
-       
     }
 
     public void LeaveRoom()
@@ -125,6 +148,7 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenMenu("loading");
+
     }
 
     public override void OnLeftRoom()
@@ -154,7 +178,24 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
         if (players.Count() == 2)
         {
-            StartGame();
+            StartCoroutine(StartMatch());
+
+            CompetitorSlot.GetComponent<Animator>().SetBool("Stop", true);
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[1]);
+            }
+            else
+            {
+                CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[0]);
+            }
         }
+    }
+
+    IEnumerator StartMatch()
+    {
+        yield return new WaitForSeconds(8);
+        StartGame();
     }
 }

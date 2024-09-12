@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8194597738965123181}
   - component: {fileID: 1766936294531061}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Name_Txt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Competitor Name
+  m_Text: 
 --- !u!1 &7304702972802529910
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 4089999146998244393}
   - component: {fileID: 4626483604194305268}
   - component: {fileID: 7809966096138092938}
+  - component: {fileID: 4980680261540914971}
   m_Layer: 5
   m_Name: CompetitorCard
   m_TagString: Untagged
@@ -168,3 +169,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90d48dc007264b9491b17a1377315fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4980680261540914971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304702972802529910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83fda538e60344e50840cfb1bdfc0e45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1766936294531061}
