@@ -10,14 +10,14 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 {
     public static NetworkManger Instance;
 
-    [SerializeField] InputField roomNameInputField;
+    /*[SerializeField] InputField roomNameInputField;
     [SerializeField] Text ErrorText;
     [SerializeField] Text RoomNameText;
     [SerializeField] Transform roomListContent;
     [SerializeField] Transform PlayerListContent;
     [SerializeField] GameObject roomListItemPrefab;
     [SerializeField] GameObject PlayerListItemPrefab;
-    [SerializeField] GameObject startGameButton;
+    [SerializeField] GameObject startGameButton;*/
 
     [SerializeField] GameObject CompetitorCard;
     [SerializeField] GameObject CompetitorSlot;
@@ -77,11 +77,11 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     {
        
         MenuManager.Instance.OpenMenu("room");
-        RoomNameText.text = PhotonNetwork.CurrentRoom.Name;
+      //  RoomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
         Player[] players = PhotonNetwork.PlayerList;
 
-        foreach (Transform child in PlayerListContent)
+      /*  foreach (Transform child in PlayerListContent)
         {
             Destroy(child.gameObject);
         }
@@ -92,7 +92,7 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
            
            
-        }
+        }*/
 
 
        
@@ -116,20 +116,20 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
 
 
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+       // startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
+   /* public override void OnMasterClientSwitched(Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
 
         
-    }
+    }*/
 
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        ErrorText.text = "Room Creation Failed: " + message;
+       // ErrorText.text = "Room Creation Failed: " + message;
         MenuManager.Instance.OpenMenu("error");
     }
 
@@ -156,7 +156,7 @@ public class NetworkManger : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("title");
     }
 
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+   /* public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         foreach (Transform trans in roomListContent)
         {
@@ -169,11 +169,11 @@ public class NetworkManger : MonoBehaviourPunCallbacks
                 continue;
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
         }
-    }
+    }*/
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+       // Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
         Player[] players = PhotonNetwork.PlayerList;
 
         if (players.Count() == 2)

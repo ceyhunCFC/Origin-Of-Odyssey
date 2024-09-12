@@ -5836,14 +5836,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73adda8d995d4e76aef2a870ee976d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomNameInputField: {fileID: 1299066411}
-  ErrorText: {fileID: 1513603435}
-  RoomNameText: {fileID: 1638160963}
-  roomListContent: {fileID: 1570661191}
-  PlayerListContent: {fileID: 267207921}
-  roomListItemPrefab: {fileID: 8679206214366298768, guid: 58ee11864c9724569914fd26eef88540, type: 3}
-  PlayerListItemPrefab: {fileID: 6015881597385224987, guid: b42a3db3329534cff96e4f3d3bab847f, type: 3}
-  startGameButton: {fileID: 130979173}
   CompetitorCard: {fileID: 524893802}
   CompetitorSlot: {fileID: 703038819}
 --- !u!4 &1644608867
