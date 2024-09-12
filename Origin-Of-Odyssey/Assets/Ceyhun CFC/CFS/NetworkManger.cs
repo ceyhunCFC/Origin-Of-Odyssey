@@ -88,12 +88,17 @@ public class NetworkManger : MonoBehaviourPunCallbacks
             Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
         }
 
+
+       
+
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+
+        
     }
 
 
@@ -145,5 +150,11 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+        Player[] players = PhotonNetwork.PlayerList;
+
+        if (players.Count() == 2)
+        {
+            StartGame();
+        }
     }
 }
