@@ -107,6 +107,81 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         CloseEnemyAllCard();
                     }
                 }
+                else if (hit.collider.gameObject.CompareTag("AreaBox"))
+                {
+                    if (hit.collider.gameObject.transform.childCount > 0)
+                    {
+                        Transform firstChild = hit.collider.gameObject.transform.GetChild(0);
+
+                        if (firstChild.tag == "CompetitorCard")
+                        {
+                            TargetCard = hit.collider.gameObject; // SEÇİLEN RAKİP KART BUDUR
+
+
+                            TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, hit.collider.gameObject.transform.parent.gameObject);
+                            if (TargetCardIndex < 7 && TargetCardIndex >= 0)
+                            {
+                                GameObject[] allTargets = GameObject.FindGameObjectsWithTag("CompetitorCard");
+
+                                foreach (GameObject target in allTargets)
+                                {
+                                    if (target != TargetCard)
+                                    {
+                                        float distance = Vector3.Distance(TargetCard.transform.position, target.transform.position);
+                                        if (distance <= 0.80f)
+                                        {
+                                            Vector3 directionToTarget = (target.transform.position - TargetCard.transform.position).normalized;
+
+                                            float dotProductForward = Vector3.Dot(TargetCard.transform.up, directionToTarget);
+
+                                            if (dotProductForward > 0.5f)
+                                            {
+                                                if (!AttackerCard.GetComponent<CardInformation>().CanAttackBehind)
+                                                {
+                                                    Debug.Log("Önünde kart var");
+
+                                                    Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "There's a card in front of it.";
+
+                                                    AttackerCard = null;
+                                                    TargetCard = null;
+                                                    TargetCardIndex = -1;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            FirstTargetCompotitorCard();
+                        }
+                        else if (firstChild.tag == "CompetitorHeroCard")
+                        {
+                            bool hasBackAreaCard = false;
+                            for (int i = 0; i < 14; i++)
+                            {
+                                Transform area = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].transform;
+
+                                if (area.childCount > 0)
+                                {
+                                    hasBackAreaCard = true;
+                                }
+                            }
+
+                            if (!hasBackAreaCard)
+                            {
+                                TargetCard = hit.collider.gameObject; // SEÇİLEN RAKİP KART BUDUR
+                                StandartDamage(AttackerCard, TargetCard); // BİZİM KARTIMIZ VE SEÇİLEN RAKİP HERO GÖNDERİLİR
+                            }
+                            else
+                            {
+                                Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "There are other cards ahead";
+                                Debug.Log("Arka alanda kart bulundu, işlem iptal edildi.");
+                                AttackerCard = null;
+                                CloseEnemyAllCard();
+                            }
+                        }
+                    }
+                }
             }
         }
         else if (Input.GetMouseButtonDown(0) && SecoundTargetCard == true)
@@ -139,6 +214,33 @@ public class CardProgress : MonoBehaviourPunCallbacks
                     Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Second Card Selected.";
                     SecondTargetUsedCard();
 
+                }
+                else if(hit.collider.gameObject.CompareTag("AreaBox"))
+                {
+                    if (hit.collider.gameObject.transform.childCount > 0)
+                    {
+                        Transform firstChild = hit.collider.gameObject.transform.GetChild(0);
+
+                        if (firstChild.tag == "CompetitorCard")
+                        {
+                            TargetCard = hit.collider.gameObject;
+                            TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, hit.collider.gameObject.transform.parent.gameObject);
+
+                            Debug.LogError("İKİNCİ KART SEÇİLDİ");
+
+                            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Second Card Selected.";
+                            SecondTargetCompotitorCard();
+                        }
+                        else if(firstChild.tag == "UsedCard")
+                        {
+                            TargetCard = hit.collider.gameObject;
+                            TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject);
+                            Debug.LogError("İKİNCİ KART SEÇİLDİ");
+
+                            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Second Card Selected.";
+                            SecondTargetUsedCard();
+                        }
+                    }
                 }
             }
         }

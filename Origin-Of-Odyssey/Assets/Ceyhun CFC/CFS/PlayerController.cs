@@ -6,6 +6,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.IO;
 using System;
+using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
 {
@@ -99,6 +100,10 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public List<string> DeadMyCardName = null;
     [HideInInspector] public List<GameObject> UsedSpellCard = null;
+
+    public GameObject vfxMovePrefab;   
+    public GameObject vfxLandingPrefab;
+    public GameObject vfxAttackPrefab;
 
     void Start()
     {
@@ -403,8 +408,6 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(MoveAndRotateCard(selectedCard, transformBox.position, 0.3f));
                 selectedCard.transform.SetParent(transformBox);
                 selectedCard.transform.localPosition = Vector3.zero;
-                selectedCard.transform.localScale = new Vector3(1, 1, 0.04f);
-                selectedCard.transform.localEulerAngles = new Vector3(45f, 0f, 180);
 
                 Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
 
@@ -414,7 +417,7 @@ public class PlayerController : MonoBehaviour
                     if(Mana > 10 )
                         Mana= 10;
                 }
-                
+
                 //////////////////////////////////// DESTEDEN BİR KART MASYA EKLENDİĞİ ZAMAN ///////////////////////////////
                 
                 if (selectedCard.GetComponent<CardInformation>().CardName == "Heracles") // MASAYA EKLENEN KART NEDİR
@@ -1394,11 +1397,26 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    IEnumerator MoveAndRotateCard(GameObject card, Vector3 targetPosition,  float duration)
+    IEnumerator MoveAndRotateCard(GameObject card, Vector3 targetPosition, float duration)
     {
         Vector3 startPosition = card.transform.position;
         float time = 0f;
 
+        // Kart yukarı ve ileri pozisyonda hareket ederken oynayacak VFX
+        GameObject vfxMoveInstance = null;
+        if (vfxMovePrefab != null)
+        {
+            vfxMoveInstance = Instantiate(vfxMovePrefab, card.transform.position, Quaternion.identity);
+            vfxMoveInstance.transform.SetParent(card.transform);
+            vfxMoveInstance.transform.localPosition = Vector3.zero;
+            VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
+            if (vfxMoveComponent != null)
+            {
+                vfxMoveComponent.Play();
+            }
+        }
+
+        // İlk hareket: Yukarı ve ileri doğru hareket
         Vector3 targetPlus = targetPosition + new Vector3(0f, 0.4f, 0.8f);
         while (time < duration)
         {
@@ -1406,16 +1424,49 @@ public class PlayerController : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
+
+        // İlk hareket bittiğinde biraz bekle
         yield return new WaitForSeconds(1.5f);
+
+        // Kartın inmesi sırasında olan VFX'i yok et
+        if (vfxMoveInstance != null)
+        {
+            Destroy(vfxMoveInstance);
+        }
+
+        // İkinci hareket: Kart hedef pozisyona doğru inerken
         time = 0f;
         while (time < duration)
         {
             card.transform.position = Vector3.Lerp(targetPlus, targetPosition, time / duration);
             time += Time.deltaTime;
             yield return null;
-        }             
+        }
 
+        // Kart tam olarak hedef pozisyona yerleştirildi
         card.transform.position = targetPosition;
+
+        // İniş tamamlandığında diğer VFX'i çalıştır
+        GameObject vfxLandingInstance = null;
+        if (vfxLandingPrefab != null)
+        {
+            vfxLandingInstance = Instantiate(vfxLandingPrefab, card.transform.position, Quaternion.identity);
+            vfxLandingInstance.transform.SetParent(card.transform);
+            vfxLandingInstance.transform.localPosition = Vector3.zero;
+            VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
+            if (vfxLandingComponent != null)
+            {
+                vfxLandingComponent.Play();
+            }
+        }
+
+        // Son VFX'i çalıştırdıktan 5 saniye sonra yok et
+        if (vfxLandingInstance != null)
+        {
+            yield return new WaitForSeconds(5f);
+            Destroy(vfxLandingInstance);
+        }
+
         selectedCard = null;
         StackDeck();
     }
@@ -1506,6 +1557,8 @@ public class PlayerController : MonoBehaviour
         GameObject CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform);
         CardCurrent.tag = "UsedCard";
 
+        CardCurrent.transform.localPosition = Vector3.zero;
+
         CardCurrent.GetComponent<CardInformation>().CardName = name;
         CardCurrent.GetComponent<CardInformation>().CardDes = des;
         CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
@@ -1527,9 +1580,7 @@ public class PlayerController : MonoBehaviour
             CardCurrent.tag = "CompetitorCard";
 
           //  CardCurrent.GetComponent<PhotonView>().ViewID = OwnDeck.Length;
-            CardCurrent.transform.localScale = new Vector3(1,1,0.04f);
             CardCurrent.transform.localPosition = Vector3.zero;
-            CardCurrent.transform.localEulerAngles = new Vector3(45,0,180);
             if(name == "Crypt Warden" || name == "Chaos Scarab" ||name== "Gyrocopter" || name == "Piscean Diver" || name == "Rebel Outcast" || name == "Urban Ranger" || name == "Shadow Assassin" || name == "Elven Tracker")
             {
                 CardCurrent.SetActive(false);
@@ -1542,8 +1593,9 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
+            StartCoroutine(MoveAndRotateCard(CardCurrent, CardCurrent.transform.position, 0.3f));
         }
-    }
+    } 
     public void SetActiveCard(int index)
     {
         CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_SetActiveCard", RpcTarget.All, index);
@@ -1703,13 +1755,16 @@ public class PlayerController : MonoBehaviour
         {
             targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[targetIndex].transform;
         }
-        
+        GameObject targetChildObject = targetTransform.GetChild(0).gameObject;
+        print(targetChildObject.GetComponent<CardInformation>().CardName);
+        GameObject AttackPrefab = Instantiate(vfxAttackPrefab, targetTransform);
+        Destroy(AttackPrefab, 5f);
 
         GameObject damageTextObject = Instantiate(DamageText);
         damageTextObject.transform.parent = targetTransform;
-        damageTextObject.transform.localPosition = new Vector3(0, 3, 0);
-        damageTextObject.transform.localRotation = Quaternion.Euler(5, 0, 0);
-        damageTextObject.transform.localScale = new Vector3(0.01f, 0.05f, 0.01f);
+        damageTextObject.transform.localPosition = new Vector3(0, 0.5f, 0);
+        damageTextObject.transform.localRotation = Quaternion.Euler(50, 0, 0);
+        damageTextObject.transform.localScale = new Vector3(0.005f, 0.01f, 0.01f);
         Text textComponent = damageTextObject.GetComponentInChildren<Text>();
         textComponent.text = "-" + damage.ToString();
         Destroy(damageTextObject, 3f);
@@ -1729,7 +1784,10 @@ public class PlayerController : MonoBehaviour
         {
             targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[targetIndex].transform;
         }
-
+        GameObject targetChildObject = targetTransform.GetChild(0).gameObject;
+        print(targetChildObject.GetComponent<CardInformation>().CardName);
+        GameObject AttackPrefab = Instantiate(vfxAttackPrefab, targetTransform);
+        Destroy(AttackPrefab, 5f);
 
         GameObject damageTextObject = Instantiate(DamageText);
         damageTextObject.transform.parent = targetTransform;
@@ -1772,8 +1830,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // Attacker ve Target objelerini bul ve resimlerini yükle
-        Transform attackerObject = logsObject.transform.Find("Attacker");
-        Transform targetObject = logsObject.transform.Find("Target");
+        Transform attackerObject = logsObject.transform.Find("AttackerImage/Attacker");
+        Transform targetObject = logsObject.transform.Find("TargetImage/Target");
 
         if (attackerObject != null)
         {
@@ -1848,8 +1906,8 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogWarning("Dead object not found in LogsPrefab.");
         }
-        Transform attackerObject = logsObject.transform.Find("Attacker");
-        Transform targetObject = logsObject.transform.Find("Target");
+        Transform attackerObject = logsObject.transform.Find("AttackerImage/Attacker");
+        Transform targetObject = logsObject.transform.Find("TargetImage/Target");
 
         if (attackerObject != null)
         {
@@ -4360,8 +4418,6 @@ public class PlayerController : MonoBehaviour
 
 
             CardCurrent.transform.localPosition = Vector3.zero;
-            CardCurrent.transform.localEulerAngles = new Vector3(45, 0, 180);
-            CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
             CardCurrent.GetComponent<CardInformation>().CardName = name;
             CardCurrent.GetComponent<CardInformation>().CardHealth = health;
             CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
@@ -4394,8 +4450,6 @@ public class PlayerController : MonoBehaviour
 
          
         CardCurrent.transform.localPosition = Vector3.zero;
-        CardCurrent.transform.localEulerAngles = new Vector3(45, 0, 180);
-        CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
         CardCurrent.GetComponent<CardInformation>().CardName = name;
         CardCurrent.GetComponent<CardInformation>().CardHealth = health;
         CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
@@ -4780,7 +4834,7 @@ public class PlayerController : MonoBehaviour
                 GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
             }
 
-            GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 2.7f, -3.81f);
+            GameObject.Find("Deck").transform.position = new Vector3(3.35f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.9f, -1.09f);
 
         }
         else if (GameObject.Find("Deck").transform.childCount < 10)
@@ -4797,7 +4851,7 @@ public class PlayerController : MonoBehaviour
 
             }
 
-            GameObject.Find("Deck").transform.position = new Vector3(0.3f - GameObject.Find("Deck").transform.childCount * 0.1f, 2.7f, -3.81f);
+            GameObject.Find("Deck").transform.position = new Vector3(3.02f - GameObject.Find("Deck").transform.childCount * 0.1f, 0.9f, -1.09f);
 
         }
         else
@@ -4814,7 +4868,7 @@ public class PlayerController : MonoBehaviour
 
             }
 
-            GameObject.Find("Deck").transform.position = new Vector3(0.05f - GameObject.Find("Deck").transform.childCount * 0.05f, 2.7f, -3.81f);
+            GameObject.Find("Deck").transform.position = new Vector3(2.80f - GameObject.Find("Deck").transform.childCount * 0.05f, 0.9f, -1.09f);
 
         }
     }
@@ -4829,7 +4883,7 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.95f, -0.86f);
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(3.3f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.26f, 1.54f);
 
     }
 

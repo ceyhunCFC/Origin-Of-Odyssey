@@ -8,7 +8,7 @@ public class CompetitorCardSize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(GameObject.Find("Arrow").transform.position.y - transform.position.y);
+        //print(GameObject.Find("Arrow").transform.position.y - transform.position.y);
 
         float value = 1 - (1 * (Mathf.Abs(GameObject.Find("Arrow").transform.position.y - transform.position.y)/5) / 100);
 
