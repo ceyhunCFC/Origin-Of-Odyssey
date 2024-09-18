@@ -6287,7 +6287,7 @@ MonoBehaviour:
   RegisterLastName: {fileID: 100007111}
   ResetPasswordEmail: {fileID: 401887489}
   loginInfo: {fileID: 2114409986}
-  registerInfo: {fileID: 0}
+  registerInfo: {fileID: 748682129}
   robotToggle: {fileID: 1221596598}
   robotToggle1: {fileID: 1692493348}
   userAgreementToggle: {fileID: 37288861}

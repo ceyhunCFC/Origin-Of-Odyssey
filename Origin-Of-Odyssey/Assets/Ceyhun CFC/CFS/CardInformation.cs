@@ -13,6 +13,7 @@ public class CardInformation : MonoBehaviour
     public string MaxHealth;
     public int MaxAttack;
     public int MaxMana;
+    public Rarity rarity;
    // public Sprite CardVisual;
     public bool CardFreeze=false;
     public bool isItFirstRaound = true;
@@ -44,6 +45,19 @@ public class CardInformation : MonoBehaviour
     public Text CardManaText;
     public Image CardVisualImage;
 
+    public Material Common;
+    public Material Rare;
+    public Material Legendary;
+    public Material Epic;
+
+
+    public enum Rarity
+    {
+        Common,
+        Rare,
+        Epic,
+        Legendary
+    }
 
     public void SetInformation()
     {
@@ -63,11 +77,9 @@ public class CardInformation : MonoBehaviour
         if (foundSprite == null)
         {
             Debug.LogWarning("Sprite not found: " + spriteName);
-
             foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
             return foundSprite;
         }
-
         return foundSprite;
     }
 
@@ -76,6 +88,31 @@ public class CardInformation : MonoBehaviour
         MaxHealth = CardHealth;
         MaxAttack = CardDamage;
         MaxMana = CardMana;
+    }
+
+    public void AssignMaterialByRarity()
+    {
+        Renderer cardRenderer = this.GetComponent<Renderer>();
+        print(rarity);
+        switch (rarity)
+        {
+            case Rarity.Common:
+                cardRenderer.material = Common;
+                break;
+            case Rarity.Rare:
+                cardRenderer.material = Rare;
+                break;
+            case Rarity.Epic:
+                cardRenderer.material = Epic;
+                break;
+            case Rarity.Legendary:
+                cardRenderer.material = Legendary;
+                break;
+            default:
+                Debug.LogWarning("Unknown rarity, default material will be used.");
+                cardRenderer.material = Common;
+                break;
+        }
     }
 
 }

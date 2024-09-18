@@ -3045,7 +3045,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: User Name
+  m_Text: 
 --- !u!222 &910603477
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6639,6 +6639,7 @@ MonoBehaviour:
   mainCardsCanvas: {fileID: 1654428636}
   settingsCanvas: {fileID: 1918206765}
   profileCanvas: {fileID: 975724227}
+  ProfileName: {fileID: 910603476}
 --- !u!114 &1549858938
 MonoBehaviour:
   m_ObjectHideFlags: 0

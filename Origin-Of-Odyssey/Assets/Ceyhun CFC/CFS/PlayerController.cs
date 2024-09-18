@@ -403,7 +403,7 @@ public class PlayerController : MonoBehaviour
 
                 Transform transformBox = hit.collider.gameObject.transform;
                 GameObject TemporaryObject = selectedCard;
-                selectedCard = CreateAreaCard(Boxindex, selectedCard.GetComponent<CardInformation>().CardName, selectedCard.GetComponent<CardInformation>().CardDes, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage, selectedCard.GetComponent<CardInformation>().CardMana);
+                selectedCard = CreateAreaCard(Boxindex, selectedCard.GetComponent<CardInformation>().CardName, selectedCard.GetComponent<CardInformation>().CardDes, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage, selectedCard.GetComponent<CardInformation>().CardMana,selectedCard.GetComponent<CardInformation>().rarity);
                 Destroy(TemporaryObject);
                 StartCoroutine(MoveAndRotateCard(selectedCard, transformBox.position, 0.3f));
                 selectedCard.transform.SetParent(transformBox);
@@ -419,6 +419,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 //////////////////////////////////// DESTEDEN BİR KART MASYA EKLENDİĞİ ZAMAN ///////////////////////////////
+                selectedCard.GetComponent<CardInformation>().AssignMaterialByRarity();
                 
                 if (selectedCard.GetComponent<CardInformation>().CardName == "Heracles") // MASAYA EKLENEN KART NEDİR
                 {
@@ -1238,7 +1239,8 @@ public class PlayerController : MonoBehaviour
                       selectedCard.GetComponent<CardInformation>().CardDes,
                      (int.Parse( selectedCard.GetComponent<CardInformation>().CardHealth) + (2 * DeadMonsterCound)).ToString(),
                       selectedCard.GetComponent<CardInformation>().CardDamage + (2 * DeadMonsterCound),
-                      selectedCard.GetComponent<CardInformation>().CardMana);
+                      selectedCard.GetComponent<CardInformation>().CardMana,
+                      selectedCard.GetComponent<CardInformation>().rarity);
                     }
                     else if(selectedCard.GetComponent<CardInformation>().CardName == "Tomb Protector")
                     {
@@ -1247,7 +1249,8 @@ public class PlayerController : MonoBehaviour
                      selectedCard.GetComponent<CardInformation>().CardDes,
                     (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + CheckUndeadCards()).ToString(),
                      selectedCard.GetComponent<CardInformation>().CardDamage,
-                     selectedCard.GetComponent<CardInformation>().CardMana);
+                     selectedCard.GetComponent<CardInformation>().CardMana,
+                     selectedCard.GetComponent<CardInformation>().rarity);
                     }
                     else
                     {
@@ -1256,7 +1259,8 @@ public class PlayerController : MonoBehaviour
                       selectedCard.GetComponent<CardInformation>().CardDes,
                       selectedCard.GetComponent<CardInformation>().CardHealth,
                       selectedCard.GetComponent<CardInformation>().CardDamage,
-                      selectedCard.GetComponent<CardInformation>().CardMana);
+                      selectedCard.GetComponent<CardInformation>().CardMana,
+                      selectedCard.GetComponent<CardInformation>().rarity);
                     }
 
 
@@ -1552,7 +1556,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public GameObject CreateAreaCard(int boxindex, string name, string des, string heatlh, int damage, int mana)
+    public GameObject CreateAreaCard(int boxindex, string name, string des, string heatlh, int damage, int mana, CardInformation.Rarity rarity)
     {
         GameObject CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform);
         CardCurrent.tag = "UsedCard";
@@ -1564,6 +1568,7 @@ public class PlayerController : MonoBehaviour
         CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
         CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
         CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+        CardCurrent.GetComponent<CardInformation>().rarity = rarity;
         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
         CardCurrent.GetComponent<CardInformation>().SetInformation();
 
@@ -1571,7 +1576,7 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    public void CreateUsedCard(int boxindex, string name, string des, string heatlh, int damage, int mana)
+    public void CreateUsedCard(int boxindex, string name, string des, string heatlh, int damage, int mana, CardInformation.Rarity rarity)
     {
 
         if (PV.IsMine)
@@ -1590,8 +1595,10 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().CardHealth = heatlh;
             CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
             CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+            CardCurrent.GetComponent<CardInformation>().rarity = rarity;
             CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
+            CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
 
             StartCoroutine(MoveAndRotateCard(CardCurrent, CardCurrent.transform.position, 0.3f));
         }
@@ -1805,7 +1812,7 @@ public class PlayerController : MonoBehaviour
         string colorString = ColorToString(color);
 
         // Damage text objesini bul ve değerini güncelle
-        Text logsDamageText = logsObject.transform.Find("Damage").GetComponent<Text>();
+        Text logsDamageText = logsObject.transform.Find("DamageImage/Damage").GetComponent<Text>();
         if(damage!=0)
         {
             logsDamageText.text = damage.ToString();
@@ -1817,10 +1824,9 @@ public class PlayerController : MonoBehaviour
         
 
         // Dead objesini bul ve gerekli işlemi yap
-        Transform deadObject = logsObject.transform.Find("Dead");
+        Transform deadObject = logsObject.transform.Find("TargetImage");
         if (deadObject != null && isdead)
         {
-            deadObject.gameObject.SetActive(true);
             Image deadImage = deadObject.GetComponent<Image>();
             deadImage.color = color;
         }
@@ -1885,9 +1891,9 @@ public class PlayerController : MonoBehaviour
     {
         GameObject logsObject = Instantiate(LogsPrefab, LogsContainerContent.transform);
         Color color= ColorFromString(colorString);
-        Text logsDamageText = logsObject.transform.Find("Damage").GetComponent<Text>();
+        Text logsDamageText = logsObject.transform.Find("DamageImage/Damage").GetComponent<Text>();
         logsDamageText.text = damage.ToString();
-        Transform deadObject = logsObject.transform.Find("Dead");
+        Transform deadObject = logsObject.transform.Find("TargetImage");
         if (damage != 0)
         {
             logsDamageText.text = damage.ToString();
@@ -1898,7 +1904,6 @@ public class PlayerController : MonoBehaviour
         }
         if (deadObject != null && isdead)
         {
-            deadObject.gameObject.SetActive(true);
             Image deadImage = deadObject.GetComponent<Image>();
             deadImage.color=color;
         }
@@ -4485,6 +4490,8 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = zeusCard.minions[targetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.minions[targetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)zeusCard.minions[targetIndex].rarity;
+                        print(CardCurrent.GetComponent<CardInformation>().rarity);
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4527,7 +4534,9 @@ public class PlayerController : MonoBehaviour
                           CardCurrent.GetComponent<CardInformation>().CardHealth = genghisCard.minions[GenghistargetIndex].health.ToString();
                           CardCurrent.GetComponent<CardInformation>().CardDamage = genghisCard.minions[GenghistargetIndex].attack;
                           CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.minions[GenghistargetIndex].mana;
-                          CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)genghisCard.minions[GenghistargetIndex].rarity;
+                        print(CardCurrent.GetComponent<CardInformation>().rarity);
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                           CardCurrent.GetComponent<CardInformation>().SetInformation();
                           break;
                       }
@@ -4567,6 +4576,8 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[OdintargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[OdintargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[OdintargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)odinCard.minions[OdintargetIndex].rarity;
+                        print(CardCurrent.GetComponent<CardInformation>().rarity);
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4615,6 +4626,8 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = anubisCard.minions[AnubistargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = anubisCard.minions[AnubistargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.minions[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)anubisCard.minions[AnubistargetIndex].rarity;
+                        print(CardCurrent.GetComponent<CardInformation>().rarity);
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4655,6 +4668,8 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = leonardoCard.minions[LeonardotargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = leonardoCard.minions[LeonardotargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.minions[LeonardotargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)leonardoCard.minions[LeonardotargetIndex].rarity;
+                        print(CardCurrent.GetComponent<CardInformation>().rarity);
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4695,6 +4710,8 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = dustinCard.minions[DustinTargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = dustinCard.minions[DustinTargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.minions[DustinTargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)dustinCard.minions[DustinTargetIndex].rarity;
+                        print(CardCurrent.GetComponent<CardInformation>().rarity);
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;

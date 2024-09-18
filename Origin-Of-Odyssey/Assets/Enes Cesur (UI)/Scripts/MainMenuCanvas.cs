@@ -10,11 +10,14 @@ public class MainMenuCanvas : MonoBehaviour
     public GameObject mainCardsCanvas;
     public GameObject settingsCanvas;
     public GameObject profileCanvas;
+    public Text ProfileName;
 
     void Start()
     {
         playPanel.SetActive(true);
         mainCardsCanvas.SetActive(false);
+        PlayerData user = new PlayerData();
+        ProfileName.text = user.userName;
     }
     public void OpenCardsCanvas()
     {

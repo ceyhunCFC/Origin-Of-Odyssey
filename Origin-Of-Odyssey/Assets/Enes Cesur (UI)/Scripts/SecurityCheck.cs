@@ -78,7 +78,6 @@ public class SecurityCheck : MonoBehaviour
             
             robotToggle.isOn = true;
             darkPanel.SetActive(false);
-            loginPage.SetActive(true);
         }
         else
         {
