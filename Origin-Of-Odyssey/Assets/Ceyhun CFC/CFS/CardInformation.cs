@@ -93,7 +93,6 @@ public class CardInformation : MonoBehaviour
     public void AssignMaterialByRarity()
     {
         Renderer cardRenderer = this.GetComponent<Renderer>();
-        print(rarity);
         switch (rarity)
         {
             case Rarity.Common:

@@ -1763,7 +1763,6 @@ public class PlayerController : MonoBehaviour
             targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[targetIndex].transform;
         }
         GameObject targetChildObject = targetTransform.GetChild(0).gameObject;
-        print(targetChildObject.GetComponent<CardInformation>().CardName);
         GameObject AttackPrefab = Instantiate(vfxAttackPrefab, targetTransform);
         Destroy(AttackPrefab, 5f);
 
@@ -1792,7 +1791,6 @@ public class PlayerController : MonoBehaviour
             targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[targetIndex].transform;
         }
         GameObject targetChildObject = targetTransform.GetChild(0).gameObject;
-        print(targetChildObject.GetComponent<CardInformation>().CardName);
         GameObject AttackPrefab = Instantiate(vfxAttackPrefab, targetTransform);
         Destroy(AttackPrefab, 5f);
 
@@ -2573,7 +2571,7 @@ public class PlayerController : MonoBehaviour
             }
             DeadMyCardName.Add(DeadCard.GetComponent<CardInformation>().CardName);
             DeadCardCount++;
-            Destroy(DeadCard);
+            Destroy(DeadCard,2f);
 
             CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_DeleteMyCard", RpcTarget.All, TargetCardIndex);
         }
@@ -2586,7 +2584,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         DeadCardCount++;
-        Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
+        Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject,2f);
     }
 
 
@@ -2597,7 +2595,7 @@ public class PlayerController : MonoBehaviour
            
 
             GameObject DeadCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject;
-            Destroy(DeadCard);
+            Destroy(DeadCard,2f);
             DeadCardCount++;
             string DeadCardName = DeadCard.GetComponent<CardInformation>().CardName;
 
@@ -3005,7 +3003,7 @@ public class PlayerController : MonoBehaviour
             if (LessSpellCost < 0)
                 LessSpellCost = 0;
         }
-        Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject);
+        Destroy(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[TargetCardIndex].transform.GetChild(0).transform.gameObject, 2f);
 
     }
 
@@ -4430,6 +4428,8 @@ public class PlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
+            StartCoroutine(MoveAndRotateCard(CardCurrent, CardCurrent.transform.position, 0.3f));
+
             CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateSpecialCard", RpcTarget.All, name,  health, damage, mana, index,front);
             return CardCurrent;
         }
@@ -4462,6 +4462,8 @@ public class PlayerController : MonoBehaviour
         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
         CardCurrent.GetComponent<CardInformation>().SetInformation();
 
+        StartCoroutine(MoveAndRotateCard(CardCurrent, CardCurrent.transform.position, 0.3f));
+
     }
 
     void CreateCard(GameObject CardCurrent)
@@ -4491,7 +4493,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.minions[targetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)zeusCard.minions[targetIndex].rarity;
-                        print(CardCurrent.GetComponent<CardInformation>().rarity);
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4535,7 +4537,7 @@ public class PlayerController : MonoBehaviour
                           CardCurrent.GetComponent<CardInformation>().CardDamage = genghisCard.minions[GenghistargetIndex].attack;
                           CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.minions[GenghistargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)genghisCard.minions[GenghistargetIndex].rarity;
-                        print(CardCurrent.GetComponent<CardInformation>().rarity);
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                           CardCurrent.GetComponent<CardInformation>().SetInformation();
                           break;
@@ -4577,7 +4579,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[OdintargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[OdintargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)odinCard.minions[OdintargetIndex].rarity;
-                        print(CardCurrent.GetComponent<CardInformation>().rarity);
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4627,7 +4629,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardDamage = anubisCard.minions[AnubistargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.minions[AnubistargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)anubisCard.minions[AnubistargetIndex].rarity;
-                        print(CardCurrent.GetComponent<CardInformation>().rarity);
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4669,7 +4671,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardDamage = leonardoCard.minions[LeonardotargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.minions[LeonardotargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)leonardoCard.minions[LeonardotargetIndex].rarity;
-                        print(CardCurrent.GetComponent<CardInformation>().rarity);
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4711,7 +4713,7 @@ public class PlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardDamage = dustinCard.minions[DustinTargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.minions[DustinTargetIndex].mana;
                         CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)dustinCard.minions[DustinTargetIndex].rarity;
-                        print(CardCurrent.GetComponent<CardInformation>().rarity);
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4754,6 +4756,8 @@ public class PlayerController : MonoBehaviour
                 CardCurrent.GetComponent<CardInformation>().CardHealth = standartCard.standartcards[StandartCardTargetIndex].health.ToString();
                 CardCurrent.GetComponent<CardInformation>().CardDamage = standartCard.standartcards[StandartCardTargetIndex].attack;
                 CardCurrent.GetComponent<CardInformation>().CardMana = standartCard.standartcards[StandartCardTargetIndex].mana;
+                CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)standartCard.standartcards[StandartCardTargetIndex].rarity;
+                CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                 CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                 CardCurrent.GetComponent<CardInformation>().SetInformation();
                 break;
@@ -4834,61 +4838,62 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
 
 
     public void StackDeck()
     {
         DraugrWarrior();
         GjallarhornCall();
+        float yOffset = 0f; // Başlangıç z pozisyonu
+
         if (GameObject.Find("Deck").transform.childCount < 6)
         {
-
             for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
             {
                 float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
+
+                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
 
             GameObject.Find("Deck").transform.position = new Vector3(3.35f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.9f, -1.09f);
-
         }
         else if (GameObject.Find("Deck").transform.childCount < 10)
         {
+            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
 
             for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
             {
                 float xPos = i * 0.4f - 0.4f; // Kartın X konumunu belirliyoruz
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
                 GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8931351f, 351.836639f, 174.237427f);
 
-
-
+                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
 
             GameObject.Find("Deck").transform.position = new Vector3(3.02f - GameObject.Find("Deck").transform.childCount * 0.1f, 0.9f, -1.09f);
-
         }
         else
         {
+            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
 
             for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
             {
                 float xPos = i * 0.3f - 0.3f; // Kartın X konumunu belirliyoruz
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
                 GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8471832f, 350.247925f, 173.120972f);
 
-
-
+                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
 
             GameObject.Find("Deck").transform.position = new Vector3(2.80f - GameObject.Find("Deck").transform.childCount * 0.05f, 0.9f, -1.09f);
-
         }
     }
+
 
     public void StackCompetitorDeck()
     {
