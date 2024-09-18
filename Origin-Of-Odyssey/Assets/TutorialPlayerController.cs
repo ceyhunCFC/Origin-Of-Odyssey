@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -65,15 +66,31 @@ public class TutorialPlayerController : MonoBehaviour
     public bool SteppeAmbush = false;
     public bool NomadicTactics = false;
     public int NomadsLand = 0;
-
+    public int DoubleDamage = 1;
     int FirstHealthCount=0;
-
     public GameObject CardPrefabSolo,CardPrefabInGame; 
 
     float TurnCount = 1;
 
     TutorialCardProgress _TutorialCardProgress;
 
+    [HideInInspector] public int AsgardQuestion = 0;
+    [HideInInspector] public bool NaiadProtector = false;
+    [HideInInspector] public List<GameObject> UsedSpellCard = null;
+    [HideInInspector] public bool PlayedSpell = false;
+    [HideInInspector] public int LessSpellCost = 0;
+    [HideInInspector] public bool MerfolkScoutBool = false;
+    [HideInInspector] public List<string> DeadMyCardName = null;
+
+    public GameObject healthTextObject;
+    public GameObject attackTextObject;
+    public GameObject drawCardTextObject;
+    public GameObject Freeze;
+    public GameObject Mummies;
+    public GameObject TakeGun;
+    public GameObject Minion;
+    public GameObject Spell;
+    GameObject NextCard;
     void Awake()
     {
         _TutorialCardProgress = GetComponent<TutorialCardProgress>();
@@ -587,11 +604,13 @@ public class TutorialPlayerController : MonoBehaviour
     }
 
 
-     public void CreateSpecialCard(string name, string health, int damage,int mana,int index,bool front)
+     
+    public GameObject CreateSpecialCard(string name, string health, int damage, int mana, int index, bool front)
     {
-        
+        if (true)
+        {
             GameObject CardCurrent;
-            if(front)
+            if (front)
             {
                 CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[index].transform);
                 CardCurrent.tag = "UsedCard";
@@ -613,11 +632,13 @@ public class TutorialPlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
-        
+            
+            return CardCurrent;
+        }
+        return null;
     }
 
-
-     public void LabyrinthMaze()
+    public void LabyrinthMaze()
     {
         CardsAreaCreator _cardsAreaCreator;
         _cardsAreaCreator = GameObject.Find("Area").GetComponent<CardsAreaCreator>();
@@ -820,8 +841,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _TutorialCardProgress.SecoundTargetCard = true;
@@ -867,8 +888,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
                     _TutorialCardProgress.SetAttackerCard(index);
                     _TutorialCardProgress.LightningStorm();
@@ -892,8 +913,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
 
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
@@ -920,8 +941,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
 
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
@@ -948,8 +969,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
 
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
@@ -976,8 +997,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
 
                     LabyrinthMaze();
 
@@ -1000,8 +1021,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
 
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
@@ -1215,8 +1236,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();                                                                                                            //genghis spells
+                    UsedSpell(selectedCard);
 
-                    
                     _TutorialCardProgress.HorsebackArchery();
 
                     selectedCard.SetActive(false);
@@ -1237,9 +1258,9 @@ public class TutorialPlayerController : MonoBehaviour
                     CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
                     DeckCardCount--;
 
-                    StackOwnDeck();                                                                                                            
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
                     _TutorialCardProgress.SecoundTargetCard = true;
                     _TutorialCardProgress.SetAttackerCard(index);
@@ -1264,8 +1285,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
                     _TutorialCardProgress.SetAttackerCard(index);
                     _TutorialCardProgress.MongolFury();
@@ -1289,8 +1310,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _TutorialCardProgress.SetAttackerCard(index);
@@ -1315,8 +1336,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
 
                     _TutorialCardProgress.SecoundTargetCard = true;
@@ -1342,8 +1363,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     GodsBaneUsed = true;
 
                     selectedCard.SetActive(false);
@@ -1365,8 +1386,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     SteppeAmbush = true;
 
                     selectedCard.SetActive(false);
@@ -1388,8 +1409,8 @@ public class TutorialPlayerController : MonoBehaviour
                     DeckCardCount--;
 
                     StackOwnDeck();
+                    UsedSpell(selectedCard);
 
-                    
                     NomadicTactics = true;
 
                     selectedCard.SetActive(false);
@@ -1401,6 +1422,1652 @@ public class TutorialPlayerController : MonoBehaviour
                     GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                     TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
                     return;
+                }
+                // ODIN HERE
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Viking Raider")
+                {
+                    selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                    Transform childTransform = selectedCard.transform;
+                    Transform green = childTransform.Find("Green");
+                    green.gameObject.SetActive(true);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Runestone Mystic")
+                {
+                    SpellsExtraDamage += 1;
+                    CreateRandomCard();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Shieldmaiden Defender")
+                {
+                    int frontRowCardCount = 0;
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].gameObject.transform.childCount > 0)
+                        {
+                            frontRowCardCount++;
+                        }
+                    }
+                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 5).ToString();
+                    selectedCard.GetComponent<CardInformation>().SetInformation();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Fenrir's Spawn")
+                {
+                    int mycard = 0;
+                    int enemycard = 0;
+
+                    for (int i = 0; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].gameObject.transform.childCount > 0)
+                        {
+                            enemycard++;
+                        }
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount > 0)
+                        {
+                            mycard++;
+                        }
+                    }
+                    if (enemycard > mycard)
+                    {
+                        Debug.Log("Düşman fazla");
+                        selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                        selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 3).ToString();
+                        selectedCard.GetComponent<CardInformation>().SetInformation();
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Skald Bard")
+                {
+                    SpawnAndReturnGameObject();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Mimir's Seer")
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        GameObject spawnedObject = SpawnAndReturnGameObject();
+
+                        if (spawnedObject.GetComponent<CardInformation>().CardHealth == "")
+                        {
+                            Debug.LogError("Mimirsseer SPEEEELLL YARATTTI ");
+                            GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Mimirs Seer created a spell..";
+                            
+                            spawnedObject.GetComponent<CardInformation>().CardMana--;
+
+                        }
+                        else
+                        {
+                            Debug.LogError("Mimirsseer MİNNYOONNNN YARATTTI ");
+                            GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Mimirs Seer created a minion..";
+                            
+                        }
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Valkyrie's Chosen")
+                {
+
+                    List<int> emptyFrontCells = new List<int>();
+                    List<int> emptyBackCells = new List<int>();
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyFrontCells.Add(i);
+                        }
+                    }
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyBackCells.Add(i);
+                        }
+                    }
+
+                    int cardsCreated = 0;
+                    while (cardsCreated < 2)
+                    {
+                        if (emptyFrontCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
+                            CreateSpecialCard("Viking Spirit", "1", 1, 0, index, true);
+                            emptyFrontCells.RemoveAt(randomIndex);
+                            cardsCreated++;
+                        }
+                        else if (emptyBackCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            CreateSpecialCard("Viking Spirit", "1", 1, 0, index, true);
+                            emptyBackCells.RemoveAt(randomIndex);
+                            cardsCreated++;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                            break;
+                        }
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Frost Giant")
+                {   
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.EnemyAllCard();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Heimdallr")
+                {
+                    List<int> emptyFrontCells = new List<int>();
+                    List<int> emptyBackCells = new List<int>();
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyFrontCells.Add(i);
+                        }
+                    }
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyBackCells.Add(i);
+                        }
+                    }
+
+                    int cardsCreated = 0;
+                    while (cardsCreated < 3)
+                    {
+                        if (emptyFrontCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
+                            CreateSpecialCard("Viking", "1", 1, 0, index, true);
+                            emptyFrontCells.RemoveAt(randomIndex);
+                            cardsCreated++;
+                        }
+                        else if (emptyBackCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            CreateSpecialCard("Viking", "1", 1, 0, index, true);
+                            emptyBackCells.RemoveAt(randomIndex);
+                            cardsCreated++;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No empty cells available to place the Viking card.");
+                            break;
+                        }
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Einherjar Caller")
+                {
+                    if (DeadMyCardName == null || DeadMyCardName.Count == 0)
+                    {
+                        Debug.LogWarning("Card name list is empty or null.");
+                        return;
+                    }
+                    string targetCardName = DeadMyCardName[UnityEngine.Random.Range(0, DeadMyCardName.Count)];
+                    int targetIndex = -1;
+                    string cardHealth = string.Empty;
+                    int cardDamage = 0;
+                    bool cardFound = false;
+
+                    OdinCard odinCard = new OdinCard();
+
+                    for (int i = 0; i < odinCard.minions.Count; i++)
+                    {
+                        if (odinCard.minions[i].name == targetCardName)
+                        {
+                            targetIndex = i;
+                            cardHealth = odinCard.minions[targetIndex].health.ToString();
+                            cardDamage = odinCard.minions[targetIndex].attack;
+                            cardFound = true;
+                            break;
+                        }
+                    }
+
+                    if (cardFound)
+                    {
+                        List<int> emptyFrontCells = new List<int>();
+                        List<int> emptyBackCells = new List<int>();
+
+                        for (int i = 7; i < 14; i++)
+                        {
+                            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                            {
+                                emptyFrontCells.Add(i);
+                            }
+                        }
+
+                        if (emptyFrontCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
+                            CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                            emptyFrontCells.RemoveAt(randomIndex);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < 7; i++)
+                            {
+                                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                {
+                                    emptyBackCells.Add(i);
+                                }
+                            }
+
+                            if (emptyBackCells.Count > 0)
+                            {
+                                int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                                int index = emptyBackCells[randomIndex];
+                                CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                emptyBackCells.RemoveAt(randomIndex);
+                            }
+                            else
+                            {
+                                Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Card not found in OdinCard minions.");
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Norn Weaver")
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        Vector3[] positions = new Vector3[3];
+                        float yPosition = 2.7f;
+                        float zPosition = -2.7f;
+
+                        Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
+                        Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
+                        Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+
+                        positions[0] = screenPos1;
+                        positions[1] = screenPos2;
+                        positions[2] = screenPos3;
+
+                        for (int i = 0; i < positions.Length; i++)
+                        {
+                            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                            GameObject Card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), positions[i], rotation);
+                            Card.tag = "SelectCard";
+                            Card.AddComponent<Button>();
+                            CreateInfoCard(Card);
+
+                            Card.GetComponent<Button>().onClick.AddListener(() => {
+                                foreach (GameObject card in GameObject.FindGameObjectsWithTag("SelectCard"))
+                                {
+                                    Destroy(card);
+                                }
+                                if (UnityEngine.Random.Range(0, 2) == 0)
+                                {
+                                    GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                                    float xPos = DeckCardCount * 0.8f - 0.8f;
+                                    selectedCard.transform.localPosition = new Vector3(xPos, 0, 0);
+                                    selectedCard.tag = "Card";
+                                    CreateInfoCard(selectedCard);
+                                    StackOwnDeck(); 
+                                    StackCompetitorDeck();
+                                    DeckCardCount++;
+
+                                }
+                            });
+                        }
+                    }
+                    else
+                        print("DesrenDolu");
+
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Winter's Chill")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.EnemyAllCard();
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Viking Raid")
+                {
+
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    List<int> emptyFrontCells = new List<int>();
+                    List<int> emptyBackCells = new List<int>();
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyFrontCells.Add(i);
+                        }
+                    }
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyBackCells.Add(i);
+                        }
+                    }
+
+                    int cardsCreated = 0;
+                    while (cardsCreated < 3)
+                    {
+                        if (emptyFrontCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
+                            GameObject Card = CreateSpecialCard("Viking", "2", 2, 0, index, true);
+                            CanFirstRauntAttack(Card);
+                            emptyFrontCells.RemoveAt(randomIndex);
+                            cardsCreated++;
+                        }
+                        else if (emptyBackCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            GameObject Card = CreateSpecialCard("Viking", "2", 2, 0, index, true);
+                            CanFirstRauntAttack(Card);
+                            emptyBackCells.RemoveAt(randomIndex);
+                            cardsCreated++;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No empty cells available to place the Viking card.");
+                            break;
+                        }
+                    }
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Sleipnir’s Gallop")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.ForMyCard = true;
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Gjallarhorn Call")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    List<string> einherjarNames = new List<string> { "Einherjar Champion", "Einherjar Berserker", "Einherjar Duelist" };
+                    int randomIndex = UnityEngine.Random.Range(0, einherjarNames.Count);
+                    string selectedName = einherjarNames[randomIndex];
+                    int index = -1;
+
+
+                    List<int> emptyFrontCells = new List<int>();
+                    List<int> emptyBackCells = new List<int>();
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyFrontCells.Add(i);
+                        }
+                    }
+
+                    if (emptyFrontCells.Count > 0)
+                    {
+                        int indexrandom = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                        index = emptyFrontCells[indexrandom];
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 7; i++)
+                        {
+                            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                            {
+                                emptyBackCells.Add(i);
+                            }
+                        }
+
+                        if (emptyBackCells.Count > 0)
+                        {
+                            int indexrandom = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            index = emptyBackCells[indexrandom];
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                        }
+                    }
+                    if (index == -1)
+                        return;
+
+                    if (selectedName == "Einherjar Champion")
+                    {
+                        GameObject CurrentCard = CreateSpecialCard("Einherjar Champion", "7", 3, 0, index, true);
+                        CanFirstRauntAttack(CurrentCard);
+                    }
+                    else if (selectedName == "Einherjar Berserker")
+                    {
+                        CreateSpecialCard("Einherjar Champion", "5", 3, 0, index, true);
+                    }
+                    else if (selectedName == "Einherjar Duelist")
+                    {
+                        CreateSpecialCard("Einherjar Champion", "5", 5, 0, index, true);
+                    }
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Rune Magic")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    RuneMagic();
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "The Allfather’s Decree")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    List<int> emptyFrontCells = new List<int>();
+                    List<int> emptyBackCells = new List<int>();
+
+                    GameObject CreatedCard;
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyFrontCells.Add(i);
+                        }
+                    }
+
+                    if (emptyFrontCells.Count > 0)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                        int index = emptyFrontCells[randomIndex];
+                        CreatedCard = CreateSpecialCard("Gungnir", "4", 2, 0, index, true);
+                        CreatedCard.GetComponent<CardInformation>().Invulnerable = true;
+                        CanFirstRauntAttack(CreatedCard);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 7; i++)
+                        {
+                            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                            {
+                                emptyBackCells.Add(i);
+                            }
+                        }
+
+                        if (emptyBackCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            CreatedCard = CreateSpecialCard("Gungnir", "4", 2, 0, index, true);
+                            CreatedCard.GetComponent<CardInformation>().Invulnerable = true;
+                            CanFirstRauntAttack(CreatedCard);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                        }
+                    }
+
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Mimir's Wisdom")
+                {
+                    int maxNewCards = 10 - GameObject.Find("Deck").transform.childCount + 1;
+                    int cardsToCreate = Mathf.Min(3, maxNewCards);
+                    for (int i = 0; i < cardsToCreate; i++)
+                    {
+                        GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                        ManaCountText.text = Mana.ToString() + "/10";
+                        OwnManaBar.fillAmount = Mana / 10f;
+                        CompetitorManaBar.fillAmount = TurnCount / 10;
+                        CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                        DeckCardCount--;
+
+                        StackOwnDeck();
+
+                        float xPos = DeckCardCount * 0.8f - 0.8f;
+                        CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0);  // Card yerine CardCurrent kullanılıyor
+                        CardCurrent.tag = "Card";
+                        CreateInfoCard(CardCurrent);
+                        StackCompetitorDeck();
+                        DeckCardCount++;
+
+                        UsedSpell(selectedCard);
+                        selectedCard.SetActive(false);
+                        selectedCard = null;
+                        lastHoveredCard = null;
+
+                        Debug.LogError("USSEEDD A SPEEELLL");
+                    }
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+
+
+                // ANUBİS HERE
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Necropolis Acolyte")
+                {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.ForHeal = true;
+                    _TutorialCardProgress.OpenMyCardSign();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Desert Bowman")
+                {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Sphinx Riddler")
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 11)
+                    {
+                        Vector3[] positions = new Vector3[3];
+                        float yPosition = 2.7f;
+                        float zPosition = -2.7f;
+
+                        Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
+                        Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
+                        Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+
+                        positions[0] = screenPos1;
+                        positions[1] = screenPos2;
+                        positions[2] = screenPos3;
+
+                        int correctCardIndex = UnityEngine.Random.Range(0, positions.Length);
+
+                        for (int i = 0; i < positions.Length; i++)
+                        {
+                            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                            GameObject Card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), positions[i], rotation);
+                            Card.tag = "SelectCard";
+                            Card.AddComponent<Button>();
+                            CreateInfoCard(Card);
+
+                            Card.GetComponent<Button>().onClick.AddListener(() => {
+                                foreach (GameObject card in GameObject.FindGameObjectsWithTag("SelectCard"))
+                                {
+                                    Destroy(card);
+                                }
+
+                                if (i == correctCardIndex)
+                                {
+                                    SpawnAndReturnGameObject();
+                                }
+                            });
+                        }
+                    }
+                    else
+                    {
+                        print("Deck is Full");
+                    }
+                }
+                
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Osiris’ Bannerman")
+                {
+                    GameObject[] AllCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (var card in AllCard)
+                    {
+                        if (card.GetComponent<CardInformation>().CardName == "Osiris")
+                        {
+                            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                            selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                        }
+                    }
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Osiris’ Bannerman")
+                {
+                    GameObject[] AllCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (var card in AllCard)
+                    {
+                        if (card.GetComponent<CardInformation>().CardName == "Osiris")
+                        {
+                            int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                            selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                            
+                        }
+                    }
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Sun Charioteer")
+                {
+                    selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                    Transform childTransform = selectedCard.transform;
+                    Transform green = childTransform.Find("Green");
+                    green.gameObject.SetActive(true);
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Tomb Protector")
+                {
+                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + CheckUndeadCards()).ToString();
+                    selectedCard.GetComponent<CardInformation>().SetInformation();
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Falcon-Eyed Hunter")
+                {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Canopic Preserver")
+                {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.ForMyCard = true;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Sandstone Scribe")
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+                        CardCurrent.tag = "Card";
+                        float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                        CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                        CardCurrent.GetComponent<CardInformation>().CardName = "Scroll of Death";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = "Scroll of Death POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "0";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = 2;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        DeckCardCount++;
+                        StackOwnDeck(); 
+                        StackCompetitorDeck();
+
+                    }
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Scroll of Death")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+                    int createdCardCount = 0;
+
+                    for (int i = 7; i < 14 && createdCardCount < 2; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            CreateSpecialCard("Mummy", "1", 1, 0, i, true);
+                            createdCardCount++;
+                        }
+                    }
+
+
+                   
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Book of the Dead")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    if (DeadMyCardName == null || DeadMyCardName.Count == 0)
+                    {
+                        Debug.LogWarning("Card name list is empty or null.");
+                        return;
+                    }
+
+                    AnubisCard anubisCard = new AnubisCard();
+                    HashSet<string> revivedCards = new HashSet<string>();
+                    int reviveCount = 0;
+
+                    while (reviveCount < 5 && revivedCards.Count < DeadMyCardName.Count)
+                    {
+                        string targetCardName = DeadMyCardName[UnityEngine.Random.Range(0, DeadMyCardName.Count)];
+
+                        if (revivedCards.Contains(targetCardName))
+                        {
+                            continue; // Bu kart zaten diriltildi, yeni bir kart seç
+                        }
+
+                        int targetIndex = -1;
+                        string cardHealth = string.Empty;
+                        int cardDamage = 0;
+                        bool cardFound = false;
+
+                        for (int i = 0; i < anubisCard.minions.Count; i++)
+                        {
+                            if (anubisCard.minions[i].name == targetCardName)
+                            {
+                                targetIndex = i;
+                                cardHealth = anubisCard.minions[targetIndex].health.ToString();
+                                cardDamage = anubisCard.minions[targetIndex].attack;
+                                cardFound = true;
+                                break;
+                            }
+                        }
+
+                        if (cardFound)
+                        {
+                            List<int> emptyFrontCells = new List<int>();
+                            List<int> emptyBackCells = new List<int>();
+
+                            for (int i = 7; i < 14; i++)
+                            {
+                                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                {
+                                    emptyFrontCells.Add(i);
+                                }
+                            }
+
+                            if (emptyFrontCells.Count > 0)
+                            {
+                                int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                                int index = emptyFrontCells[randomIndex];
+                                CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                emptyFrontCells.RemoveAt(randomIndex);
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                    {
+                                        emptyBackCells.Add(i);
+                                    }
+                                }
+
+                                if (emptyBackCells.Count > 0)
+                                {
+                                    int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                                    int index = emptyBackCells[randomIndex];
+                                    CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                    emptyBackCells.RemoveAt(randomIndex);
+                                }
+                                else
+                                {
+                                    Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                                }
+                            }
+
+                            revivedCards.Add(targetCardName);
+                            reviveCount++;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Card not found in OdinCard minions.");
+                        }
+                    }
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Sun Disk Radiance")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Plague of Locusts")
+                {
+
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "River's Blessing")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+
+
+                    selectedCard.tag = "Card";
+
+                    List<GameObject> usedCards = new List<GameObject>();
+                    foreach (GameObject card in GameObject.FindGameObjectsWithTag("UsedCard"))
+                    {
+                        usedCards.Add(card);
+                    }
+
+                    if (usedCards.Count == 0)
+                    {
+                       
+                        Debug.LogWarning("No used cards found.");
+                        selectedCard.SetActive(false);
+                        selectedCard = null;
+                        lastHoveredCard = null;
+
+                        Debug.LogError("USSEEDD A SPEEELLL");
+                        return;
+                    }
+                    int totalHealthToDistribute = 10;
+                    System.Random random = new System.Random();
+
+                    while (totalHealthToDistribute > 0)
+                    {
+                        int cardIndex = random.Next(usedCards.Count);
+                        int healthToAdd = random.Next(1, totalHealthToDistribute + 1);
+
+                        // Canı seçilen karta ekle
+                        CardInformation cardInfo = usedCards[cardIndex].GetComponent<CardInformation>();
+                        if (cardInfo != null)
+                        {
+                            int currentHealth = int.Parse(cardInfo.CardHealth);
+                            currentHealth += healthToAdd;
+                            cardInfo.CardHealth = currentHealth.ToString();
+                            cardInfo.SetInformation();
+                            int CurrentCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, usedCards[cardIndex].transform.parent.gameObject);
+                            GetComponent<PlayerController>().RefreshMyCard(CurrentCardIndex, cardInfo.CardHealth, cardInfo.HaveShield, cardInfo.CardDamage, cardInfo.DivineSelected, cardInfo.FirstTakeDamage, cardInfo.FirstDamageTaken, cardInfo.EternalShield);
+                        }
+
+                        totalHealthToDistribute -= healthToAdd;
+                    }
+
+
+                   
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Pyramid's Might")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.ForMyCard = true;
+
+                    
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Scales of Anubis")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                   
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Gates of Duat")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+                    //GatesofDuat();
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Codex Guardian")
+                {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    selectedCard.GetComponent<CardInformation>().DivineSelected = true;
+                     
+                }
+
+                // LeonardoCard HERE
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Codex Guardian")
+                {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    selectedCard.GetComponent<CardInformation>().DivineSelected = true;
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Piscean Diver")
+                {
+                    selectedCard.GetComponent<CardInformation>().CanAttackBehind = true;
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Da Vinci's Helix Engineer")
+                {
+                    GameObject spawnedObject = SpawnAndReturnGameObject();
+
+                    if (spawnedObject.GetComponent<CardInformation>().CardHealth == "")
+                    {
+                        Debug.LogError("Helix SPEEEELLL YARATTTI ");
+
+                        GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                        TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Helix created a spell..";
+                        spawnedObject.GetComponent<CardInformation>().CardMana -= 2;
+                        spawnedObject.GetComponent<CardInformation>().SetInformation();
+
+                    }
+                    else
+                    {
+                        Debug.LogError("Helix MİNNYOONNNN YARATTTI ");
+                        GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                        TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Helix created a minion..";
+                    }
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Vitruvian Firstborn")
+                {
+                    for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++) // KENDİ DESTEMİZDEKİ KARTLARI TEK TEK ÇAĞIR
+                    {
+
+                        if (GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().CardHealth == "")  // ÇAĞIRILAN KARTIN BÜYÜ MÜ OLDUĞU KONTROL ET
+                        {
+                            GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().CardMana--;
+                            GameObject.Find("Deck").transform.GetChild(i).GetComponent<CardInformation>().SetInformation();
+                        }
+                    }
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Da Vinci's Glider")
+                {
+                    for (int i = 0; i < 14; i++)
+                    {
+
+                        var cell = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].gameObject;
+
+                        if (cell.transform.childCount != 0)
+                        {
+                            GameObject child = cell.transform.GetChild(0).gameObject;
+                            int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, child.transform.parent.gameObject);
+
+                            if (!child.activeSelf)
+                            {
+                                child.SetActive(true);
+                                Debug.Log("Gizli kart bulundu");
+                            }
+                            child.GetComponent<CardInformation>().SetInformation();
+
+                        }
+
+                    }
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Mechanical Lion")
+                {
+                    GameObject[] AllCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                    LeonardoCard leonardoCard = new LeonardoCard();
+
+                    foreach (var card in AllCard)
+                    {
+                        for (int i = 0; i < leonardoCard.minions.Count; i++)
+                        {
+                            string cardName = card.GetComponent<CardInformation>().CardName;
+                            if (leonardoCard.minions[i].name == cardName &&
+                                cardName != "Codex Guardian" &&
+                                cardName != "Anatomist of the Unknown" &&
+                                cardName != "Piscean Diver" &&
+                                cardName != "Da Vinci's Helix Engineer")
+                            {
+                                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                                selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                                selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                                
+                            }
+                        }
+                    }
+
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Da Vinci’s Blueprint")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+
+
+                    GameObject spawnedObject = SpawnAndReturnGameObject();
+                    LeonardoCard leonardoCard = new LeonardoCard();
+                    for (int i = 0; i < leonardoCard.minions.Count; i++)
+                    {
+                        string cardName = spawnedObject.GetComponent<CardInformation>().CardName;
+                        if (leonardoCard.minions[i].name == cardName &&
+                            cardName != "Codex Guardian" &&
+                            cardName != "Anatomist of the Unknown" &&
+                            cardName != "Piscean Diver" &&
+                            cardName != "Da Vinci's Helix Engineer")
+                        {
+                            spawnedObject.GetComponent<CardInformation>().CardHealth = (int.Parse(spawnedObject.GetComponent<CardInformation>().CardHealth) + 3).ToString();
+                            spawnedObject.GetComponent<CardInformation>().CardDamage += 2; ;
+                            spawnedObject.GetComponent<CardInformation>().SetInformation();
+                        }
+                    }
+
+
+                   
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Tabula Aeterna")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+
+                    GameObject[] cards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                    if (cards.Length > 0)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, cards.Length);
+                        GameObject randomCard = cards[randomIndex];
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard.transform.parent.gameObject);
+                        randomCard.GetComponent<CardInformation>().CardMana--;
+                        DeleteAreaCard(TargetCardIndex);
+                        DestroyAndCreateMyDeck(randomCard);
+                    }
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Artistic Inspiration")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                   
+
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.ForMyCard = true;
+
+
+                    
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+                    UsedSpell(selectedCard);
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Anatomical Insight")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    UsedSpell(selectedCard);
+                    DoubleDamage = 2;
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                // DUSTİN HERE
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Wasteland Sniper")
+                {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Engineer of the Ruins")
+                {
+                    GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (var card in AllMyCard)
+                    {
+                        card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                        card.GetComponent<CardInformation>().SetInformation();
+                        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                       
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Rogue AI Drone")
+                {
+                    selectedCard.GetComponent<CardInformation>().Invulnerable = true;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Mutant Behemoth")
+                {
+                    for (int i = 7; i < 14; i++)
+                    {
+
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].gameObject.transform.childCount != 0)
+                        {
+                            GameObject CurrentCard = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].gameObject.transform.GetChild(0).gameObject;
+
+                            int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, CurrentCard.transform.parent.gameObject);
+                            CurrentCard.GetComponent<CardInformation>().CardDamage -= 2;
+                            CurrentCard.GetComponent<CardInformation>().Behemot = true;
+
+                            GetComponent<PlayerController>().PV.RPC("RPC_RefreshMaxDamage", RpcTarget.All, index, CurrentCard.GetComponent<CardInformation>().Behemot);
+                            RefreshLog(0, true, selectedCard.GetComponent<CardInformation>().CardName, CurrentCard.GetComponent<CardInformation>().CardName, Color.magenta);
+                        }
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Lone Cyborg")
+                {
+                    int cardscount = 0;
+                    for (int i = 7; i < 14; i++)
+                    {
+                        var cardsAreaCreator = GameObject.Find("Area").GetComponent<CardsAreaCreator>();
+                        var areaCollision = cardsAreaCreator.FrontAreaCollisions[i];
+
+                        if (areaCollision.gameObject.transform.childCount != 0)
+                        {
+                            cardscount++;
+                        }
+                    }
+                    if (cardscount == 1)
+                    {
+                        selectedCard.GetComponent<CardInformation>().CardDamage += 3;
+                        selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 3).ToString();
+                        selectedCard.GetComponent<CardInformation>().DivineSelected = true;
+                        selectedCard.GetComponent<CardInformation>().SetInformation();
+                        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                        
+                    }
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Scavenger Raider")
+                {
+                    //ScavengerRaider();
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Claire")
+                {
+                    _TutorialCardProgress.DamageToAlLOtherMinions(selectedCard.GetComponent<CardInformation>().CardDamage, selectedCard.GetComponent<CardInformation>().CardName);
+                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    CreateTextAtTargetIndex(index, 2, true);
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Scrap Shield")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.ForMyCard = true;
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Shockwave/Impulse")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        var cardsAreaCreator = GameObject.Find("Area").GetComponent<CardsAreaCreator>();
+                        var backAreaCollision = cardsAreaCreator.BackAreaCollisions[i];
+
+                        if (backAreaCollision.gameObject.transform.childCount != 0)
+                        {
+                            var cardInfo = backAreaCollision.gameObject.GetComponent<CardInformation>();
+
+                            int cardIndex = Array.IndexOf(cardsAreaCreator.BackAreaCollisions, backAreaCollision.gameObject.transform.parent.gameObject);
+                            cardInfo.CardFreeze = true;
+
+                            var playerController = GetComponent<PlayerController>();
+                            playerController.RefreshCompotitorCard(cardIndex, cardInfo.FirstTakeDamage, cardInfo.CardFreeze);
+                            playerController.RefreshLog(0, true, selectedCard.GetComponent<CardInformation>().CardName, cardInfo.CardName, Color.blue);
+                        }
+                    }
+
+
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+
+                    // GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    // TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Garage Raid")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+                    int randomChoice = UnityEngine.Random.Range(0, 2);
+
+                    if (randomChoice == 0)
+                    {
+                        CreateDeckCard("Warlord", "6", 6, 7);
+                    }
+                    else
+                    {
+                        CreateDeckCard("Dune Raider", "5", 4, 5);
+                    }
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Radioactive Fallout")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    
+
+                    List<Transform> allCells = new List<Transform>();
+                    List<Transform> cardTransforms = new List<Transform>();
+
+                    for (int i = 0; i < 14; i++)
+                    {
+                        var backAreaCollision = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[i].transform;
+                        allCells.Add(backAreaCollision);
+
+                        if (backAreaCollision.childCount != 0)
+                        {
+                            cardTransforms.Add(backAreaCollision.GetChild(0));
+                        }
+                    }
+
+                    List<Transform> shuffledCells = new List<Transform>(allCells);
+                    for (int i = 0; i < shuffledCells.Count; i++)
+                    {
+                        Transform temp = shuffledCells[i];
+                        int randomIndex = UnityEngine.Random.Range(i, shuffledCells.Count);
+                        shuffledCells[i] = shuffledCells[randomIndex];
+                        shuffledCells[randomIndex] = temp;
+                    }
+
+                    List<int> shuffledIndexes = new List<int>();
+                    int cardIndex = 0;
+                    for (int i = 0; i < shuffledCells.Count; i++)
+                    {
+                        shuffledIndexes.Add(allCells.IndexOf(shuffledCells[i]));
+
+                        if (shuffledCells[i].childCount == 0 && cardIndex < cardTransforms.Count)
+                        {
+                            cardTransforms[cardIndex].SetParent(shuffledCells[i]);
+                            cardTransforms[cardIndex].localPosition = Vector3.zero;
+                            cardIndex++;
+                        }
+                    }
+                   GetComponent<PlayerController>().PV.RPC("RPC_ShuffleCells", RpcTarget.All, shuffledIndexes.ToArray());
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    Destroy(selectedCard);
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Mutated Blood Sample")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                   
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.ForMyCard = true;
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Mechanical Reinforcement")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    
+
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+                    _TutorialCardProgress.ForMyCard = true;
+
+
+                    UsedSpell(selectedCard);
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Tome of Confusion")
+                {
+                    ManaCountText.text = Mana.ToString() + "/10";
+                    OwnManaBar.fillAmount = Mana / 10f;
+                    CompetitorManaBar.fillAmount = TurnCount / 10;
+                    CompetitorManaCountText.text = (TurnCount) + "/10".ToString();
+                    DeckCardCount--;
+
+                    StackOwnDeck();
+
+                    
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                    _TutorialCardProgress.SecoundTargetCard = true;
+                    _TutorialCardProgress.SetAttackerCard(index);
+                    _TutorialCardProgress.AttackerCard = selectedCard;
+
+
+
+                    UsedSpell(selectedCard);
+
+                    selectedCard.SetActive(false);
+                    selectedCard = null;
+                    lastHoveredCard = null;
+
+                    Debug.LogError("USSEEDD A SPEEELLL");
+                
+                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
+                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    return;
+                }
+                else if (selectedCard.GetComponent<CardInformation>().CardName == "Echo of Tomorrow")
+                {
+                    EchoOfTomorrow();
                 }
 
                 ManaCountText.text = Mana.ToString() + "/10";
@@ -1420,6 +3087,506 @@ public class TutorialPlayerController : MonoBehaviour
                 lastHoveredCard = null;
                 return; 
             }
+
+
+            // Standart HERE
+
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Templar Knight")
+            {
+                selectedCard.GetComponent<CardInformation>().DivineSelected = true;
+                int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Cerberus Spawn")
+            {
+                GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+
+                if (AllEnemyCard.Length > AllMyCard.Length)
+                {
+                    Debug.Log("Enemy has more cards than you. CerberusSpawnFun is activated.");
+                    List<int> emptyFrontCells = new List<int>();
+                    List<int> emptyBackCells = new List<int>();
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyFrontCells.Add(i);
+                        }
+                    }
+
+                    if (emptyFrontCells.Count >= 2)
+                    {
+                        for (int j = 0; j < 2; j++)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
+                            //GameObject currentcard = CreateSpecialCard("Hellhound", "1", 1, 0, index, true);
+                            //CanFirstRauntAttack(currentcard);
+                            emptyFrontCells.RemoveAt(randomIndex);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 7; i++)
+                        {
+                            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                            {
+                                emptyBackCells.Add(i);
+                            }
+                        }
+
+                        if (emptyBackCells.Count >= 2)
+                        {
+                            for (int j = 0; j < 2; j++)
+                            {
+                                int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                                int index = emptyBackCells[randomIndex];
+                                GameObject currentcard = CreateSpecialCard("Hellhound", "1", 1, 0, index, true);
+                                CanFirstRauntAttack(currentcard);
+                                emptyBackCells.RemoveAt(randomIndex);
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No empty cells available to place the Scavenger card.");
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log("You have equal or more cards than the enemy. CerberusSpawnFun is not activated.");
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Arcane Scholar")
+            {
+                SpellsExtraDamage += 2;
+                CreateRandomCard();
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Rebel Outcast")
+            {
+                GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                GameObject randomCard = AllEnemyCard[UnityEngine.Random.Range(0, AllEnemyCard.Length)];
+                randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) - 4).ToString();
+                randomCard.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard.transform.parent.gameObject);
+                CreateTextAtTargetIndex(index, 2, false);
+                
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Naiad Protector")
+            {
+                NaiadProtector = true;
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Ruined City Scout")
+            {
+                MarcoPolo();
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Gladiator Champion")
+            {
+                GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                int count = AllEnemyCard.Length;
+
+                if (count > 0)
+                {
+                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + count).ToString();
+                    selectedCard.GetComponent<CardInformation>().CardDamage += count;
+                    selectedCard.GetComponent<CardInformation>().SetInformation();
+                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                   
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Urban Ranger")
+            {
+                GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+
+                if (AllEnemyCard.Length < 2)
+                {
+                    Debug.LogWarning("Not enough enemy cards to target two distinct cards.");
+                    return;
+                }
+
+                GameObject randomCard1 = AllEnemyCard[UnityEngine.Random.Range(0, AllEnemyCard.Length)];
+                randomCard1.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard1.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+                randomCard1.GetComponent<CardInformation>().SetInformation();
+                int index1 = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard1.transform.parent.gameObject);
+                CreateTextAtTargetIndex(index1, 2, false);                                                    //iki kart seçiyor ilkinin aynısı olmasın ve 2 hasar veriyor ikisine de
+
+                GameObject randomCard2;
+                do
+                {
+                    randomCard2 = AllEnemyCard[UnityEngine.Random.Range(0, AllEnemyCard.Length)];
+                } while (randomCard2 == randomCard1);
+
+                randomCard2.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard2.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+                randomCard2.GetComponent<CardInformation>().SetInformation();
+                int index2 = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard2.transform.parent.gameObject);
+                CreateTextAtTargetIndex(index2, 2, false);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Byzantine Fire Slinger")
+            {
+                _TutorialCardProgress.DamageToAlLOtherMinions(1, "Byzantine Fire Slinger");
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Shadow Assassin")
+            {
+                selectedCard.GetComponent<CardInformation>().SunDiskRadiance = true;
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Radiated Marauder")
+            {
+                selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                Transform childTransform = selectedCard.transform;
+                Transform green = childTransform.Find("Green");
+                green.gameObject.SetActive(true);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Rogue Mech-Pilot")
+            {
+                List<int> emptyFrontCells = new List<int>();
+                List<int> emptyBackCells = new List<int>();
+
+                for (int i = 7; i < 14; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyFrontCells.Add(i);
+                    }
+                }
+
+                if (emptyFrontCells.Count >= 2)
+                {
+                    for (int j = 0; j < 2; j++)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                        int index = emptyFrontCells[randomIndex];
+                        GameObject currentcard = CreateSpecialCard("Defective Drone", "1", 1, 0, index, true);
+                        CanFirstRauntAttack(currentcard);
+                        emptyFrontCells.RemoveAt(randomIndex);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyBackCells.Add(i);
+                        }
+                    }
+
+                    if (emptyBackCells.Count >= 2)
+                    {
+                        for (int j = 0; j < 2; j++)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            GameObject currentcard = CreateSpecialCard("Defective Drone", "1", 1, 0, index, true);
+                            CanFirstRauntAttack(currentcard);
+                            emptyBackCells.RemoveAt(randomIndex);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No empty cells available to place the Defective Drone card.");
+                    }
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Rubble Raider")
+            {
+                selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                Transform childTransform = selectedCard.transform;
+                Transform green = childTransform.Find("Green");
+                green.gameObject.SetActive(true);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Desert Conjurer")
+            {
+                CreateDeckCard("Sandstorm", "0", 0, 0);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Sandstorm")
+            {
+                _TutorialCardProgress.DamageToAlLOtherMinions(1, "Sandstorm");
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Gaelic Warrior")
+            {
+                StandartCardFuns.CanFirstRauntAttack(selectedCard);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Oasis Guardian")
+            {
+                selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                Transform childTransform = selectedCard.transform;
+                Transform green = childTransform.Find("Green");
+                green.gameObject.SetActive(true);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Battle Mage")
+            {
+                SpellsExtraDamage += 1;
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Roving Merchant")
+            {
+                GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                if (AllMyCard.Length >= 3)
+                {
+                    SpawnAndReturnGameObject();
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Nomadic Hunter")
+            {
+                if (PlayedSpell)
+                {
+                    CanFirstRauntAttack(selectedCard);
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Raiding Party")
+            {
+                List<int> emptyFrontCells = new List<int>();
+                List<int> emptyBackCells = new List<int>();
+
+                for (int i = 7; i < 14; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyFrontCells.Add(i);
+                    }
+                }
+
+                if (emptyFrontCells.Count >= 2)
+                {
+                    for (int j = 0; j < 2; j++)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                        int index = emptyFrontCells[randomIndex];
+                        GameObject currentcard = CreateSpecialCard("Pirate", "1", 1, 0, index, true);
+                        CanFirstRauntAttack(currentcard);
+                        emptyFrontCells.RemoveAt(randomIndex);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyBackCells.Add(i);
+                        }
+                    }
+
+                    if (emptyBackCells.Count >= 2)
+                    {
+                        for (int j = 0; j < 2; j++)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            GameObject currentcard = CreateSpecialCard("Pirate", "1", 1, 0, index, true);
+                            CanFirstRauntAttack(currentcard);
+                            emptyBackCells.RemoveAt(randomIndex);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No empty cells available to place the Pirate card.");
+                    }
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Tavern Brawler")
+            {
+                selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                Transform childTransform = selectedCard.transform;
+                Transform green = childTransform.Find("Green");
+                green.gameObject.SetActive(true);
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Pyromaniac Wizard")
+            {
+                _TutorialCardProgress.DamageToAlLOtherMinions(1, "Pyromaniac Wizard");
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Frontline Militia")
+            {
+                GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                if (AllMyCard.Length > 0)
+                {
+                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + AllMyCard.Length).ToString();
+                    selectedCard.GetComponent<CardInformation>().SetInformation();
+                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Wandering Healer")
+            {
+                GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                foreach (GameObject Card in AllMyCard)
+                {
+                    if (Card != selectedCard)
+                    {
+                        Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) + 3).ToString();
+                        Card.GetComponent<CardInformation>().SetInformation();
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, Card.transform.parent.gameObject);
+                    }  
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Horse Archer")
+            {
+                    selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+                    Transform childTransform = selectedCard.transform;
+                    Transform green = childTransform.Find("Green");
+                    green.gameObject.SetActive(true);
+                }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Viking Shield-Maiden")
+            {
+                    GameObject[] allMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (GameObject Card in allMyCard)
+                    {
+                        if (Card.GetComponent<CardInformation>().CardName == "Viking Raider" || Card.GetComponent<CardInformation>().CardName == "Viking" || Card.GetComponent<CardInformation>().CardName == "Viking Spirit")
+                        {
+                            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                            selectedCard.GetComponent<CardInformation>().CardDamage++;
+                            selectedCard.GetComponent<CardInformation>().SetInformation();
+                            int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                            
+                            return;
+                        }
+                    }
+                }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Plague Carrier")
+            {
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                _TutorialCardProgress.SecoundTargetCard = true;
+                _TutorialCardProgress.SetAttackerCard(index);
+                _TutorialCardProgress.AttackerCard = selectedCard;
+                }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Dune Scout")
+            {
+                GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                if (AllEnemyCard.Length == 0)
+                {
+                    CanFirstRauntAttack(selectedCard);
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Scavenger's Daughter")
+            {
+                GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                foreach (GameObject Card in AllMyCard)
+                {
+                    if (Card != selectedCard)
+                    {
+                        Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                        Card.GetComponent<CardInformation>().SetInformation();
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, Card.transform.parent.gameObject);
+                      
+                    }
+
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Mystic Archer")
+            {
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                _TutorialCardProgress.SecoundTargetCard = true;
+                _TutorialCardProgress.SetAttackerCard(index);
+                _TutorialCardProgress.AttackerCard = selectedCard;
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Toxic Rainmaker")
+            {
+                GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                foreach (GameObject card in AllEnemyCard)
+                {
+                    card.GetComponent<CardInformation>().CardDamage -= 1;
+                    card.GetComponent<CardInformation>().SetInformation();
+                    card.GetComponent<CardInformation>().ToxicRainmaker = true;
+                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, card.transform.parent.gameObject);
+                    
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Desert Warlock")
+            {
+                List<int> emptyFrontCells = new List<int>();
+                List<int> emptyBackCells = new List<int>();
+
+                for (int i = 7; i < 14; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyFrontCells.Add(i);
+                    }
+                }
+
+                if (emptyFrontCells.Count >= 2)
+                {
+                    for (int j = 0; j < 2; j++)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                        int index = emptyFrontCells[randomIndex];
+                        GameObject currentcard = CreateSpecialCard("Sand Elementals", "2", 2, 0, index, true);
+                        CanFirstRauntAttack(currentcard);
+                        emptyFrontCells.RemoveAt(randomIndex);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyBackCells.Add(i);
+                        }
+                    }
+
+                    if (emptyBackCells.Count >= 2)
+                    {
+                        for (int j = 0; j < 2; j++)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            GameObject currentcard = CreateSpecialCard("Sand Elementals", "2", 2, 0, index, true);
+                            CanFirstRauntAttack(currentcard);
+                            emptyBackCells.RemoveAt(randomIndex);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No empty cells available to place the Sand Elementals card.");
+                    }
+                }
+                LessSpellCost += 1;
+            }
+            
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Merfolk Scout")
+            {
+                MerfolkScout();
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Street Thug")
+            {
+                GameObject[] AllEnemyCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                if (AllEnemyCard.Length == 1)
+                {
+                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                    selectedCard.GetComponent<CardInformation>().CardDamage += 2;
+                    selectedCard.GetComponent<CardInformation>().SetInformation();
+                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+                    
+                }
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Ancient Librarian")
+            {
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
+
+                _TutorialCardProgress.SecoundTargetCard = true;
+                _TutorialCardProgress.SetAttackerCard(index);
+                _TutorialCardProgress.AttackerCard = selectedCard;
+                
+            }
+            else if (selectedCard.GetComponent<CardInformation>().CardName == "Apprentice Sorcerer")
+            {
+                GameObject CurrentCard;
+
+                do
+                {
+                    CurrentCard = CreateRandomCard();
+                    if (CurrentCard.GetComponent<CardInformation>().CardMana > 3)
+                    {
+                        CreateSpell(CurrentCard);
+                    }
+                }
+                while (CurrentCard.GetComponent<CardInformation>().CardMana > 3);
+            }
+            
+            
         }
 
         if (selectedCard != null)
@@ -1430,6 +3597,408 @@ public class TutorialPlayerController : MonoBehaviour
             selectedCard = null;
         }
     }
+    public void RuneMagic()
+    {
+        
+            healthTextObject.SetActive(true);
+            attackTextObject.SetActive(true);
+            drawCardTextObject.SetActive(true);
+
+            healthTextObject.GetComponent<Button>().onClick.AddListener(() => OnTextClicked(healthTextObject));
+            attackTextObject.GetComponent<Button>().onClick.AddListener(() => OnTextClicked(attackTextObject));
+            drawCardTextObject.GetComponent<Button>().onClick.AddListener(() => OnTextClicked(drawCardTextObject));
+       
+    }
+    void OnTextClicked(GameObject clickedTextObject)
+    {
+        if (clickedTextObject == healthTextObject)
+        {
+            GetComponent<CardController>().AddHealCard(2,true);
+        }
+        else if (clickedTextObject == attackTextObject)
+        {
+            GetComponent<CardController>().UsedCard(2, GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+        }
+        else if (clickedTextObject == drawCardTextObject)
+        {
+            SpawnAndReturnGameObject();
+        }
+
+        healthTextObject.SetActive(false);
+        attackTextObject.SetActive(false);
+        drawCardTextObject.SetActive(false);
+    }
+    public void CreateSpell(GameObject CardCurrent)
+    {
+        List<Spell> spells = null;
+        if (OwnMainCard == "Zeus")
+        {
+            ZeusCard zeusCard = new ZeusCard();
+            spells = zeusCard.spells;
+        }
+        else if (OwnMainCard == "Odin")
+        {
+            OdinCard odinCard = new OdinCard();
+            spells = odinCard.spells;
+        }
+        else if (OwnMainCard == "Genghis")
+        {
+            GenghisCard genghisCard = new GenghisCard();
+            spells = genghisCard.spells;
+        }
+        else if (OwnMainCard == "Anubis")
+        {
+            AnubisCard anubisCard = new AnubisCard();
+            spells = anubisCard.spells;
+        }
+        else if (OwnMainCard == "Dustin")
+        {
+            DustinCard dustinCard = new DustinCard();
+            spells = dustinCard.spells;
+        }
+        else if (OwnMainCard == "Leonardo Da Vinci")
+        {
+            LeonardoCard leonardoCard = new LeonardoCard();
+            spells = leonardoCard.spells;
+        }
+
+        if (spells != null && spells.Count > 0)
+        {
+            // Rastgele bir büyü seçiyoruz.
+            int spellIndex = UnityEngine.Random.Range(0, spells.Count);
+            Spell selectedSpell = spells[spellIndex];
+
+            // Seçilen büyüyü CardCurrent nesnesine uyguluyoruz.
+            CardCurrent.GetComponent<CardInformation>().CardName = selectedSpell.name;
+            CardCurrent.GetComponent<CardInformation>().CardDes = selectedSpell.name + " POWWERRRRR!!!";
+            CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+            CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+            CardCurrent.GetComponent<CardInformation>().CardMana = selectedSpell.mana;
+
+            // Kart bilgilerinin güncellenmesini sağlıyoruz.
+            CardCurrent.GetComponent<CardInformation>().SetInformation();
+        }
+        else
+        {
+            Debug.LogError("Spell listesi boş veya geçersiz bir kart seçildi.");
+        }
+    }
+    public void MerfolkScout()
+    {
+        if (GameObject.Find("Deck").transform.childCount < 10)
+        {
+            Vector3[] positions = new Vector3[3];
+            float yPosition = 2.7f;
+            float zPosition = -2.7f;
+
+            Vector3 screenPos1 = new Vector3(0f, yPosition, zPosition);
+
+            positions[0] = screenPos1;
+
+            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+            GameObject CardCurrent = Instantiate(CardPrefabSolo, positions[0], rotation);
+            CardCurrent.AddComponent<Button>();
+            CreateInfoCard(CardCurrent);
+            MerfolkScoutBool = true;
+            NextCard = CardCurrent;
+            CardCurrent.GetComponent<Button>().onClick.AddListener(() => Destroy(CardCurrent));
+        }
+        else
+            Debug.Log("Desten Dolu");
+    }
+    public void MarcoPolo()
+    {
+        if (GameObject.Find("Deck").transform.childCount < 10)
+        {
+            Vector3[] positions = new Vector3[3];
+            float yPosition = 2.7f;
+            float zPosition = -2.7f;
+
+            Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
+            Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
+            Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+
+            positions[0] = screenPos1;
+            positions[1] = screenPos2;
+            positions[2] = screenPos3;
+
+            for (int i = 0; i < positions.Length; i++)
+            {
+                Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                GameObject CardCurrent = Instantiate(CardPrefabSolo, positions[i], rotation);
+                CardCurrent.tag = "SelectCard";
+                CardCurrent.AddComponent<Button>();
+                CreateInfoCard(CardCurrent);
+                CardCurrent.GetComponent<Button>().onClick.AddListener(() => SelectedCard(CardCurrent));
+
+            }
+        }
+        else
+            Debug.Log("Desten Dolu");
+    }
+    public void ScavengerRaider()
+    {
+        
+        
+            drawCardTextObject.SetActive(true);
+            TakeGun.SetActive(true);
+
+            drawCardTextObject.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked2(drawCardTextObject));
+            TakeGun.GetComponent<Button>().onClick.AddListener(() => OnGameobjectClicked2(TakeGun));
+        
+    }
+    void OnGameobjectClicked2(GameObject clickedTextObject)
+    {
+        if (clickedTextObject == drawCardTextObject)
+        {
+            SpawnAndReturnGameObject();
+        }
+        else if (clickedTextObject == TakeGun)
+        {
+            CreateDeckCard("Gun", "2", 2, 0);
+
+        }
+
+        drawCardTextObject.SetActive(false);
+        TakeGun.SetActive(false);
+    }
+    public static void CanFirstRauntAttack(GameObject selectedCard)
+    {
+        selectedCard.GetComponent<CardInformation>().isItFirstRaound = false;
+        Transform childTransform = selectedCard.transform;
+        Transform green = childTransform.Find("Green");
+        green.gameObject.SetActive(true);
+    }
+    public void EchoOfTomorrow()
+    {
+        if (UsedSpellCard.Count > 0)
+        {
+            if (GameObject.Find("Deck").transform.childCount < 10)
+            {
+                // Son büyü kartını seçiyoruz
+                GameObject lastSpellCard = UsedSpellCard[UsedSpellCard.Count - 1];
+
+                // Kartı oluşturuyoruz
+                GameObject CardCurrent = Instantiate(lastSpellCard, GameObject.Find("Deck").transform);
+                CardCurrent.tag = "Card";
+                CardCurrent.GetComponent<CardInformation>().CardMana -= 3;
+                if (CardCurrent.GetComponent<CardInformation>().CardMana < 0)
+                {
+                    CardCurrent.GetComponent<CardInformation>().CardMana = 0;
+                }
+                CardCurrent.GetComponent<CardInformation>().SetInformation();
+
+                float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+                DeckCardCount++;
+            }
+        }
+    }
+    public void CreateDeckCard(string name, string health, int damage, int mana)
+    {
+        GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+        CardCurrent.GetComponent<CardInformation>().CardName = name;
+        CardCurrent.GetComponent<CardInformation>().CardHealth = health;
+        CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
+        CardCurrent.GetComponent<CardInformation>().CardMana = mana;
+
+        StackOwnDeck();
+        StackCompetitorDeck();
+        DeckCardCount++;
+
+        GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+    }
+    public void UsedSpell(GameObject SpellCard)
+    {
+       
+        PlayerController[] objects = PlayerController.FindObjectsOfType<PlayerController>();
+        foreach (PlayerController obj in objects)
+        {
+            if (obj.name == "PlayerController(Clone)"  && obj.GetComponent<PlayerController>().SteppeAmbush == true)
+            {
+                List<int> emptyCells = new List<int>();
+
+                for (int i = 0; i < 14; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyCells.Add(i);
+                    }
+                }
+                if (emptyCells.Count > 0)
+                {
+                    int randomIndex = emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)];
+
+                    CreateSpecialCard("Horse Archer", "2", 3, 0, randomIndex, false);
+                    obj.GetComponent<PlayerController>().SteppeAmbush = false;
+                }
+                else
+                {
+                    Debug.LogWarning("No empty cells available to place the horse archer card.");
+                }
+            }
+        }
+        GameObject[] myCards = GameObject.FindGameObjectsWithTag("UsedCard"); // RAKİBİN BÜTÜN KARTLARINI AL
+
+
+        foreach (var Card in myCards)
+        {
+            if (Card.GetComponent<CardInformation>().CardName == "Anatomist of the Unknown")
+            {
+                if (myCards.Length > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, myCards.Length);
+                    GameObject randomCard = myCards[randomIndex];
+                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, randomCard.transform.parent.gameObject);
+                    randomCard.GetComponent<CardInformation>().CardDamage += 2;
+                    randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                    
+                }
+                else if (Card.GetComponent<CardInformation>().CardName == "Automaton Apprentice")
+                {
+                    Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                    Card.GetComponent<CardInformation>().SetInformation();
+                }
+                else
+                {
+                    Debug.LogWarning("Hiç kart bulunamadı.");
+                }
+            }
+        }
+        AsgardQuestion++;
+
+        if (NaiadProtector)
+        {
+            GetComponent<CardController>().AddHealCard(1,true);
+        }
+
+        UsedSpellCard.Add(SpellCard);
+
+        PlayedSpell = true;
+    }
+    public void RefreshUsedCard(int boxindex, string heatlh, int damage)
+    {
+        GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>().SetInformation();
+
+    }
+    public void DamageToAlLOtherMinionsForLocust()
+    {
+
+        GameObject[] allTargets = GameObject.FindGameObjectsWithTag("CompetitorCard"); // RAKİBİN BÜTÜN KARTLARINI AL
+
+        foreach (var Card in allTargets)
+        {
+
+            if (Card.GetComponent<CardInformation>().CardHealth != "") // MİNİYON OLUP OLMADIĞINI ÖĞREN - ŞARTI SAĞLIYORSA MİNYONDUR.
+            {
+                int CurrentCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, Card.transform.parent.gameObject);
+
+                Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) - 1).ToString(); //  İKİ DAMAGE VURUYOR
+                RefreshUsedCard(CurrentCardIndex, Card.GetComponent<CardInformation>().CardHealth, Card.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
+                CreateTextAtTargetIndex(CurrentCardIndex, 1, false);
+
+                if (int.Parse(Card.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET
+                {
+                    List<int> emptyFrontCells = new List<int>();
+                    List<int> emptyBackCells = new List<int>();
+
+                    for (int i = 7; i < 14; i++)
+                    {
+                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                        {
+                            emptyFrontCells.Add(i);
+                        }
+                    }
+
+                    if (emptyFrontCells.Count > 0)
+                    {
+                        int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                        int index = emptyFrontCells[randomIndex];
+                        CreateSpecialCard("Plague of Locusts", "1", 1, 0, index, true);
+                        emptyFrontCells.RemoveAt(randomIndex);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 7; i++)
+                        {
+                            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                            {
+                                emptyBackCells.Add(i);
+                            }
+                        }
+
+                        if (emptyBackCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                            int index = emptyBackCells[randomIndex];
+                            CreateSpecialCard("Plague of Locusts", "1", 1, 0, index, true);
+                            emptyBackCells.RemoveAt(randomIndex);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                        }
+                    }
+                    GetComponent<PlayerController>().DeleteAreaCard(CurrentCardIndex);
+                    GetComponent<PlayerController>().RefreshLog(-1, true, "Plague of Locusts", Card.GetComponent<CardInformation>().CardName, Color.red);
+                }
+                else
+                    GetComponent<PlayerController>().RefreshLog(-1, false, "Plague of Locusts", Card.GetComponent<CardInformation>().CardName, Color.red);
+
+
+            }
+        }
+    }
+    public void DestroyAndCreateMyDeck(GameObject CardCurrent)
+    {
+
+        GameObject deckObject = GameObject.Find("Deck");
+        if (deckObject.transform.childCount < 10)
+        {
+            string cardName = CardCurrent.GetComponent<CardInformation>().CardName;
+            string cardDes = cardName + " POWWERRRRR!!!";
+            string cardHealth = CardCurrent.GetComponent<CardInformation>().CardHealth;
+            int cardDamage = CardCurrent.GetComponent<CardInformation>().CardDamage;
+            int cardMana = CardCurrent.GetComponent<CardInformation>().CardMana;
+
+
+            GameObject Card = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
+
+            float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+            Card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+            Card.GetComponent<CardInformation>().CardName = cardName;
+            Card.GetComponent<CardInformation>().CardDes = cardDes;
+            Card.GetComponent<CardInformation>().CardHealth = cardHealth;
+            Card.GetComponent<CardInformation>().CardDamage = cardDamage;
+            Card.GetComponent<CardInformation>().CardMana = cardMana;
+            Card.GetComponent<CardInformation>().SetInformation();
+
+
+            StackOwnDeck();
+            StackCompetitorDeck();
+            DeckCardCount++;
+            GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+        }
+        Destroy(CardCurrent);
+        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, CardCurrent.transform.parent.gameObject);
+        GetComponent<PlayerController>().PV.RPC("RPC_DeleteMyCard", RpcTarget.All, index);
+
+    }
+    public int CheckUndeadCards()
+    {
+        GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
+        int count = 0;
+        foreach (var card in AllOwnCards)
+        {
+            if (card.GetComponent<CardInformation>().CardName == "Royal Mummy" || card.GetComponent<CardInformation>().CardName == "Mummy")
+            {
+                count++;
+            }
+        }
+        return count;
+    }
 
     void DragCardAfterSelect()
     {
@@ -1439,7 +4008,7 @@ public class TutorialPlayerController : MonoBehaviour
         float followSpeed = 5f; // Kartın takip hızı
         selectedCard.transform.position = Vector3.Lerp(selectedCard.transform.position, targetPosition, Time.deltaTime * followSpeed);
     }
-
+    
 
     void SelectCardFromDeck()
     {
