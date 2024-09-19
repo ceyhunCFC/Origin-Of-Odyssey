@@ -150,7 +150,7 @@ MonoBehaviour:
       x: 566
       y: -749
       width: 1119
-      height: 1939
+      height: 1984
     contents:
     - model: {fileID: 8926484042661616674}
       id: 0
@@ -240,6 +240,9 @@ MonoBehaviour:
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661617175}
+      id: 0
+      isStickyNote: 0
+    - model: {fileID: 8926484042661617209}
       id: 0
       isStickyNote: 0
   - title: Orb Effect
@@ -334,15 +337,15 @@ MonoBehaviour:
   - name: Position Mesh
     collapsed: 1
   - name: View Image
-    collapsed: 1
-  - name: Orb Effect
     collapsed: 0
+  - name: Orb Effect
+    collapsed: 1
   uiBounds:
     serializedVersion: 2
     x: -957
     y: -769
     width: 3534
-    height: 2611
+    height: 2631
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -451,6 +454,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617173}
   - {fileID: 8926484042661617175}
   - {fileID: 8926484042661617179}
+  - {fileID: 8926484042661617209}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
@@ -1008,6 +1012,22 @@ MonoBehaviour:
         m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       m_SerializableObject: 
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: IntensityTextVI
+    path: IntensityTextVI
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_Float
+    realType: Single
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 1
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -6937,7 +6957,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: -433, y: 698}
+  m_UIPosition: {x: -453, y: 884}
   m_UICollapsed: 0
   m_UISuperCollapsed: 1
   m_InputSlots: []
@@ -6994,7 +7014,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: -236, y: 639}
+  m_UIPosition: {x: -256, y: 825}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -7863,7 +7883,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661614581}
     - outputSlot: {fileID: 8926484042661616265}
       inputSlot: {fileID: 8926484042661614582}
-    position: {x: -246, y: 576}
+    position: {x: -266, y: 762}
     expandedSlots:
     - {fileID: 8926484042661616263}
     expanded: 0
@@ -8405,7 +8425,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616283}
       inputSlot: {fileID: 8926484042661615085}
-    position: {x: -472, y: 647}
+    position: {x: -492, y: 833}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616283
@@ -8485,7 +8505,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616287}
       inputSlot: {fileID: 8926484042661616289}
-    position: {x: -441, y: 768}
+    position: {x: -461, y: 954}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616287
@@ -8538,7 +8558,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: -236, y: 749}
+  m_UIPosition: {x: -256, y: 935}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -8693,7 +8713,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616293}
       inputSlot: {fileID: 8926484042661614729}
-    position: {x: -236, y: 847}
+    position: {x: -256, y: 1033}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616293
@@ -8991,7 +9011,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616307}
       inputSlot: {fileID: 8926484042661616309}
-    position: {x: -396, y: 883}
+    position: {x: -416, y: 1069}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616307
@@ -9044,7 +9064,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: -168, y: 898}
+  m_UIPosition: {x: -188, y: 1084}
   m_UICollapsed: 0
   m_UISuperCollapsed: 1
   m_InputSlots:
@@ -9168,7 +9188,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616312}
       inputSlot: {fileID: 8926484042661614731}
-    position: {x: -236, y: 928}
+    position: {x: -256, y: 1114}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616312
@@ -9248,7 +9268,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616314}
       inputSlot: {fileID: 8926484042661614732}
-    position: {x: -233, y: 968}
+    position: {x: -253, y: 1154}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616314
@@ -10681,6 +10701,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616986}
   - {fileID: 8926484042661616805}
   - {fileID: 8926484042661617128}
+  - {fileID: 8926484042661617208}
   - {fileID: 8926484042661616755}
   - {fileID: 8926484042661616766}
   - {fileID: 8926484042661616770}
@@ -13862,7 +13883,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616939}
   m_ExposedName: DurationOE
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 1
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -14697,7 +14718,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616974}
   m_ExposedName: SpawnVI
   m_Exposed: 1
-  m_Order: 3
+  m_Order: 0
   m_Category: View Image
   m_Min:
     m_Type:
@@ -14777,7 +14798,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616976}
   m_ExposedName: DelayVI
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 1
   m_Category: View Image
   m_Min:
     m_Type:
@@ -14857,7 +14878,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616978}
   m_ExposedName: SizeVI
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 2
   m_Category: View Image
   m_Min:
     m_Type:
@@ -14937,7 +14958,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616980}
   m_ExposedName: LifetimeVI
   m_Exposed: 1
-  m_Order: 12
+  m_Order: 3
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15017,7 +15038,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616982}
   m_ExposedName: TextureVI
   m_Exposed: 1
-  m_Order: 14
+  m_Order: 4
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15097,7 +15118,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616984}
   m_ExposedName: ThicknessLineVI
   m_Exposed: 1
-  m_Order: 19
+  m_Order: 6
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15214,7 +15235,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616990}
   m_ExposedName: ColorTextVI
   m_Exposed: 1
-  m_Order: 23
+  m_Order: 7
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15294,7 +15315,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616992}
   m_ExposedName: RGBIntensityVI
   m_Exposed: 1
-  m_Order: 26
+  m_Order: 8
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15476,7 +15497,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616997}
   m_ExposedName: BlendVI
   m_Exposed: 1
-  m_Order: 28
+  m_Order: 9
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15558,7 +15579,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616999}
   m_ExposedName: LerpUVVI
   m_Exposed: 1
-  m_Order: 30
+  m_Order: 10
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15640,7 +15661,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617001}
   m_ExposedName: ScaleUVVI
   m_Exposed: 1
-  m_Order: 32
+  m_Order: 11
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15720,7 +15741,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617003}
   m_ExposedName: SpeedUVVI
   m_Exposed: 1
-  m_Order: 34
+  m_Order: 12
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15868,7 +15889,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617007}
   m_ExposedName: ColorThicknessVI
   m_Exposed: 1
-  m_Order: 35
+  m_Order: 13
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16084,7 +16105,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617033}
   m_ExposedName: AnimValueVI
   m_Exposed: 1
-  m_Order: 37
+  m_Order: 14
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16164,7 +16185,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617035}
   m_ExposedName: ThicknessDissolveVI
   m_Exposed: 1
-  m_Order: 42
+  m_Order: 17
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16246,7 +16267,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617037}
   m_ExposedName: ScaleDissolveVI
   m_Exposed: 1
-  m_Order: 44
+  m_Order: 18
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16326,7 +16347,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617039}
   m_ExposedName: ZAngleLifeVI
   m_Exposed: 1
-  m_Order: 47
+  m_Order: 20
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16345,7 +16366,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617039}
       inputSlot: {fileID: 8926484042661616704}
-    position: {x: 1078, y: 833}
+    position: {x: 1052, y: 991}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617039
@@ -16406,7 +16427,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617041}
   m_ExposedName: SizeLifeVI
   m_Exposed: 1
-  m_Order: 49
+  m_Order: 21
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16425,7 +16446,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617041}
       inputSlot: {fileID: 8926484042661616707}
-    position: {x: 1094, y: 953}
+    position: {x: 1068, y: 1159}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617041
@@ -16486,7 +16507,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617043}
   m_ExposedName: SpawnOE
   m_Exposed: 1
-  m_Order: 1
+  m_Order: 0
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -16569,7 +16590,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617047}
   m_ExposedName: SizeRandomOE
   m_Exposed: 1
-  m_Order: 5
+  m_Order: 2
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -16721,7 +16742,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617051}
   m_ExposedName: AngleRandomOE
   m_Exposed: 1
-  m_Order: 9
+  m_Order: 4
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -16873,7 +16894,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617055}
   m_ExposedName: LifetimeRandomOE
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 3
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17025,7 +17046,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617059}
   m_ExposedName: TextureOE
   m_Exposed: 1
-  m_Order: 11
+  m_Order: 5
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17105,7 +17126,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617061}
   m_ExposedName: ColorLifeOE
   m_Exposed: 1
-  m_Order: 13
+  m_Order: 7
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17185,7 +17206,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617063}
   m_ExposedName: PowerOE
   m_Exposed: 1
-  m_Order: 15
+  m_Order: 8
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17270,7 +17291,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617065}
   m_ExposedName: LerpAlphaOE
   m_Exposed: 1
-  m_Order: 16
+  m_Order: 9
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17352,7 +17373,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617067}
   m_ExposedName: LerpUVOE
   m_Exposed: 1
-  m_Order: 20
+  m_Order: 11
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17434,7 +17455,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617069}
   m_ExposedName: ScaleUVOE
   m_Exposed: 1
-  m_Order: 22
+  m_Order: 12
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17514,7 +17535,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617071}
   m_ExposedName: SpeedUVOE
   m_Exposed: 1
-  m_Order: 24
+  m_Order: 13
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17662,7 +17683,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617075}
   m_ExposedName: SpeedTwirlUVOE
   m_Exposed: 1
-  m_Order: 25
+  m_Order: 14
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17810,7 +17831,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617079}
   m_ExposedName: StrenhtTwirlUVOE
   m_Exposed: 1
-  m_Order: 27
+  m_Order: 15
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17890,7 +17911,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617081}
   m_ExposedName: SizeLifeOE
   m_Exposed: 1
-  m_Order: 29
+  m_Order: 16
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18723,7 +18744,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617122}
   m_ExposedName: ActiveTextDissolveVI
   m_Exposed: 1
-  m_Order: 39
+  m_Order: 15
   m_Category: View Image
   m_Min:
     m_Type:
@@ -18803,7 +18824,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617124}
   m_ExposedName: TextDissolveVI
   m_Exposed: 1
-  m_Order: 41
+  m_Order: 16
   m_Category: View Image
   m_Min:
     m_Type:
@@ -19979,7 +20000,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617174}
   m_ExposedName: AlphaLifeVI
   m_Exposed: 1
-  m_Order: 45
+  m_Order: 19
   m_Category: View Image
   m_Min:
     m_Type:
@@ -20180,14 +20201,14 @@ MonoBehaviour:
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 0
+  m_UICollapsed: 1
   m_UISuperCollapsed: 0
   m_InputSlots: []
   m_OutputSlots:
   - {fileID: 8926484042661617180}
   m_ExposedName: NoiseUVOE
   m_Exposed: 1
-  m_Order: 18
+  m_Order: 10
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -20244,3 +20265,118 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661617116}
+--- !u!114 &8926484042661617208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617208}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661616676}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 1
+    m_Space: -1
+  m_Property:
+    name: _IntensityMain
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 0
+  m_LinkedSlots:
+  - {fileID: 8926484042661617210}
+--- !u!114 &8926484042661617209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 0
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661617210}
+  m_ExposedName: IntensityTextVI
+  m_Exposed: 1
+  m_Order: 5
+  m_Category: View Image
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661617210}
+      inputSlot: {fileID: 8926484042661617208}
+    position: {x: 1003, y: 545}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661617210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617210}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661617209}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 1
+    m_Space: -1
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661617208}

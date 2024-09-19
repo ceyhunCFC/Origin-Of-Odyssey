@@ -1403,24 +1403,37 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator MoveAndRotateCard(GameObject card, Vector3 targetPosition, float duration)
     {
+        // Kart ismini al ve boşlukları kaldır
+        string cardName = card.GetComponent<CardInformation>().CardName.Replace(" ", "");
+
+        // Kart ismine göre VFX prefab yollarını oluştur
+        string movieVFXPath = $"Vfx/VFX_{cardName}_Movie";
+        string lastVFXPath = $"Vfx/VFX_{cardName}_Last";
+
+        // Movie VFX prefab'ını yükle
+        GameObject vfxMovePrefab = Resources.Load<GameObject>(movieVFXPath);
+
+        // VFX prefab'ı bulunup bulunmadığını kontrol et
+        if (vfxMovePrefab == null)
+        {
+            Debug.LogError("VFX prefab'ı bulunamadı: " + movieVFXPath);
+            yield break; // Eğer prefab bulunamadıysa işlemi durdur
+        }
+
         Vector3 startPosition = card.transform.position;
         float time = 0f;
 
-        // Kart yukarı ve ileri pozisyonda hareket ederken oynayacak VFX
-        GameObject vfxMoveInstance = null;
-        if (vfxMovePrefab != null)
+        // Movie VFX varsa onu instantiate et
+        GameObject vfxMoveInstance = Instantiate(vfxMovePrefab, card.transform.position, Quaternion.identity);
+        vfxMoveInstance.transform.SetParent(card.transform);
+        vfxMoveInstance.transform.localPosition = Vector3.zero;
+        VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
+        if (vfxMoveComponent != null)
         {
-            vfxMoveInstance = Instantiate(vfxMovePrefab, card.transform.position, Quaternion.identity);
-            vfxMoveInstance.transform.SetParent(card.transform);
-            vfxMoveInstance.transform.localPosition = Vector3.zero;
-            VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
-            if (vfxMoveComponent != null)
-            {
-                vfxMoveComponent.Play();
-            }
+            vfxMoveComponent.Play();
         }
 
-        // İlk hareket: Yukarı ve ileri doğru hareket
+        // Kartı yukarı ve ileri hareket ettir
         Vector3 targetPlus = targetPosition + new Vector3(0f, 0.4f, 0.8f);
         while (time < duration)
         {
@@ -1429,16 +1442,13 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
-        // İlk hareket bittiğinde biraz bekle
+        // İlk hareketten sonra biraz bekle
         yield return new WaitForSeconds(1.5f);
 
-        // Kartın inmesi sırasında olan VFX'i yok et
-        if (vfxMoveInstance != null)
-        {
-            Destroy(vfxMoveInstance);
-        }
+        // Movie VFX'i yok et
+        Destroy(vfxMoveInstance);
 
-        // İkinci hareket: Kart hedef pozisyona doğru inerken
+        // Kartı hedef pozisyona indir
         time = 0f;
         while (time < duration)
         {
@@ -1446,34 +1456,37 @@ public class PlayerController : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
-
-        // Kart tam olarak hedef pozisyona yerleştirildi
         card.transform.position = targetPosition;
 
-        // İniş tamamlandığında diğer VFX'i çalıştır
-        GameObject vfxLandingInstance = null;
-        if (vfxLandingPrefab != null)
+        // Last VFX prefab'ını yükle
+        GameObject vfxLandingPrefab = Resources.Load<GameObject>(lastVFXPath);
+
+        // VFX prefab'ı bulunup bulunmadığını kontrol et
+        if (vfxLandingPrefab == null)
         {
-            vfxLandingInstance = Instantiate(vfxLandingPrefab, card.transform.position, Quaternion.identity);
-            vfxLandingInstance.transform.SetParent(card.transform);
-            vfxLandingInstance.transform.localPosition = Vector3.zero;
-            VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
-            if (vfxLandingComponent != null)
-            {
-                vfxLandingComponent.Play();
-            }
+            Debug.LogError("VFX prefab'ı bulunamadı: " + lastVFXPath);
+            yield break; // Eğer prefab bulunamadıysa işlemi durdur
         }
 
-        // Son VFX'i çalıştırdıktan 5 saniye sonra yok et
-        if (vfxLandingInstance != null)
+        // Last VFX varsa onu instantiate et
+        GameObject vfxLandingInstance = Instantiate(vfxLandingPrefab, card.transform.position, Quaternion.identity);
+        vfxLandingInstance.transform.SetParent(card.transform);
+        vfxLandingInstance.transform.localPosition = Vector3.zero;
+        VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
+        if (vfxLandingComponent != null)
         {
-            yield return new WaitForSeconds(5f);
-            Destroy(vfxLandingInstance);
+            vfxLandingComponent.Play();
         }
+
+        // Last VFX'i 5 saniye sonra yok et
+        yield return new WaitForSeconds(5f);
+        Destroy(vfxLandingInstance);
 
         selectedCard = null;
         StackDeck();
     }
+
+
 
     void SelectAndUseCard()
     {
