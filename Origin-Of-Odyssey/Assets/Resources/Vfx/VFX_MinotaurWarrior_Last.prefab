@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8472451197464994749}
   - component: {fileID: 9174170910139020238}
   m_Layer: 0
-  m_Name: VFX_MinatorWarrior_Last
+  m_Name: VFX_MinotaurWarrior_Last
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

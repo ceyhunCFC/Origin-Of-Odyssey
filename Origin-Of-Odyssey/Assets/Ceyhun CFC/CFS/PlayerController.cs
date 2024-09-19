@@ -1410,21 +1410,15 @@ public class PlayerController : MonoBehaviour
         string movieVFXPath = $"Vfx/VFX_{cardName}_Movie";
         string lastVFXPath = $"Vfx/VFX_{cardName}_Last";
 
-        // Movie VFX prefab'ını yükle
-        GameObject vfxMovePrefab = Resources.Load<GameObject>(movieVFXPath);
-
-        // VFX prefab'ı bulunup bulunmadığını kontrol et
-        if (vfxMovePrefab == null)
-        {
-            Debug.LogError("VFX prefab'ı bulunamadı: " + movieVFXPath);
-            yield break; // Eğer prefab bulunamadıysa işlemi durdur
-        }
+        // Movie VFX prefab'ını yükle, eğer bulunamazsa default vfxMovePrefab'ı kullan
+        GameObject loadedMovePrefab = Resources.Load<GameObject>(movieVFXPath);
+        GameObject moveVFXToUse = loadedMovePrefab != null ? loadedMovePrefab : vfxMovePrefab;
 
         Vector3 startPosition = card.transform.position;
         float time = 0f;
 
         // Movie VFX varsa onu instantiate et
-        GameObject vfxMoveInstance = Instantiate(vfxMovePrefab, card.transform.position, Quaternion.identity);
+        GameObject vfxMoveInstance = Instantiate(moveVFXToUse, card.transform.position, Quaternion.identity);
         vfxMoveInstance.transform.SetParent(card.transform);
         vfxMoveInstance.transform.localPosition = Vector3.zero;
         VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
@@ -1458,18 +1452,12 @@ public class PlayerController : MonoBehaviour
         }
         card.transform.position = targetPosition;
 
-        // Last VFX prefab'ını yükle
-        GameObject vfxLandingPrefab = Resources.Load<GameObject>(lastVFXPath);
-
-        // VFX prefab'ı bulunup bulunmadığını kontrol et
-        if (vfxLandingPrefab == null)
-        {
-            Debug.LogError("VFX prefab'ı bulunamadı: " + lastVFXPath);
-            yield break; // Eğer prefab bulunamadıysa işlemi durdur
-        }
+        // Last VFX prefab'ını yükle, eğer bulunamazsa default vfxLandingPrefab'ı kullan
+        GameObject loadedLandingPrefab = Resources.Load<GameObject>(lastVFXPath);
+        GameObject landingVFXToUse = loadedLandingPrefab != null ? loadedLandingPrefab : vfxLandingPrefab;
 
         // Last VFX varsa onu instantiate et
-        GameObject vfxLandingInstance = Instantiate(vfxLandingPrefab, card.transform.position, Quaternion.identity);
+        GameObject vfxLandingInstance = Instantiate(landingVFXToUse, card.transform.position, Quaternion.identity);
         vfxLandingInstance.transform.SetParent(card.transform);
         vfxLandingInstance.transform.localPosition = Vector3.zero;
         VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
@@ -1485,6 +1473,7 @@ public class PlayerController : MonoBehaviour
         selectedCard = null;
         StackDeck();
     }
+
 
 
 
@@ -1764,7 +1753,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void CreateTextAtTargetIndex(int targetIndex, int damage,bool mycard)
+    public void CreateTextAtTargetIndex(int targetIndex, int damage, bool mycard, string cardname)
     {
         Transform targetTransform;
         if (mycard)
@@ -1775,24 +1764,43 @@ public class PlayerController : MonoBehaviour
         {
             targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[targetIndex].transform;
         }
-        GameObject targetChildObject = targetTransform.GetChild(0).gameObject;
-        GameObject AttackPrefab = Instantiate(vfxAttackPrefab, targetTransform);
-        Destroy(AttackPrefab, 5f);
+
+        string cardName = cardname.Replace(" ", "");
+
+        // Kart adına göre VFX yolunu oluştur
+        string attackVFXPath = $"Vfx/VFX_{cardName}_Attack";
+        GameObject loadedVFXPrefab = Resources.Load<GameObject>(attackVFXPath);
+
+        // Eğer kart VFX prefab'ı bulunamazsa, default prefab'ı kullan
+        if (loadedVFXPrefab != null)
+        {
+            GameObject attackInstance = Instantiate(loadedVFXPrefab, targetTransform);
+            Destroy(attackInstance, 5f);
+        }
+        else
+        {
+            Debug.LogError("Attack VFX prefab'ı bulunamadı: " + attackVFXPath + ". Default VFX çalıştırılıyor.");
+            GameObject attackInstance = Instantiate(vfxAttackPrefab, targetTransform); // vfxAttackPrefab zaten default olarak tanımlı
+            Destroy(attackInstance, 5f);
+        }
 
         GameObject damageTextObject = Instantiate(DamageText);
         damageTextObject.transform.parent = targetTransform;
         damageTextObject.transform.localPosition = new Vector3(0, 0.5f, 0);
         damageTextObject.transform.localRotation = Quaternion.Euler(50, 0, 0);
         damageTextObject.transform.localScale = new Vector3(0.005f, 0.01f, 0.01f);
+
         Text textComponent = damageTextObject.GetComponentInChildren<Text>();
         textComponent.text = "-" + damage.ToString();
         Destroy(damageTextObject, 3f);
 
-        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateTextAtTargetIndex", RpcTarget.Others,targetIndex,damage,mycard);
+        CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateTextAtTargetIndex", RpcTarget.Others, targetIndex, damage, mycard,cardname);
     }
 
+
+
     [PunRPC]
-    void RPC_CreateTextAtTargetIndex(int targetIndex,int damage,bool mycard)
+    void RPC_CreateTextAtTargetIndex(int targetIndex,int damage,bool mycard, string cardname)
     {
         Transform targetTransform;
         if (mycard)
@@ -1804,8 +1812,24 @@ public class PlayerController : MonoBehaviour
             targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[targetIndex].transform;
         }
         GameObject targetChildObject = targetTransform.GetChild(0).gameObject;
-        GameObject AttackPrefab = Instantiate(vfxAttackPrefab, targetTransform);
-        Destroy(AttackPrefab, 5f);
+        string cardName = targetChildObject.GetComponent<CardInformation>().CardName.Replace(" ", "");
+
+        // Kart adına göre VFX yolunu oluştur
+        string attackVFXPath = $"Vfx/VFX_{cardName}_Attack";
+        GameObject loadedVFXPrefab = Resources.Load<GameObject>(attackVFXPath);
+
+        // Eğer kart VFX prefab'ı bulunamazsa, default prefab'ı kullan
+        if (loadedVFXPrefab != null)
+        {
+            GameObject attackInstance = Instantiate(loadedVFXPrefab, targetTransform);
+            Destroy(attackInstance, 5f);
+        }
+        else
+        {
+            Debug.LogError("Attack VFX prefab'ı bulunamadı: " + attackVFXPath + ". Default VFX çalıştırılıyor.");
+            GameObject attackInstance = Instantiate(vfxAttackPrefab, targetTransform); // vfxAttackPrefab zaten default olarak tanımlı
+            Destroy(attackInstance, 5f);
+        }
 
         GameObject damageTextObject = Instantiate(DamageText);
         damageTextObject.transform.parent = targetTransform;
@@ -2079,7 +2103,7 @@ public class PlayerController : MonoBehaviour
                     int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomEnemyCard.transform.parent.gameObject);
                     randomEnemyCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomEnemyCard.GetComponent<CardInformation>().CardHealth) - 2).ToString();
                     RefreshUsedCard(TargetCardIndex, randomEnemyCard.GetComponent<CardInformation>().CardHealth, randomEnemyCard.GetComponent<CardInformation>().CardDamage);
-                    CreateTextAtTargetIndex(TargetCardIndex, 2, false);
+                    CreateTextAtTargetIndex(TargetCardIndex, 2, false, "Grand Cannon");
                     if (int.Parse(randomEnemyCard.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
                     {
 
@@ -2734,7 +2758,7 @@ public class PlayerController : MonoBehaviour
                                         target.GetComponent<CardInformation>().CardHealth =(int.Parse(target.GetComponent<CardInformation>().CardHealth) - _CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage).ToString();
                                         int index= Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions,target.transform.parent.gameObject);
                                         RefreshUsedCard(index, target.GetComponent<CardInformation>().CardHealth, target.GetComponent<CardInformation>().CardDamage);
-                                        CreateTextAtTargetIndex(index, _CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, false);
+                                        CreateTextAtTargetIndex(index, _CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, false, _CardProgress.AttackerCard.GetComponent<CardInformation>().CardName);
                                         RefreshLog(-_CardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, true, _CardProgress.AttackerCard.GetComponent<CardInformation>().CardName, target.GetComponent<CardInformation>().CardName, Color.red);
                                         if (int.Parse(target.GetComponent<CardInformation>().CardHealth) <= 0)
                                         {

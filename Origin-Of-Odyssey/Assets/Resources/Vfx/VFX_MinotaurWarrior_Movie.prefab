@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5852511714955574066}
   - component: {fileID: 8276075011911073325}
   m_Layer: 0
-  m_Name: VFX_MinatorWarrior_Movie
+  m_Name: VFX_MinotaurWarrior_Movie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

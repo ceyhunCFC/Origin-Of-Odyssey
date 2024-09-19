@@ -54,7 +54,7 @@ public class AnubisCardFuns
         {
             int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
             card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) - 2).ToString();
-            PC.GetComponent<PlayerController>().CreateTextAtTargetIndex(index, 2, true);
+            PC.GetComponent<PlayerController>().CreateTextAtTargetIndex(index, 2, true, attackername);
             if (int.Parse(card.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
             {
 
@@ -492,7 +492,7 @@ public class AnubisCardFuns
 
                 Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) - 1).ToString(); //  ÝKÝ DAMAGE VURUYOR
                 PC.GetComponent<PlayerController>().RefreshUsedCard(CurrentCardIndex, Card.GetComponent<CardInformation>().CardHealth, Card.GetComponent<CardInformation>().CardDamage); // DAMAGE YÝYEN KARTIN BÝLGÝLERÝNÝ GÜNCELLE
-                PC.GetComponent<PlayerController>().CreateTextAtTargetIndex(CurrentCardIndex, 1, false);
+                PC.GetComponent<PlayerController>().CreateTextAtTargetIndex(CurrentCardIndex, 1, false, "Plague of Locusts");
 
                 if (int.Parse(Card.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET
                 {

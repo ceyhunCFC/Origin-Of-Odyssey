@@ -184,7 +184,7 @@ public class DustinCardFuns
         PC._CardProgress.DamageToAlLOtherMinions(selectedCard.GetComponent<CardInformation>().CardDamage, selectedCard.GetComponent<CardInformation>().CardName);
         selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) - 2).ToString();
         int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
-        PC.CreateTextAtTargetIndex(index,2, true);
+        PC.CreateTextAtTargetIndex(index,2, true, "Claire");
         PC.RefreshMyCard(index,
                     selectedCard.GetComponent<CardInformation>().CardHealth,
                     selectedCard.GetComponent<CardInformation>().HaveShield,

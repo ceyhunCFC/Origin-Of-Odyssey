@@ -216,7 +216,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                         int damage = 3 + GetComponent<PlayerController>().SpellsExtraDamage;
                         TargetInfo = TargetCard.GetComponent<CardInformation>();
                         TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - damage).ToString();
-                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, damage, false);
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, damage, false, AttackerCard.GetComponent<CardInformation>().CardName);
                         FreezeAround();
                         if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
                         {
@@ -248,7 +248,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                     {
                         TargetInfo = TargetCard.GetComponent<CardInformation>();
                         TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 3).ToString();
-                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 3, false);
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 3, false, AttackerCard.GetComponent<CardInformation>().CardName);
                         if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
                         {
 
@@ -269,7 +269,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                         TargetInfo = TargetCard.GetComponent<CardInformation>();
 
                         TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 2).ToString();
-                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 2, false);
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 2, false, AttackerCard.GetComponent<CardInformation>().CardName);
                         if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
                         {
 
@@ -306,7 +306,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
                                     selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(AttackerInfo.CardHealth) - TargetInfo.CardDamage).ToString();
                                     GetComponent<PlayerController>().RefreshUsedCard(index, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-                                    GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, false);
+                                    GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, false, AttackerCard.GetComponent<CardInformation>().CardName);
                                 }
                             }
                             else
@@ -321,7 +321,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
                                     selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(AttackerInfo.CardHealth) - TargetInfo.CardDamage).ToString();
                                     GetComponent<PlayerController>().RefreshUsedCard(index, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-                                    GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, true);
+                                    GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, true, AttackerCard.GetComponent<CardInformation>().CardName);
                                 }
                             }
                         }
@@ -339,7 +339,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                     {
                         TargetInfo = TargetCard.GetComponent<CardInformation>();
                         TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 2).ToString();
-                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 2, false);
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 2, false, AttackerCard.GetComponent<CardInformation>().CardName);
                         if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
                         {
 
@@ -1566,7 +1566,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                         target.GetComponent<CardInformation>().CardHealth = (int.Parse(target.GetComponent<CardInformation>().CardHealth) - 1).ToString();
                         int NearbyCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, target.transform.parent.gameObject);
 
-                        GetComponent<PlayerController>().CreateTextAtTargetIndex(NearbyCardIndex, 1, false);
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(NearbyCardIndex, 1, false,"hydra");
                         target.GetComponent<CardInformation>().CardFreeze = true;
                         GetComponent<PlayerController>().RefreshCompotitorCard(NearbyCardIndex, target.GetComponent<CardInformation>().FirstTakeDamage, target.GetComponent<CardInformation>().CardFreeze);
 
@@ -1601,7 +1601,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
                 Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) - damage).ToString(); //  İKİ DAMAGE VURUYOR
                 GetComponent<PlayerController>().RefreshUsedCard(CurrentCardIndex, Card.GetComponent<CardInformation>().CardHealth, Card.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-                GetComponent<PlayerController>().CreateTextAtTargetIndex(CurrentCardIndex, damage, false);
+                GetComponent<PlayerController>().CreateTextAtTargetIndex(CurrentCardIndex, damage, false, name);
 
                 if (int.Parse(Card.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET
                 {

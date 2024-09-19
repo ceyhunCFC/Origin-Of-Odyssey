@@ -144,7 +144,7 @@ public class StandartCardFuns
         randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) - 4).ToString();
         randomCard.GetComponent<CardInformation>().SetInformation();
         int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard.transform.parent.gameObject);
-        PC.CreateTextAtTargetIndex(index, 2, false);
+        PC.CreateTextAtTargetIndex(index, 2, false, "Rebel Outcast");
         PC.RefreshUsedCard(index, randomCard.GetComponent<CardInformation>().CardHealth, randomCard.GetComponent<CardInformation>().CardDamage);
 
     }
@@ -198,7 +198,7 @@ public class StandartCardFuns
         randomCard1.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard1.GetComponent<CardInformation>().CardHealth) - 2).ToString();
         randomCard1.GetComponent<CardInformation>().SetInformation();
         int index1 = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard1.transform.parent.gameObject);
-        PC.CreateTextAtTargetIndex(index1, 2, false);
+        PC.CreateTextAtTargetIndex(index1, 2, false, "Urban Ranger");
         PC.RefreshUsedCard(index1, randomCard1.GetComponent<CardInformation>().CardHealth, randomCard1.GetComponent<CardInformation>().CardDamage);                                                          //iki kart seçiyor ilkinin aynýsý olmasýn ve 2 hasar veriyor ikisine de
 
         GameObject randomCard2;
@@ -210,7 +210,7 @@ public class StandartCardFuns
         randomCard2.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard2.GetComponent<CardInformation>().CardHealth) - 2).ToString();
         randomCard2.GetComponent<CardInformation>().SetInformation();
         int index2 = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard2.transform.parent.gameObject);
-        PC.CreateTextAtTargetIndex(index2, 2, false);
+        PC.CreateTextAtTargetIndex(index2, 2, false, "Urban Ranger");
         PC.RefreshUsedCard(index2, randomCard2.GetComponent<CardInformation>().CardHealth, randomCard2.GetComponent<CardInformation>().CardDamage);
     }
 
