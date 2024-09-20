@@ -5,6 +5,7 @@ using Photon.Pun;
 using UnityEngine.UI;
 using Photon.Realtime;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class NetworkManger : MonoBehaviourPunCallbacks
 {
@@ -135,7 +136,7 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-            PhotonNetwork.LoadLevel("BattleMap");
+        PhotonNetwork.LoadLevel("BattleMap");
     }
 
     public void LeaveRoom()
@@ -151,25 +152,33 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
     }
 
-    public override void OnLeftRoom()
+    public void BackMainMenu()
     {
-        MenuManager.Instance.OpenMenu("title");
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("MainMenuScene");
     }
 
-   /* public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    
+    public override void OnLeftLobby()
     {
-        foreach (Transform trans in roomListContent)
-        {
-            Destroy(trans.gameObject);
-        }
+         SceneManager.LoadScene("MainMenuScene"); // Ana menü sahnesine geç
+     //   Destroy(GameObject.Find("RoomManager").gameObject);
+    }
 
-        for (int i = 0; i < roomList.Count; i++)
-        {
-            if (roomList[i].RemovedFromList)
-                continue;
-            Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
-        }
-    }*/
+    /* public override void OnRoomListUpdate(List<RoomInfo> roomList)
+     {
+         foreach (Transform trans in roomListContent)
+         {
+             Destroy(trans.gameObject);
+         }
+
+         for (int i = 0; i < roomList.Count; i++)
+         {
+             if (roomList[i].RemovedFromList)
+                 continue;
+             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
+         }
+     }*/
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
@@ -198,4 +207,5 @@ public class NetworkManger : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(8);
         StartGame();
     }
+
 }
