@@ -5,7 +5,6 @@ public class OpeningScript : MonoBehaviour
 {
     public GameObject Versus;
     public GameObject SettingCanvas;
-    public GameObject board;
 
     void Start()
     {
@@ -17,7 +16,6 @@ public class OpeningScript : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         Versus.SetActive(false);
-        board.SetActive(true);
     }
 
     public void OpenSettingsCanvas()

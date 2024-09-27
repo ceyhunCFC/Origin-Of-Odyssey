@@ -983,30 +983,54 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
         if (TargetCard.name == "CompetitorHeoCard(Clone)")
         {
-            AttackerCard.GetComponent<CardController>().UsedCard(AttackerInfo.CardDamage, GetComponent<PlayerController>().PV.Owner.IsMasterClient); // HERO YA DAMAGE VURMA
-            Debug.LogError("HEROYA DAMAGEEEEE");
-
-            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Damage to the enemy!";
-
-
-            if (GetComponent<PlayerController>().PV.IsMine)
+            if(AttackerCard.GetComponent<CardInformation>().CardName == "Zeus")
             {
-                GetComponent<PlayerController>().CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
-                GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
-                GetComponent<PlayerController>().SetMana(AttackerCard);
+                AttackerCard.GetComponent<CardController>().UsedCard(AttackerInfo.CardDamage, GetComponent<PlayerController>().PV.Owner.IsMasterClient);
+                Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Damage to the enemy!";
+
+
+                if (GetComponent<PlayerController>().PV.IsMine)
+                {
+                    GetComponent<PlayerController>().CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    GetComponent<PlayerController>().SetMana(AttackerCard);
+                }
+                GetComponent<PlayerController>().CreateTextHero(AttackerInfo.CardDamage);
+                GetComponent<PlayerController>().RefreshLog(-AttackerInfo.CardDamage, false, AttackerInfo.CardName, GetComponent<PlayerController>().OwnMainCardText.text, Color.red);
+                AttackerCard = null;
+                TargetCard = null;
+                TargetCardIndex = -1;
+                SecoundTargetCard = false;
+                return;
             }
-            GetComponent<PlayerController>().CreateTextHero(AttackerInfo.CardDamage);
-            GetComponent<PlayerController>().RefreshLog(-AttackerInfo.CardDamage, false, AttackerInfo.CardName, GetComponent<PlayerController>().OwnMainCardText.text, Color.red);
-            Transform transform = AttackerCard.transform;
-            Transform Green = transform.Find("Green");
-            Transform Blue = transform.Find("Blue");
-            Blue.gameObject.SetActive(false);
-            Green.gameObject.SetActive(false);
-            AttackerCard = null;
-            TargetCard = null;
-            TargetCardIndex = -1;
-            SecoundTargetCard = false;
-            return;
+            else
+            {
+                AttackerCard.GetComponent<CardController>().UsedCard(AttackerInfo.CardDamage, GetComponent<PlayerController>().PV.Owner.IsMasterClient); // HERO YA DAMAGE VURMA
+                Debug.LogError("HEROYA DAMAGEEEEE");
+
+                Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Damage to the enemy!";
+
+
+                if (GetComponent<PlayerController>().PV.IsMine)
+                {
+                    GetComponent<PlayerController>().CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+                    GetComponent<PlayerController>().SetMana(AttackerCard);
+                }
+                GetComponent<PlayerController>().CreateTextHero(AttackerInfo.CardDamage);
+                GetComponent<PlayerController>().RefreshLog(-AttackerInfo.CardDamage, false, AttackerInfo.CardName, GetComponent<PlayerController>().OwnMainCardText.text, Color.red);
+                Transform transform = AttackerCard.transform;
+                Transform Green = transform.Find("Green");
+                Transform Blue = transform.Find("Blue");
+                Blue.gameObject.SetActive(false);
+                Green.gameObject.SetActive(false);
+                AttackerCard = null;
+                TargetCard = null;
+                TargetCardIndex = -1;
+                SecoundTargetCard = false;
+                return;
+            }
+            
         }
         else
         {
@@ -1643,7 +1667,8 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
             if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount==0)
             {
-                GetComponent<PlayerController>().CreateHoplitesCard(i);
+                //GetComponent<PlayerController>().CreateHoplitesCard(i);
+                GetComponent<PlayerController>().CreateSpecialCard("Hoplite", "1", 1, 1, i, true);
             }
            
         }

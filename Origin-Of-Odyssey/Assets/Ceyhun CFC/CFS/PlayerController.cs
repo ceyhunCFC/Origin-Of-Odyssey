@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public int AsgardQuestion = 0;
     [HideInInspector] public int DeadCardCount = 0;
     [HideInInspector] public int DeckCardCount = 0;
-    [HideInInspector] public float Mana = 3;
+    [HideInInspector] public float Mana = 1;
     [HideInInspector] public int DeadMonsterCound = 0;
     [HideInInspector] public int AugmentCount = 0;
     [HideInInspector] public bool CanAttackMainCard = true;
@@ -118,6 +118,7 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<PlayerController>().transform.GetChild(0).gameObject.SetActive(false);
         }
+        Mana = 1;
 
 
 
@@ -1417,15 +1418,7 @@ public class PlayerController : MonoBehaviour
         Vector3 startPosition = card.transform.position;
         float time = 0f;
 
-        // Movie VFX varsa onu instantiate et
-        GameObject vfxMoveInstance = Instantiate(moveVFXToUse, card.transform.position, Quaternion.identity);
-        vfxMoveInstance.transform.SetParent(card.transform);
-        vfxMoveInstance.transform.localPosition = Vector3.zero;
-        VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
-        if (vfxMoveComponent != null)
-        {
-            vfxMoveComponent.Play();
-        }
+        
 
         // Kartı yukarı ve ileri hareket ettir
         Vector3 targetPlus = targetPosition + new Vector3(0f, 0.4f, 0.8f);
@@ -1434,6 +1427,16 @@ public class PlayerController : MonoBehaviour
             card.transform.position = Vector3.Lerp(startPosition, targetPlus, time / duration);
             time += Time.deltaTime;
             yield return null;
+        }
+
+        // Movie VFX varsa onu instantiate et
+        GameObject vfxMoveInstance = Instantiate(moveVFXToUse, card.transform.position, Quaternion.identity);
+        vfxMoveInstance.transform.SetParent(card.transform);
+        vfxMoveInstance.transform.localPosition = Vector3.zero;
+        VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
+        if (vfxMoveComponent != null)
+        {
+            vfxMoveComponent.Play();
         }
 
         // İlk hareketten sonra biraz bekle
@@ -3442,8 +3445,8 @@ public class PlayerController : MonoBehaviour
                     existingObject = OwnMainCardGameObject;
                 }
 
-              
 
+                print(Mana+ "" + CanAttackMainCard);
                 switch (OwnMainCard)
                 {
 
@@ -4906,7 +4909,7 @@ public class PlayerController : MonoBehaviour
                 float xPos = i * 0.4f - 0.4f; // Kartın X konumunu belirliyoruz
 
                 GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8931351f, 351.836639f, 174.237427f);
+                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8931351f, 351.836639f, 174.237427f);
 
                 yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
@@ -4922,7 +4925,7 @@ public class PlayerController : MonoBehaviour
                 float xPos = i * 0.3f - 0.3f; // Kartın X konumunu belirliyoruz
 
                 GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8471832f, 350.247925f, 173.120972f);
+                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8471832f, 350.247925f, 173.120972f);
 
                 yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
