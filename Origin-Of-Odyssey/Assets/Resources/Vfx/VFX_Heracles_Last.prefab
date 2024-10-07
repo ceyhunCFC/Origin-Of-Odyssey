@@ -169,11 +169,14 @@ VisualEffect:
       - m_Value: {x: 1, y: 12, z: 1}
         m_Name: RGBIntensityVI
         m_Overridden: 1
-      - m_Value: {x: 0, y: 1.7, z: 0.25}
+      - m_Value: {x: 0, y: 0.9, z: 0.6}
         m_Name: PositionSphere_transform_position
         m_Overridden: 1
       - m_Value: {x: 0, y: 0.4, z: 0.4}
         m_Name: Position_position
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 0.4}
+        m_Name: PositionPM
         m_Overridden: 1
     m_Vector4f:
       m_Array:

@@ -157,6 +157,12 @@ VisualEffect:
       - m_Value: {x: 0, y: 0.4, z: 0.4}
         m_Name: Position_position
         m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 0.4}
+        m_Name: PositionPM
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0.5, z: 0.4}
+        m_Name: PositionSpherePS_transform_position
+        m_Overridden: 1
     m_Vector4f:
       m_Array:
       - m_Value: {x: 16.997704, y: 3.6630647, z: 0.7216003, w: 0}

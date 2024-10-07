@@ -154,6 +154,12 @@ VisualEffect:
       - m_Value: {x: 0, y: 0.4, z: 0.4}
         m_Name: Position_position
         m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 0.4}
+        m_Name: PositionPM
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0.5, z: 0.4}
+        m_Name: PositionSphere_transform_position
+        m_Overridden: 1
     m_Vector4f:
       m_Array:
       - m_Value: {x: 47.93726, y: 47.93726, z: 47.93726, w: 0}
@@ -509,7 +515,10 @@ VisualEffect:
         m_Name: TexturePM
         m_Overridden: 0
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Orb Effect
+        m_Overridden: 0
 --- !u!73398921 &7122352604063974320
 VFXRenderer:
   serializedVersion: 1

@@ -138,12 +138,15 @@ MonoBehaviour:
     - model: {fileID: 8926484042661617111}
       id: 0
       isStickyNote: 0
+    - model: {fileID: 8926484042661617334}
+      id: 0
+      isStickyNote: 0
   - title: View Image
     position:
       serializedVersion: 2
-      x: 568
+      x: 500
       y: -749
-      width: 1117
+      width: 1185
       height: 1959
     contents:
     - model: {fileID: 8926484042661616674}
@@ -247,6 +250,12 @@ MonoBehaviour:
       isStickyNote: 0
     - model: {fileID: 8926484042661617328}
       id: 1
+      isStickyNote: 0
+    - model: {fileID: 8926484042661617330}
+      id: 0
+      isStickyNote: 0
+    - model: {fileID: 8926484042661617332}
+      id: 0
       isStickyNote: 0
   - title: Orb Effect
     position:
@@ -418,9 +427,9 @@ MonoBehaviour:
   - name: Active Controls
     collapsed: 0
   - name: Position Mesh
-    collapsed: 1
-  - name: View Image
     collapsed: 0
+  - name: View Image
+    collapsed: 1
   - name: Orb Effect
     collapsed: 1
   - name: Particle Sphere
@@ -565,6 +574,9 @@ MonoBehaviour:
   - {fileID: 8926484042661617308}
   - {fileID: 8926484042661617310}
   - {fileID: 8926484042661617328}
+  - {fileID: 8926484042661617330}
+  - {fileID: 8926484042661617332}
+  - {fileID: 8926484042661617334}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
@@ -1030,6 +1042,22 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
+  - name: PositionPM
+    path: PositionPM
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_Vector3f
+    realType: Vector3
+    defaultValue:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: '{"x":0.0,"y":0.0,"z":0.0}'
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
   - name: View Image
     path: 
     tooltip: 
@@ -1040,6 +1068,38 @@ MonoBehaviour:
     defaultValue:
       m_Type:
         m_SerializableType: 
+      m_SerializableObject: 
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: ThicknessColor
+    path: ThicknessColor
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_Bool
+    realType: Boolean
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: False
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: ThicknessText
+    path: ThicknessText
+    tooltip: 
+    space: -1
+    spaceable: 0
+    sheetType: m_NamedObject
+    realType: Texture2D
+    defaultValue:
+      m_Type:
+        m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
       m_SerializableObject: 
     min: -Infinity
     max: Infinity
@@ -5099,7 +5159,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614919}
   m_ExposedName: DelayPM
   m_Exposed: 1
-  m_Order: 48
+  m_Order: 57
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -5255,7 +5315,7 @@ MonoBehaviour:
         m_SerializableType: UnityEditor.VFX.Transform, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       m_SerializableObject: '{"position":{"x":0.0,"y":0.0,"z":0.0},"angles":{"x":0.0,"y":0.0,"z":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}}'
-    m_Space: 1
+    m_Space: 0
   m_Property:
     name: transform
     m_serializedType:
@@ -5298,7 +5358,8 @@ MonoBehaviour:
       m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661617335}
 --- !u!114 &8926484042661614947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7607,7 +7668,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615089}
   m_ExposedName: ColorParticlePM
   m_Exposed: 1
-  m_Order: 63
+  m_Order: 66
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -8087,7 +8148,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616257}
   m_ExposedName: SpawnPM
   m_Exposed: 1
-  m_Order: 38
+  m_Order: 56
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -8167,7 +8228,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616259}
   m_ExposedName: SizeRandomPM
   m_Exposed: 1
-  m_Order: 55
+  m_Order: 58
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -8319,7 +8380,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616263}
   m_ExposedName: LifetimeRandomPM
   m_Exposed: 1
-  m_Order: 56
+  m_Order: 59
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -8559,7 +8620,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616269}
   m_ExposedName: XZVelocityRandomPM
   m_Exposed: 1
-  m_Order: 60
+  m_Order: 63
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -8711,7 +8772,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616273}
   m_ExposedName: YVelocityRandomPM
   m_Exposed: 1
-  m_Order: 61
+  m_Order: 64
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -8863,7 +8924,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616283}
   m_ExposedName: TurbulenIntensityLifePM
   m_Exposed: 1
-  m_Order: 65
+  m_Order: 68
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -8943,7 +9004,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616287}
   m_ExposedName: TurbulenDragLifePM
   m_Exposed: 1
-  m_Order: 66
+  m_Order: 69
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9151,7 +9212,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616293}
   m_ExposedName: TurbulenFrequencyPM
   m_Exposed: 1
-  m_Order: 67
+  m_Order: 70
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9231,7 +9292,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616301}
   m_ExposedName: ColorPM
   m_Exposed: 1
-  m_Order: 64
+  m_Order: 67
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9447,7 +9508,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616307}
   m_ExposedName: TurbulenOctavesPM
   m_Exposed: 1
-  m_Order: 68
+  m_Order: 71
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9624,7 +9685,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616312}
   m_ExposedName: TurbulenRoughnessPM
   m_Exposed: 1
-  m_Order: 69
+  m_Order: 72
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9706,7 +9767,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616314}
   m_ExposedName: TurbulenLacunarityPM
   m_Exposed: 1
-  m_Order: 70
+  m_Order: 73
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9786,7 +9847,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616316}
   m_ExposedName: TexturePM
   m_Exposed: 1
-  m_Order: 62
+  m_Order: 65
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9866,7 +9927,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616318}
   m_ExposedName: AlphaLifePM
   m_Exposed: 1
-  m_Order: 71
+  m_Order: 74
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -9946,7 +10007,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616320}
   m_ExposedName: SizeLifePM
   m_Exposed: 1
-  m_Order: 72
+  m_Order: 75
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -10026,7 +10087,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616322}
   m_ExposedName: PositionMesh
   m_Exposed: 1
-  m_Order: 73
+  m_Order: 76
   m_Category: Active Controls
   m_Min:
     m_Type:
@@ -10106,7 +10167,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616365}
   m_ExposedName: ViewImage
   m_Exposed: 1
-  m_Order: 74
+  m_Order: 77
   m_Category: Active Controls
   m_Min:
     m_Type:
@@ -11225,7 +11286,7 @@ MonoBehaviour:
     - 1
     - -5
     - 5
-    - 8
+    - 4
   primitiveType: 1
   useGeometryShader: 0
 --- !u!114 &8926484042661616677
@@ -12313,7 +12374,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 805, y: 498}
+  m_UIPosition: {x: 737, y: 590}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -12441,7 +12502,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 612, y: 557}
+  m_UIPosition: {x: 544, y: 649}
   m_UICollapsed: 0
   m_UISuperCollapsed: 1
   m_InputSlots: []
@@ -14340,7 +14401,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616939}
   m_ExposedName: DurationOE
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 6
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -14653,7 +14714,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616948}
   m_ExposedName: Position
   m_Exposed: 1
-  m_Order: 57
+  m_Order: 60
   m_Category: All Controls
   m_Min:
     m_Type:
@@ -15399,7 +15460,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616974}
   m_ExposedName: SpawnVI
   m_Exposed: 1
-  m_Order: 0
+  m_Order: 3
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15479,7 +15540,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616976}
   m_ExposedName: DelayVI
   m_Exposed: 1
-  m_Order: 1
+  m_Order: 4
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15559,7 +15620,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616978}
   m_ExposedName: SizeVI
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 7
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15639,7 +15700,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616980}
   m_ExposedName: LifetimeVI
   m_Exposed: 1
-  m_Order: 3
+  m_Order: 8
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15719,7 +15780,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616982}
   m_ExposedName: TextureVI
   m_Exposed: 1
-  m_Order: 4
+  m_Order: 9
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15738,7 +15799,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616982}
       inputSlot: {fileID: 8926484042661616677}
-    position: {x: 1017, y: 176}
+    position: {x: 949, y: 268}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616982
@@ -15799,7 +15860,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616984}
   m_ExposedName: ThicknessLineVI
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 12
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15820,7 +15881,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616984}
       inputSlot: {fileID: 8926484042661616986}
-    position: {x: 979, y: 202}
+    position: {x: 911, y: 294}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616984
@@ -15916,7 +15977,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616990}
   m_ExposedName: ColorTextVI
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 13
   m_Category: View Image
   m_Min:
     m_Type:
@@ -15935,7 +15996,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616990}
       inputSlot: {fileID: 8926484042661616755}
-    position: {x: 1008, y: 240}
+    position: {x: 940, y: 332}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616990
@@ -15996,7 +16057,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616992}
   m_ExposedName: RGBIntensityVI
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 15
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16015,7 +16076,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616992}
       inputSlot: {fileID: 8926484042661616766}
-    position: {x: 979, y: 275}
+    position: {x: 911, y: 367}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616992
@@ -16178,7 +16239,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616997}
   m_ExposedName: BlendVI
   m_Exposed: 1
-  m_Order: 10
+  m_Order: 17
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16199,7 +16260,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616997}
       inputSlot: {fileID: 8926484042661616770}
-    position: {x: 1008, y: 314}
+    position: {x: 940, y: 406}
     expandedSlots: []
     expanded: 1
 --- !u!114 &8926484042661616997
@@ -16260,7 +16321,7 @@ MonoBehaviour:
   - {fileID: 8926484042661616999}
   m_ExposedName: LerpUVVI
   m_Exposed: 1
-  m_Order: 11
+  m_Order: 19
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16281,7 +16342,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661616999}
       inputSlot: {fileID: 8926484042661616771}
-    position: {x: 1003, y: 356}
+    position: {x: 935, y: 448}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661616999
@@ -16342,7 +16403,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617001}
   m_ExposedName: ScaleUVVI
   m_Exposed: 1
-  m_Order: 12
+  m_Order: 20
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16361,7 +16422,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617001}
       inputSlot: {fileID: 8926484042661616772}
-    position: {x: 1003, y: 393}
+    position: {x: 935, y: 485}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617001
@@ -16422,7 +16483,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617003}
   m_ExposedName: SpeedUVVI
   m_Exposed: 1
-  m_Order: 13
+  m_Order: 22
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16441,7 +16502,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617003}
       inputSlot: {fileID: 8926484042661616773}
-    position: {x: 992, y: 427}
+    position: {x: 924, y: 519}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617003
@@ -16570,7 +16631,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617007}
   m_ExposedName: ColorThicknessVI
   m_Exposed: 1
-  m_Order: 14
+  m_Order: 23
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16589,7 +16650,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617007}
       inputSlot: {fileID: 8926484042661616791}
-    position: {x: 942, y: 463}
+    position: {x: 874, y: 555}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617007
@@ -16786,7 +16847,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617033}
   m_ExposedName: AnimValueVI
   m_Exposed: 1
-  m_Order: 15
+  m_Order: 25
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16805,7 +16866,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617033}
       inputSlot: {fileID: 8926484042661616812}
-    position: {x: 649, y: 506}
+    position: {x: 581, y: 598}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617033
@@ -16866,7 +16927,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617035}
   m_ExposedName: ThicknessDissolveVI
   m_Exposed: 1
-  m_Order: 19
+  m_Order: 31
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16887,7 +16948,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617035}
       inputSlot: {fileID: 8926484042661616799}
-    position: {x: 1008, y: 696}
+    position: {x: 940, y: 788}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617035
@@ -16948,7 +17009,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617037}
   m_ExposedName: ScaleDissolveVI
   m_Exposed: 1
-  m_Order: 20
+  m_Order: 32
   m_Category: View Image
   m_Min:
     m_Type:
@@ -16967,7 +17028,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617037}
       inputSlot: {fileID: 8926484042661616801}
-    position: {x: 1015, y: 734}
+    position: {x: 947, y: 826}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617037
@@ -17028,7 +17089,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617039}
   m_ExposedName: ZAngleLifeVI
   m_Exposed: 1
-  m_Order: 21
+  m_Order: 34
   m_Category: View Image
   m_Min:
     m_Type:
@@ -17108,7 +17169,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617041}
   m_ExposedName: SizeLifeVI
   m_Exposed: 1
-  m_Order: 23
+  m_Order: 37
   m_Category: View Image
   m_Min:
     m_Type:
@@ -17188,7 +17249,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617043}
   m_ExposedName: SpawnOE
   m_Exposed: 1
-  m_Order: 1
+  m_Order: 5
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17271,7 +17332,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617047}
   m_ExposedName: SizeRandomOE
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 18
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17423,7 +17484,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617051}
   m_ExposedName: AngleRandomOE
   m_Exposed: 1
-  m_Order: 9
+  m_Order: 26
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17575,7 +17636,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617055}
   m_ExposedName: LifetimeRandomOE
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 24
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17727,7 +17788,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617059}
   m_ExposedName: TextureOE
   m_Exposed: 1
-  m_Order: 12
+  m_Order: 35
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17807,7 +17868,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617061}
   m_ExposedName: ColorLifeOE
   m_Exposed: 1
-  m_Order: 15
+  m_Order: 39
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17887,7 +17948,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617063}
   m_ExposedName: PowerOE
   m_Exposed: 1
-  m_Order: 16
+  m_Order: 40
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -17972,7 +18033,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617065}
   m_ExposedName: LerpAlphaOE
   m_Exposed: 1
-  m_Order: 19
+  m_Order: 42
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18054,7 +18115,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617067}
   m_ExposedName: LerpUVOE
   m_Exposed: 1
-  m_Order: 22
+  m_Order: 45
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18136,7 +18197,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617069}
   m_ExposedName: ScaleUVOE
   m_Exposed: 1
-  m_Order: 24
+  m_Order: 47
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18216,7 +18277,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617071}
   m_ExposedName: SpeedUVOE
   m_Exposed: 1
-  m_Order: 26
+  m_Order: 49
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18364,7 +18425,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617075}
   m_ExposedName: SpeedTwirlUVOE
   m_Exposed: 1
-  m_Order: 28
+  m_Order: 50
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18512,7 +18573,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617079}
   m_ExposedName: StrenhtTwirlUVOE
   m_Exposed: 1
-  m_Order: 29
+  m_Order: 51
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18592,7 +18653,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617081}
   m_ExposedName: SizeLifeOE
   m_Exposed: 1
-  m_Order: 31
+  m_Order: 53
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -18672,7 +18733,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617083}
   m_ExposedName: Orb Effect
   m_Exposed: 1
-  m_Order: 75
+  m_Order: 78
   m_Category: Active Controls
   m_Min:
     m_Type:
@@ -19024,7 +19085,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617108}
   m_ExposedName: ScaleMinRandomPM
   m_Exposed: 1
-  m_Order: 58
+  m_Order: 61
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -19172,7 +19233,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617112}
   m_ExposedName: ScaleMaxRandomPM
   m_Exposed: 1
-  m_Order: 59
+  m_Order: 62
   m_Category: Position Mesh
   m_Min:
     m_Type:
@@ -19425,7 +19486,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617122}
   m_ExposedName: ActiveTextDissolveVI
   m_Exposed: 1
-  m_Order: 16
+  m_Order: 27
   m_Category: View Image
   m_Min:
     m_Type:
@@ -19444,7 +19505,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617122}
       inputSlot: {fileID: 8926484042661617119}
-    position: {x: 1008, y: 573}
+    position: {x: 940, y: 665}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617122
@@ -19505,7 +19566,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617124}
   m_ExposedName: TextDissolveVI
   m_Exposed: 1
-  m_Order: 17
+  m_Order: 28
   m_Category: View Image
   m_Min:
     m_Type:
@@ -19524,7 +19585,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617124}
       inputSlot: {fileID: 8926484042661617120}
-    position: {x: 1033, y: 623}
+    position: {x: 965, y: 715}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617124
@@ -21977,7 +22038,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617212}
   m_ExposedName: SizeRandomPS
   m_Exposed: 1
-  m_Order: 13
+  m_Order: 38
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -22129,7 +22190,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617216}
   m_ExposedName: ColorRandomPS
   m_Exposed: 1
-  m_Order: 30
+  m_Order: 52
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -22209,7 +22270,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617218}
   m_ExposedName: SizeLifePS
   m_Exposed: 1
-  m_Order: 34
+  m_Order: 55
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -22289,7 +22350,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617220}
   m_ExposedName: LifetimeRandomPS
   m_Exposed: 1
-  m_Order: 17
+  m_Order: 41
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -22441,7 +22502,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617224}
   m_ExposedName: ScalePS
   m_Exposed: 1
-  m_Order: 23
+  m_Order: 46
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -22589,7 +22650,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617228}
   m_ExposedName: VelocityRandomPS
   m_Exposed: 1
-  m_Order: 20
+  m_Order: 43
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -22741,7 +22802,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617232}
   m_ExposedName: TexturePS
   m_Exposed: 1
-  m_Order: 25
+  m_Order: 48
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -22821,7 +22882,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617234}
   m_ExposedName: DragLifePS
   m_Exposed: 1
-  m_Order: 32
+  m_Order: 54
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -23762,7 +23823,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617273}
   m_ExposedName: SpawnPS
   m_Exposed: 1
-  m_Order: 3
+  m_Order: 10
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -23842,7 +23903,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617275}
   m_ExposedName: DurationPS
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 21
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -23922,7 +23983,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617277}
   m_ExposedName: Particle Sphere
   m_Exposed: 1
-  m_Order: 76
+  m_Order: 79
   m_Category: Active Controls
   m_Min:
     m_Type:
@@ -24037,7 +24098,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617281}
   m_ExposedName: MaskBlendVI
   m_Exposed: 1
-  m_Order: 9
+  m_Order: 16
   m_Category: View Image
   m_Min:
     m_Type:
@@ -24056,7 +24117,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617281}
       inputSlot: {fileID: 8926484042661617279}
-    position: {x: 1031, y: 522}
+    position: {x: 963, y: 614}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617281
@@ -24144,7 +24205,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 593, y: 448}
+  m_UIPosition: {x: 525, y: 540}
   m_UICollapsed: 0
   m_UISuperCollapsed: 1
   m_InputSlots: []
@@ -24200,7 +24261,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 796, y: 350}
+  m_UIPosition: {x: 728, y: 442}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -24336,7 +24397,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617291}
   m_ExposedName: AlphaLifeVI
   m_Exposed: 1
-  m_Order: 22
+  m_Order: 36
   m_Category: View Image
   m_Min:
     m_Type:
@@ -24355,7 +24416,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617291}
       inputSlot: {fileID: 8926484042661617287}
-    position: {x: 644, y: 368}
+    position: {x: 576, y: 460}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617291
@@ -24451,7 +24512,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617294}
   m_ExposedName: DelayOE
   m_Exposed: 1
-  m_Order: 5
+  m_Order: 14
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -24566,7 +24627,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617298}
   m_ExposedName: PowerTextDissolveVI
   m_Exposed: 1
-  m_Order: 18
+  m_Order: 29
   m_Category: View Image
   m_Min:
     m_Type:
@@ -24587,7 +24648,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617298}
       inputSlot: {fileID: 8926484042661617296}
-    position: {x: 890, y: 649}
+    position: {x: 822, y: 741}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617298
@@ -24683,7 +24744,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617302}
   m_ExposedName: DoubleTextOE
   m_Exposed: 1
-  m_Order: 11
+  m_Order: 33
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -24798,7 +24859,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617305}
   m_ExposedName: DelayPS
   m_Exposed: 1
-  m_Order: 10
+  m_Order: 30
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -24888,7 +24949,8 @@ MonoBehaviour:
       m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661617331}
 --- !u!114 &8926484042661617307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24922,7 +24984,8 @@ MonoBehaviour:
       m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661617333}
 --- !u!114 &8926484042661617308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24946,7 +25009,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617309}
   m_ExposedName: NoiseUVOE
   m_Exposed: 1
-  m_Order: 21
+  m_Order: 44
   m_Category: Orb Effect
   m_Min:
     m_Type:
@@ -25026,7 +25089,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617311}
   m_ExposedName: PositionSpherePS
   m_Exposed: 1
-  m_Order: 77
+  m_Order: 80
   m_Category: Particle Sphere
   m_Min:
     m_Type:
@@ -25617,7 +25680,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617329}
   m_ExposedName: IntensityTextVI
   m_Exposed: 1
-  m_Order: 5
+  m_Order: 11
   m_Category: View Image
   m_Min:
     m_Type:
@@ -25636,7 +25699,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661617329}
       inputSlot: {fileID: 8926484042661617327}
-    position: {x: 838, y: 596}
+    position: {x: 770, y: 688}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661617329
@@ -25674,3 +25737,345 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661617327}
+--- !u!114 &8926484042661617330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661617331}
+  m_ExposedName: ThicknessColor
+  m_Exposed: 1
+  m_Order: 1
+  m_Category: View Image
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661617331}
+      inputSlot: {fileID: 8926484042661617306}
+    position: {x: 1005, y: 198}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661617331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4c11ff25089a324daf359f4b0629b33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617331}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661617330}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: False
+    m_Space: -1
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661617306}
+--- !u!114 &8926484042661617332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 0
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661617333}
+  m_ExposedName: ThicknessText
+  m_Exposed: 1
+  m_Order: 2
+  m_Category: View Image
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661617333}
+      inputSlot: {fileID: 8926484042661617307}
+    position: {x: 998, y: 231}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661617333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70a331b1d86cc8d4aa106ccbe0da5852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617333}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661617332}
+    m_Value:
+      m_Type:
+        m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: 
+    m_Space: -1
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661617307}
+--- !u!114 &8926484042661617334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 0
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661617335}
+  m_ExposedName: PositionPM
+  m_Exposed: 1
+  m_Order: 81
+  m_Category: Position Mesh
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661617335}
+      inputSlot: {fileID: 8926484042661614946}
+    position: {x: -86.52174, y: 3.4782639}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661617335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac39bd03fca81b849929b9c966f1836a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children:
+  - {fileID: 8926484042661617336}
+  - {fileID: 8926484042661617337}
+  - {fileID: 8926484042661617338}
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617335}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661617334}
+    m_Value:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: 
+    m_Space: -1
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661614946}
+--- !u!114 &8926484042661617336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661617335}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617335}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: -1
+  m_Property:
+    name: x
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots: []
+--- !u!114 &8926484042661617337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661617335}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617335}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: -1
+  m_Property:
+    name: y
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots: []
+--- !u!114 &8926484042661617338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661617335}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661617335}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: -1
+  m_Property:
+    name: z
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots: []
