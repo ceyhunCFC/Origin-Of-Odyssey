@@ -1983,6 +1983,7 @@ MonoBehaviour:
   vfxMovePrefab: {fileID: 3434550663373508169, guid: 73488bfd9cd996043b5d83dc9c9cec16, type: 3}
   vfxLandingPrefab: {fileID: 360442925675595034, guid: 7d8c4a2042160024493ae7782f5959c2, type: 3}
   vfxAttackPrefab: {fileID: 7823976076692707666, guid: 00f3bb5677d44394194d09b5b6539422, type: 3}
+  CompetitorCardMaterial: {fileID: 2100000, guid: 51d4685643e4a4628b2dd16e2e18e954, type: 2}
   HeroAnimator: {fileID: 2961789529435728672}
 --- !u!114 &6638573949623686288
 MonoBehaviour:

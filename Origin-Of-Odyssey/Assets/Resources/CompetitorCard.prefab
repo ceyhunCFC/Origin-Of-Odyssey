@@ -208,6 +208,10 @@ MonoBehaviour:
   CardHealth: 
   CardDamage: 0
   CardMana: 0
+  MaxHealth: 
+  MaxAttack: 0
+  MaxMana: 0
+  rarity: 0
   CardFreeze: 0
   isItFirstRaound: 1
   FirstTakeDamage: 1
@@ -215,12 +219,29 @@ MonoBehaviour:
   DivineSelected: 0
   FirstDamageTaken: 1
   isAttacked: 0
+  GerDefense: 0
+  MongolFury: 0
+  CanAttackBehind: 0
+  EternalShield: 0
+  Gallop: 0
+  Invulnerable: 0
+  SunDiskRadiance: 0
+  ArtisticInspiration: 0
+  Behemot: 0
+  MutatedBlood: 0
+  PlagueCarrier: 0
+  ToxicRainmaker: 0
+  ChargeBrokandSindri: 0
   CardNameText: {fileID: 3503785215774116764}
   CardDesText: {fileID: 2436654656967440558}
   CardHealthText: {fileID: 2879304106318651243}
   CardDamageText: {fileID: 3444559999918201156}
   CardManaText: {fileID: 3572500332005150431}
   CardVisualImage: {fileID: 1288053770773056427}
+  Common: {fileID: 0}
+  Rare: {fileID: 0}
+  Legendary: {fileID: 0}
+  Epic: {fileID: 0}
 --- !u!114 &7104790795427912426
 MonoBehaviour:
   m_ObjectHideFlags: 0

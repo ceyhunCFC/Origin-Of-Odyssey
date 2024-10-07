@@ -105,6 +105,8 @@ public class PlayerController : MonoBehaviour
     public GameObject vfxLandingPrefab;
     public GameObject vfxAttackPrefab;
 
+    public Material CompetitorCardMaterial;
+
     void Start()
     {
         //_CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
@@ -5100,11 +5102,28 @@ public class PlayerController : MonoBehaviour
                         StackDeck();
                         StackCompetitorDeck();
                         DeckCardCount++;
-                        
+
+                        MeshRenderer cardRenderer = card.GetComponent<MeshRenderer>();
+
+                        if (cardRenderer != null)
+                        {
+                            string currentMaterialName = cardRenderer.material != null ? cardRenderer.material.name : "None";
+                            bool shouldReplaceMaterial = !currentMaterialName.Contains("WhatsApp Image 2024 - 03 - 07 at 16.23.16 1(Instance)")
+                                                        && currentMaterialName.Contains("Lit (Instance)");
+
+                            if (cardRenderer.material == null || shouldReplaceMaterial)
+                            {
+                                if (CompetitorCardMaterial != null)
+                                {
+                                    cardRenderer.material = CompetitorCardMaterial;
+                                    Debug.Log("Materyal atandı: " + CompetitorCardMaterial.name);
+                                }
+                            }
+                        }
+
 
                     }
 
-                    
                     OwnHealth = _GameManager.OtherHealth; //new
                     OwnHealthText.text = OwnHealth.ToString(); //new
 
@@ -5115,7 +5134,7 @@ public class PlayerController : MonoBehaviour
                  
                     GameObject Herocard = Instantiate(Resources.Load<GameObject>("CompetitorHeoCard"), GameObject.Find("CompetitorHeroPivot").transform);
                 }
-                
+
             }
         }
     }
