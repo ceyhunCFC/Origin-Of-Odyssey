@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class TutorialPlayerController : MonoBehaviour
 {
@@ -44,12 +45,7 @@ public class TutorialPlayerController : MonoBehaviour
     public Image CompetitorHealthBar;
     public Image CompetitorManaBar;
 
-    public int DeadMonsterCound = 0;
-
-    public int DeckCardCount = 0;
-
     int CompetitorDeckCardCount = 0;
-    public float Mana = 3;
     float elapsedTime = 60;
 
     GameObject selectedCard;
@@ -59,14 +55,6 @@ public class TutorialPlayerController : MonoBehaviour
 
     public Text OwnHeroAttackDamageText;
     public Text CompetitorHeroAttackDamageText;
-
-    public int OlympiaKillCount = 0;
-    public int SpellsExtraDamage = 0;
-    public bool GodsBaneUsed = false;
-    public bool SteppeAmbush = false;
-    public bool NomadicTactics = false;
-    public int NomadsLand = 0;
-    public int DoubleDamage = 1;
     int FirstHealthCount=0;
     public GameObject CardPrefabSolo,CardPrefabInGame; 
 
@@ -74,14 +62,30 @@ public class TutorialPlayerController : MonoBehaviour
 
     TutorialCardProgress _TutorialCardProgress;
 
+    [HideInInspector] public int OlympiaKillCount = 0;
+    [HideInInspector] public int SpellsExtraDamage = 0;
+    [HideInInspector] public bool GodsBaneUsed = false;
+    [HideInInspector] public bool SteppeAmbush = false;
+    [HideInInspector] public bool NomadicTactics = false;
+    [HideInInspector] public int NomadsLand = 0;
     [HideInInspector] public int AsgardQuestion = 0;
-    [HideInInspector] public bool NaiadProtector = false;
-    [HideInInspector] public List<GameObject> UsedSpellCard = null;
-    [HideInInspector] public bool PlayedSpell = false;
-    [HideInInspector] public int LessSpellCost = 0;
-    [HideInInspector] public bool MerfolkScoutBool = false;
-    [HideInInspector] public List<string> DeadMyCardName = null;
+    [HideInInspector] public int DeadCardCount = 0;
+    [HideInInspector] public int DeckCardCount = 0;
+    [HideInInspector] public float Mana = 3;
+    [HideInInspector] public int DeadMonsterCound = 0;
+    [HideInInspector] public int AugmentCount = 0;
+    [HideInInspector] public bool CanAttackMainCard = true;
+    [HideInInspector] public int DoubleDamage = 1;
+    [HideInInspector] public bool NaiadProtector = false;     //true ise büyü kullandığında +1 sağlık kazanıyoruz
+    [HideInInspector] public bool PlayedSpell = false;          //bu tur büyü oynandımı diye kontrol
+    [HideInInspector] public bool PlagueCarrierBool = false;    //ikinci sefer çalışması için
+    [HideInInspector] public int LessSpellCost = 0;             //büyülerin mana değerini 1 azaltıyor
+    [HideInInspector] public bool MerfolkScoutBool = false;     //bir karta bakıyor daha sonra onu çekiyor
 
+    [HideInInspector] public List<string> DeadMyCardName = null;
+    [HideInInspector] public List<GameObject> UsedSpellCard = null;
+
+    public GameObject CompetitorPV = null;
     public GameObject healthTextObject;
     public GameObject attackTextObject;
     public GameObject drawCardTextObject;
@@ -91,6 +95,10 @@ public class TutorialPlayerController : MonoBehaviour
     public GameObject Minion;
     public GameObject Spell;
     GameObject NextCard;
+
+    public GameObject vfxMovePrefab;
+    public GameObject vfxLandingPrefab;
+    public GameObject vfxAttackPrefab;
     void Awake()
     {
         _TutorialCardProgress = GetComponent<TutorialCardProgress>();
@@ -261,7 +269,7 @@ public class TutorialPlayerController : MonoBehaviour
                                         target.GetComponent<CardInformation>().CardHealth =(int.Parse(target.GetComponent<CardInformation>().CardHealth) - _TutorialCardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage).ToString();
                                         int index= Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions,target.transform.parent.gameObject);
                                       //  RefreshUsedCard(index, target.GetComponent<CardInformation>().CardHealth, target.GetComponent<CardInformation>().CardDamage);
-                                        CreateTextAtTargetIndex(index, _TutorialCardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, false);
+                                        CreateTextAtTargetIndex(index, _TutorialCardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, false, _TutorialCardProgress.AttackerCard.GetComponent<CardInformation>().CardName);
                                         RefreshLog(-_TutorialCardProgress.AttackerCard.GetComponent<CardInformation>().CardDamage, true, _TutorialCardProgress.AttackerCard.GetComponent<CardInformation>().CardName, target.GetComponent<CardInformation>().CardName, Color.red);
                                         if (int.Parse(target.GetComponent<CardInformation>().CardHealth) <= 0)
                                         {
@@ -291,7 +299,7 @@ public class TutorialPlayerController : MonoBehaviour
         
     }
 
-     public void CreateTextAtTargetIndex(int targetIndex, int damage,bool mycard)
+    public void CreateTextAtTargetIndex(int targetIndex, int damage, bool mycard, string cardname)
     {
         Transform targetTransform;
         if (mycard)
@@ -302,17 +310,37 @@ public class TutorialPlayerController : MonoBehaviour
         {
             targetTransform = GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[targetIndex].transform;
         }
-        
+
+        string cardName = cardname.Replace(" ", "");
+
+        // Kart adına göre VFX yolunu oluştur
+        string attackVFXPath = $"Vfx/VFX_{cardName}_Attack";
+        GameObject loadedVFXPrefab = Resources.Load<GameObject>(attackVFXPath);
+
+        // Eğer kart VFX prefab'ı bulunamazsa, default prefab'ı kullan
+        if (loadedVFXPrefab != null)
+        {
+            GameObject attackInstance = Instantiate(loadedVFXPrefab, targetTransform);
+            Destroy(attackInstance, 5f);
+        }
+        else
+        {
+            Debug.LogError("Attack VFX prefab'ı bulunamadı: " + attackVFXPath + ". Default VFX çalıştırılıyor.");
+            GameObject attackInstance = Instantiate(vfxAttackPrefab, targetTransform); // vfxAttackPrefab zaten default olarak tanımlı
+            Destroy(attackInstance, 5f);
+        }
 
         GameObject damageTextObject = Instantiate(DamageText);
         damageTextObject.transform.parent = targetTransform;
-        damageTextObject.transform.localPosition = new Vector3(0, 3, 0);
-        damageTextObject.transform.localRotation = Quaternion.Euler(5, 0, 0);
-        damageTextObject.transform.localScale = new Vector3(0.01f, 0.05f, 0.01f);
+        damageTextObject.transform.localPosition = new Vector3(0, 0.5f, 0);
+        damageTextObject.transform.localRotation = Quaternion.Euler(50, 0, 0);
+        damageTextObject.transform.localScale = new Vector3(0.005f, 0.01f, 0.01f);
+
         Text textComponent = damageTextObject.GetComponentInChildren<Text>();
         textComponent.text = "-" + damage.ToString();
         Destroy(damageTextObject, 3f);
 
+        
     }
 
     public void SetMana(GameObject attackercard)
@@ -366,13 +394,18 @@ public class TutorialPlayerController : MonoBehaviour
     }
 
 
+    public string ColorToString(Color color)
+    {
+        return color.r + "," + color.g + "," + color.b + "," + color.a;
+    }
     public void RefreshLog(int damage, bool isdead, string attackercardname, string targetcardname, Color color)
     {
         GameObject logsObject = Instantiate(LogsPrefab, LogsContainerContent.transform);
-     
+        string colorString = ColorToString(color);
+
         // Damage text objesini bul ve değerini güncelle
-        Text logsDamageText = logsObject.transform.Find("Damage").GetComponent<Text>();
-        if(damage!=0)
+        Text logsDamageText = logsObject.transform.Find("DamageImage/Damage").GetComponent<Text>();
+        if (damage != 0)
         {
             logsDamageText.text = damage.ToString();
         }
@@ -380,13 +413,12 @@ public class TutorialPlayerController : MonoBehaviour
         {
             logsDamageText.text = null;
         }
-        
+
 
         // Dead objesini bul ve gerekli işlemi yap
-        Transform deadObject = logsObject.transform.Find("Dead");
+        Transform deadObject = logsObject.transform.Find("TargetImage");
         if (deadObject != null && isdead)
         {
-            deadObject.gameObject.SetActive(true);
             Image deadImage = deadObject.GetComponent<Image>();
             deadImage.color = color;
         }
@@ -396,8 +428,8 @@ public class TutorialPlayerController : MonoBehaviour
         }
 
         // Attacker ve Target objelerini bul ve resimlerini yükle
-        Transform attackerObject = logsObject.transform.Find("Attacker");
-        Transform targetObject = logsObject.transform.Find("Target");
+        Transform attackerObject = logsObject.transform.Find("AttackerImage/Attacker");
+        Transform targetObject = logsObject.transform.Find("TargetImage/Target");
 
         if (attackerObject != null)
         {
@@ -441,7 +473,7 @@ public class TutorialPlayerController : MonoBehaviour
             Debug.LogWarning("Target object not found in LogsPrefab.");
         }
 
-        // Rakip oyuncular için RPC çağrısı yap
+        // Rakip oyuncular için RPC çağrısı yap
     }
 
     private void UpdateDamageText(GameObject logsObject, int damage)
@@ -539,27 +571,75 @@ public class TutorialPlayerController : MonoBehaviour
 
      IEnumerator MoveAndRotateCard(GameObject card, Vector3 targetPosition,  float duration)
     {
+        // Kart ismini al ve boşlukları kaldır
+        string cardName = card.GetComponent<CardInformation>().CardName.Replace(" ", "");
+
+        // Kart ismine göre VFX prefab yollarını oluştur
+        string movieVFXPath = $"Vfx/VFX_{cardName}_Movie";
+        string lastVFXPath = $"Vfx/VFX_{cardName}_Last";
+
+        // Movie VFX prefab'ını yükle, eğer bulunamazsa default vfxMovePrefab'ı kullan
+        GameObject loadedMovePrefab = Resources.Load<GameObject>(movieVFXPath);
+        GameObject moveVFXToUse = loadedMovePrefab != null ? loadedMovePrefab : vfxMovePrefab;
+
         Vector3 startPosition = card.transform.position;
         float time = 0f;
 
-        Vector3 targetPlus = targetPosition + new Vector3(0f, 0.4f, 0.8f);
 
+
+        // Kartı yukarı ve ileri hareket ettir
+        Vector3 targetPlus = targetPosition + new Vector3(0f, 0.4f, 0.8f);
         while (time < duration)
         {
             card.transform.position = Vector3.Lerp(startPosition, targetPlus, time / duration);
             time += Time.deltaTime;
             yield return null;
         }
+
+        // Movie VFX varsa onu instantiate et
+        GameObject vfxMoveInstance = Instantiate(moveVFXToUse, card.transform.position, Quaternion.identity);
+        vfxMoveInstance.transform.SetParent(card.transform);
+        vfxMoveInstance.transform.localPosition = Vector3.zero;
+        VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
+        if (vfxMoveComponent != null)
+        {
+            vfxMoveComponent.Play();
+        }
+
+        // İlk hareketten sonra biraz bekle
         yield return new WaitForSeconds(1.5f);
+
+        // Movie VFX'i yok et
+        Destroy(vfxMoveInstance);
+
+        // Kartı hedef pozisyona indir
         time = 0f;
         while (time < duration)
         {
             card.transform.position = Vector3.Lerp(targetPlus, targetPosition, time / duration);
             time += Time.deltaTime;
             yield return null;
-        }             
-
+        }
         card.transform.position = targetPosition;
+
+        // Last VFX prefab'ını yükle, eğer bulunamazsa default vfxLandingPrefab'ı kullan
+        GameObject loadedLandingPrefab = Resources.Load<GameObject>(lastVFXPath);
+        GameObject landingVFXToUse = loadedLandingPrefab != null ? loadedLandingPrefab : vfxLandingPrefab;
+
+        // Last VFX varsa onu instantiate et
+        GameObject vfxLandingInstance = Instantiate(landingVFXToUse, card.transform.position, Quaternion.identity);
+        vfxLandingInstance.transform.SetParent(card.transform);
+        vfxLandingInstance.transform.localPosition = Vector3.zero;
+        VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
+        if (vfxLandingComponent != null)
+        {
+            vfxLandingComponent.Play();
+        }
+
+        // Last VFX'i 5 saniye sonra yok et
+        yield return new WaitForSeconds(5f);
+        Destroy(vfxLandingInstance);
+
         selectedCard = null;
         StackOwnDeck();
     }
@@ -738,8 +818,8 @@ public class TutorialPlayerController : MonoBehaviour
                 StartCoroutine(MoveAndRotateCard(selectedCard, transformBox.position, 0.3f));
                 selectedCard.transform.SetParent(transformBox);
                 selectedCard.transform.localPosition = Vector3.zero;
-                selectedCard.transform.localScale = new Vector3(1, 1, 0.04f);
-                selectedCard.transform.localEulerAngles = new Vector3(45f, 0f, 180);
+               // selectedCard.transform.localScale = new Vector3(1, 1, 0.04f);
+               // selectedCard.transform.localEulerAngles = new Vector3(45f, 0f, 180);
 
                 Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
                 
@@ -2129,20 +2209,6 @@ public class TutorialPlayerController : MonoBehaviour
                     }
                 }
 
-                else if (selectedCard.GetComponent<CardInformation>().CardName == "Osiris’ Bannerman")
-                {
-                    GameObject[] AllCard = GameObject.FindGameObjectsWithTag("UsedCard");
-                    foreach (var card in AllCard)
-                    {
-                        if (card.GetComponent<CardInformation>().CardName == "Osiris")
-                        {
-                            int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
-                            selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
-                            selectedCard.GetComponent<CardInformation>().CardDamage += 2;
-                            
-                        }
-                    }
-                }
 
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Sun Charioteer")
                 {
@@ -2810,7 +2876,7 @@ public class TutorialPlayerController : MonoBehaviour
                     _TutorialCardProgress.DamageToAlLOtherMinions(selectedCard.GetComponent<CardInformation>().CardDamage, selectedCard.GetComponent<CardInformation>().CardName);
                     selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) - 2).ToString();
                     int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
-                    CreateTextAtTargetIndex(index, 2, true);
+                    CreateTextAtTargetIndex(index, 2, true, "Claire");
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Scrap Shield")
                 {
@@ -3170,7 +3236,7 @@ public class TutorialPlayerController : MonoBehaviour
                 randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) - 4).ToString();
                 randomCard.GetComponent<CardInformation>().SetInformation();
                 int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard.transform.parent.gameObject);
-                CreateTextAtTargetIndex(index, 2, false);
+                CreateTextAtTargetIndex(index, 2, false, "Rebel Outcast");
                 
             }
             else if (selectedCard.GetComponent<CardInformation>().CardName == "Naiad Protector")
@@ -3209,7 +3275,7 @@ public class TutorialPlayerController : MonoBehaviour
                 randomCard1.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard1.GetComponent<CardInformation>().CardHealth) - 2).ToString();
                 randomCard1.GetComponent<CardInformation>().SetInformation();
                 int index1 = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard1.transform.parent.gameObject);
-                CreateTextAtTargetIndex(index1, 2, false);                                                    //iki kart seçiyor ilkinin aynısı olmasın ve 2 hasar veriyor ikisine de
+                CreateTextAtTargetIndex(index1, 2, false, "Urban Ranger");                                                    //iki kart seçiyor ilkinin aynısı olmasın ve 2 hasar veriyor ikisine de
 
                 GameObject randomCard2;
                 do
@@ -3220,7 +3286,7 @@ public class TutorialPlayerController : MonoBehaviour
                 randomCard2.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard2.GetComponent<CardInformation>().CardHealth) - 2).ToString();
                 randomCard2.GetComponent<CardInformation>().SetInformation();
                 int index2 = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard2.transform.parent.gameObject);
-                CreateTextAtTargetIndex(index2, 2, false);
+                CreateTextAtTargetIndex(index2, 2, false, "Urban Ranger");
             }
             else if (selectedCard.GetComponent<CardInformation>().CardName == "Byzantine Fire Slinger")
             {
@@ -3807,7 +3873,7 @@ public class TutorialPlayerController : MonoBehaviour
         StackCompetitorDeck();
         DeckCardCount++;
 
-        GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+       
     }
     public void UsedSpell(GameObject SpellCard)
     {
@@ -3896,7 +3962,7 @@ public class TutorialPlayerController : MonoBehaviour
 
                 Card.GetComponent<CardInformation>().CardHealth = (int.Parse(Card.GetComponent<CardInformation>().CardHealth) - 1).ToString(); //  İKİ DAMAGE VURUYOR
                 RefreshUsedCard(CurrentCardIndex, Card.GetComponent<CardInformation>().CardHealth, Card.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-                CreateTextAtTargetIndex(CurrentCardIndex, 1, false);
+                CreateTextAtTargetIndex(CurrentCardIndex, 1, false, name);
 
                 if (int.Parse(Card.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET
                 {
@@ -4031,7 +4097,7 @@ public class TutorialPlayerController : MonoBehaviour
             }
             else if (hit.collider.gameObject.tag == "UsedCard" && _TutorialCardProgress.ForMyCard==false)
             {
-                // _CardFunction.SelectFirstCard(hit.collider.gameObject);
+                //_CardFunction.SelectFirstCard(hit.collider.gameObject);
                 Debug.LogError(hit.collider.gameObject.transform.parent);
                 if (hit.collider.gameObject.GetComponent<CardInformation>().CardFreeze == false && hit.collider.gameObject.GetComponent<CardInformation>().isItFirstRaound == false && hit.collider.gameObject.GetComponent<CardInformation>().isAttacked == false)
                 {
@@ -4059,9 +4125,7 @@ public class TutorialPlayerController : MonoBehaviour
                         {
                             _TutorialCardProgress.CloseBlueSign();
 
-                            _TutorialCardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject));
-                            Transform blue = firstChild.Find("Blue");
-                            blue.gameObject.SetActive(true);
+                           
                         }
                         else
                         {
@@ -4074,8 +4138,8 @@ public class TutorialPlayerController : MonoBehaviour
         }
      }
 
-        
-    
+
+   
 
     public void BeginerFunction() // Tur bize geçtiğinde çalışan fonksion
     {
@@ -4125,7 +4189,53 @@ public class TutorialPlayerController : MonoBehaviour
                         card.GetComponent<CardInformation>().EternalShield = false;
                       
                     }
-
+                   
+                    if (card.GetComponent<CardInformation>().CardName == "Brokk and Sindri")
+                    {
+                        card.GetComponent<CardInformation>().ChargeBrokandSindri++;
+                        if (card.GetComponent<CardInformation>().ChargeBrokandSindri == 3)
+                        {
+                            _TutorialCardProgress.CharceBrokandSindri();
+                        }
+                    }
+                    if (card.GetComponent<CardInformation>().MutatedBlood == true)
+                    {
+                        GameObject[] RandomEnemyCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                        if (RandomEnemyCards.Length > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, RandomEnemyCards.Length);
+                            GameObject selectedEnemyCard = RandomEnemyCards[randomIndex];
+                            _TutorialCardProgress.StandartDamage(card, selectedEnemyCard);
+                        }
+                    }
+                    
+                    if (card.GetComponent<CardInformation>().CardName == "Gaelic Warrior")
+                    {
+                        int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+                        DeleteAreaCard(TargetCardIndex);
+                    }
+                    if (card.GetComponent<CardInformation>().CardName == "Wall Builder")
+                    {
+                        card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                        card.GetComponent<CardInformation>().SetInformation();
+                        
+                    }
+                    if (card.GetComponent<CardInformation>().CardName == "Tavern Brawler")
+                    {
+                        card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                        card.GetComponent<CardInformation>().SetInformation();
+                        
+                    }
+                    if (card.GetComponent<CardInformation>().CardName == "Berserker Thrall")
+                    {
+                        GameObject[] RandomEnemyCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                        if (RandomEnemyCards.Length > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, RandomEnemyCards.Length);
+                            GameObject selectedEnemyCard = RandomEnemyCards[randomIndex];
+                            _TutorialCardProgress.StandartDamage(card, selectedEnemyCard);
+                        }
+                    }
                 }
 
                 if (OlympiaKillCount >= 4)
@@ -4161,15 +4271,25 @@ public class TutorialPlayerController : MonoBehaviour
 
     public void FinishButton()
     {
-        // Find all GameObjects with the specified name
-      
+        GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
         GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
         WhoseTurnText.text = "Enemy Turn";
         Timer.text = "00:60";
         elapsedTime = 60;
         finishButton.interactable = false;
+        CanAttackMainCard = true;
+        foreach (GameObject obj in objects)
+        {
+            if (obj.name == "PlayerController(Clone)")
+            {
 
-        
+                if (true)
+                {
+                    CompetitorPV = obj;
+                }
+            }
+        }
+
         foreach (var card in AllOwnCards)
         {
             card.GetComponent<CardInformation>().isItFirstRaound = false;
@@ -4180,20 +4300,201 @@ public class TutorialPlayerController : MonoBehaviour
             {
                 _TutorialCardProgress.KublaiKhan();
             }
-
-            if(card.GetComponent<CardInformation>().MongolFury==true)
+            if (card.GetComponent<CardInformation>().MongolFury == true)
             {
                 card.GetComponent<CardInformation>().CardDamage -= 2;
                 card.GetComponent<CardInformation>().MongolFury = false;
                 card.GetComponent<CardInformation>().SetInformation();
-           
+                
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Dwarven Blacksmith")
+            {
+                GameObject randomCard = AllOwnCards[UnityEngine.Random.Range(0, AllOwnCards.Length)];
+                randomCard.GetComponent<CardInformation>().CardDamage += 2;
+                randomCard.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, randomCard.transform.parent.gameObject);
+               
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Thor")
+            {
+                _TutorialCardProgress.DamageToAlLOtherMinions(1, "Thor");
+            }
+            if (card.GetComponent<CardInformation>().Gallop == true)
+            {
+                card.GetComponent<CardInformation>().Gallop = false;
+                DestroyAndCreateMyDeck(card);
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Codex Guardian")
+            {
+                GetComponent<CardController>().AddHealCard(2, true);
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Grand Cannon")
+            {
+                GameObject[] AllEnemyCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                if (AllEnemyCards.Length > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, AllEnemyCards.Length);
+                    GameObject randomEnemyCard = AllEnemyCards[randomIndex];
+                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomEnemyCard.transform.parent.gameObject);
+                    randomEnemyCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomEnemyCard.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+                    RefreshUsedCard(TargetCardIndex, randomEnemyCard.GetComponent<CardInformation>().CardHealth, randomEnemyCard.GetComponent<CardInformation>().CardDamage);
+                    CreateTextAtTargetIndex(TargetCardIndex, 2, false, "Grand Cannon");
+                    if (int.Parse(randomEnemyCard.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+                    {
+
+                        GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                        GetComponent<PlayerController>().RefreshLog(-2, true, "Grand Cannon", randomEnemyCard.GetComponent<CardInformation>().CardName, Color.red);
+                    }
+                    else
+                        GetComponent<PlayerController>().RefreshLog(-2, false, "Grand Cannon", randomEnemyCard.GetComponent<CardInformation>().CardName, Color.red);
+                }
+                else
+                {
+                    Debug.LogWarning("Hiç düşman kartı bulunamadı.");
+                }
+            }
+            if (card.GetComponent<CardInformation>().Behemot)
+            {
+                card.GetComponent<CardInformation>().Behemot = false;
+                card.GetComponent<CardInformation>().CardDamage = card.GetComponent<CardInformation>().MaxAttack;
+                card.GetComponent<CardInformation>().SetInformation();
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Eques Automaton")
+            {
+                card.GetComponent<CardInformation>().CardHealth = card.GetComponent<CardInformation>().MaxHealth;
+                card.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, card.transform.parent.gameObject);
+               
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Scrapyard Engineer")
+            {
+                GameObject randomCard = AllOwnCards[UnityEngine.Random.Range(0, AllOwnCards.Length)];
+                randomCard.GetComponent<CardInformation>().CardDamage += 2;
+                randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                randomCard.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, randomCard.transform.parent.gameObject);
+                
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Forest Nymph")
+            {
+                GameObject[] MyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                foreach (GameObject cards in MyCard)
+                {
+                    if (cards.GetComponent<CardInformation>().CardName != "Forest Nymph")
+                    {
+                        cards.GetComponent<CardInformation>().CardHealth = (int.Parse(cards.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                        cards.GetComponent<CardInformation>().SetInformation();
+                        //int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, cards.transform.parent.gameObject);
+                        //RefreshMyCard(index,
+                        //    cards.GetComponent<CardInformation>().CardHealth,
+                        //    cards.GetComponent<CardInformation>().HaveShield,
+                        //    cards.GetComponent<CardInformation>().CardDamage,
+                        //    cards.GetComponent<CardInformation>().DivineSelected,
+                        //    cards.GetComponent<CardInformation>().FirstTakeDamage,
+                        //    cards.GetComponent<CardInformation>().FirstDamageTaken,
+                        //    cards.GetComponent<CardInformation>().EternalShield);
+                    }
+                }
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Scrap Collector")
+            {
+                GameObject randomCard = AllOwnCards[UnityEngine.Random.Range(0, AllOwnCards.Length)];
+                randomCard.GetComponent<CardInformation>().CardDamage += 1;
+                randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) + 1).ToString();
+                randomCard.GetComponent<CardInformation>().SetInformation();
+               
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Chronomancer Cleopatra")
+            {
+                if (UsedSpellCard.Count != 0)
+                {
+                    if (GameObject.Find("Deck").transform.childCount < 10)
+                    {
+                        System.Random random = new System.Random();
+                        int randomIndex = random.Next(UsedSpellCard.Count);
+                        GameObject selectedSpellCard = UsedSpellCard[randomIndex];
+
+                        GameObject CardCurrent = Instantiate(selectedSpellCard, GameObject.Find("Deck").transform);
+                        CardCurrent.tag = "Card";
+
+                        float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
+                        CardCurrent.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+
+                        DeckCardCount++;
+                    }
+                }
+            }
+
+            if (card.GetComponent<CardInformation>().PlagueCarrier && PlagueCarrierBool)
+            {
+                card.GetComponent<CardInformation>().PlagueCarrier = false;
+                PlagueCarrierBool = false;
+                card.GetComponent<CardInformation>().CardDamage += 2;
+                card.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, card.transform.parent.gameObject);
+                RefreshUsedCard(index, card.GetComponent<CardInformation>().CardHealth, card.GetComponent<CardInformation>().CardDamage);
+            }
+            else
+            {
+                PlagueCarrierBool = true;
+            }
+            if (card.GetComponent<CardInformation>().ToxicRainmaker && PlagueCarrierBool)
+            {
+                card.GetComponent<CardInformation>().ToxicRainmaker = false;
+                PlagueCarrierBool = false;
+                card.GetComponent<CardInformation>().CardDamage += 1;
+                card.GetComponent<CardInformation>().SetInformation();
+                int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, card.transform.parent.gameObject);
+                RefreshUsedCard(index, card.GetComponent<CardInformation>().CardHealth, card.GetComponent<CardInformation>().CardDamage);
+            }
+            else
+            {
+                PlagueCarrierBool = true;
+            }
+
+        }
+        if (AsgardQuestion >= 3)
+        {
+            List<GameObject> selectedCards = new List<GameObject>();
+
+            while (selectedCards.Count < 2)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, AllOwnCards.Length);
+                GameObject randomCard = AllOwnCards[randomIndex];
+
+                if (!selectedCards.Contains(randomCard))
+                {
+                    selectedCards.Add(randomCard);
+                }
+            }
+
+            foreach (GameObject card in selectedCards)
+            {
+                card.GetComponent<CardInformation>().DivineSelected = true;
             }
         }
+        if (AugmentCount >= 4)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                if (GameObject.Find("Deck").transform.childCount < 10)
+                {
+                    int health = UnityEngine.Random.Range(1, 3);
+                    int damage = UnityEngine.Random.Range(1, 3);
+
+                    CreateDeckCard("Mechanical Reinforcement", health.ToString(), damage, 1);
+                }
+            }
+        }
+        PlayedSpell = false;
         _TutorialCardProgress.WindFury = true;
         _TutorialCardProgress.ResetAllSign();
 
-       // ADD MANA
-       // BOTU CALISTIR
+    
+        _TutorialCardProgress.WindFury = true;
+        _TutorialCardProgress.ResetAllSign();
+
+       
        
       
        GetComponent<BotController>().BotAttack();
@@ -4205,6 +4506,10 @@ public class TutorialPlayerController : MonoBehaviour
         _TutorialCardProgress.ForMyCard = false;
 
 
+    }
+    public void RefreshMyCard(int boxindex, string heatlh, bool haveshield, int damage, bool divineselected, bool firstdamage, bool firstdamagetaken, bool eternalshield)
+    {
+        GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[boxindex].transform.GetChild(0).transform.gameObject.GetComponent<CardInformation>().SetInformation();       //kendi kart bilgimi güncelleme
     }
 
     public void CreateAnCard()
@@ -4282,7 +4587,7 @@ public class TutorialPlayerController : MonoBehaviour
             GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("CompetitorDeck").transform.position = new Vector3(0.6f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.95f, -0.86f);
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(3.3f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.26f, 1.54f);
 
     }
 
@@ -4386,14 +4691,18 @@ public class TutorialPlayerController : MonoBehaviour
     }
     
 
-    public void CreateUsedCard(int boxindex, string name, string des, string heatlh, int damage, int mana)
+    public void CreateUsedCard(int boxindex, string name, string des, string heatlh, int damage, int mana, CardInformation.Rarity rarity)
     {
 
         
             GameObject CardCurrent = Instantiate(CardPrefabInGame, GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions[boxindex].transform);
-            CardCurrent.tag = "CompetitorCard";
+            CardCurrent.tag = "UsedCard";
 
-          //  CardCurrent.GetComponent<PhotonView>().ViewID = OwnDeck.Length;
+            //  CardCurrent.GetComponent<PhotonView>().ViewID = OwnDeck.Length;
+            if (name == "Crypt Warden" || name == "Chaos Scarab" || name == "Gyrocopter" || name == "Piscean Diver" || name == "Rebel Outcast" || name == "Urban Ranger" || name == "Shadow Assassin" || name == "Elven Tracker")
+            {
+                CardCurrent.SetActive(false);
+            }
             CardCurrent.transform.localScale = new Vector3(1,1,0.04f);
             CardCurrent.transform.localPosition = Vector3.zero;
             CardCurrent.transform.localEulerAngles = new Vector3(45,0,180);
@@ -4405,65 +4714,69 @@ public class TutorialPlayerController : MonoBehaviour
             CardCurrent.GetComponent<CardInformation>().CardMana = mana;
             CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
+            CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
 
-        
+            StartCoroutine(MoveAndRotateCard(CardCurrent, CardCurrent.transform.position, 0.3f));
+
+
     }
 
     void StackOwnDeck()
     {
 
+        float yOffset = 0f; // Başlangıç z pozisyonu
+
         if (GameObject.Find("Deck").transform.childCount < 6)
         {
-
             for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
             {
                 float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
+
+                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
 
-            GameObject.Find("Deck").transform.position = new Vector3(0.6f - GameObject.Find("Deck").transform.childCount * 0.2f, 2.7f, -3.81f);
-
+            GameObject.Find("Deck").transform.position = new Vector3(3.35f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.9f, -1.09f);
         }
         else if (GameObject.Find("Deck").transform.childCount < 10)
         {
+            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
 
             for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
             {
                 float xPos = i * 0.4f - 0.4f; // Kartın X konumunu belirliyoruz
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8931351f, 351.836639f, 174.237427f);
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8931351f, 351.836639f, 174.237427f);
 
-
-
+                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
 
-            GameObject.Find("Deck").transform.position = new Vector3(0.3f - GameObject.Find("Deck").transform.childCount * 0.1f, 2.7f, -3.81f);
-
+            GameObject.Find("Deck").transform.position = new Vector3(3.02f - GameObject.Find("Deck").transform.childCount * 0.1f, 0.9f, -1.09f);
         }
         else
         {
+            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
 
             for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
             {
                 float xPos = i * 0.3f - 0.3f; // Kartın X konumunu belirliyoruz
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(74.8471832f, 350.247925f, 173.120972f);
+                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
+                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8471832f, 350.247925f, 173.120972f);
 
-
-
+                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
             }
 
-            GameObject.Find("Deck").transform.position = new Vector3(0.05f - GameObject.Find("Deck").transform.childCount * 0.05f, 2.7f, -3.81f);
-
+            GameObject.Find("Deck").transform.position = new Vector3(2.80f - GameObject.Find("Deck").transform.childCount * 0.05f, 0.9f, -1.09f);
         }
     }
 
     public void CreateInfoCard(GameObject CardCurrent)
     {
-        
+
+
         switch (OwnMainCard)
         {
             case "Zeus":
@@ -4472,7 +4785,6 @@ public class TutorialPlayerController : MonoBehaviour
 
                 int CardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string targetCardName = OwnDeck[CardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int targetIndex = -1;
 
 
@@ -4488,6 +4800,8 @@ public class TutorialPlayerController : MonoBehaviour
                         CardCurrent.GetComponent<CardInformation>().CardHealth = zeusCard.minions[targetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.minions[targetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)zeusCard.minions[targetIndex].rarity;
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
                         CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
                         CardCurrent.GetComponent<CardInformation>().SetInformation();
                         break;
@@ -4508,6 +4822,8 @@ public class TutorialPlayerController : MonoBehaviour
                         break;
                     }
                 }
+
+                CreateStandartCards(CardCurrent, targetCardName);
                 break;
 
             case "Genghis":
@@ -4515,44 +4831,246 @@ public class TutorialPlayerController : MonoBehaviour
 
                 int GenghisCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
                 string GenghistargetCardName = OwnDeck[GenghisCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
-
                 int GenghistargetIndex = -1;
 
                 for (int i = 0; i < genghisCard.minions.Count; i++)
-                  {
-                      if (genghisCard.minions[i].name == GenghistargetCardName)
-                      {
-                          GenghistargetIndex = i;
+                {
+                    if (genghisCard.minions[i].name == GenghistargetCardName)
+                    {
+                        GenghistargetIndex = i;
 
-                          CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.minions[GenghistargetIndex].name;
-                          CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.minions[GenghistargetIndex].name + " POWWERRRRR!!!";
-                          CardCurrent.GetComponent<CardInformation>().CardHealth = genghisCard.minions[GenghistargetIndex].health.ToString();
-                          CardCurrent.GetComponent<CardInformation>().CardDamage = genghisCard.minions[GenghistargetIndex].attack;
-                          CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.minions[GenghistargetIndex].mana;
-                          CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
-                          CardCurrent.GetComponent<CardInformation>().SetInformation();
-                          break;
-                      }
-                  }
+                        CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.minions[GenghistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.minions[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = genghisCard.minions[GenghistargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = genghisCard.minions[GenghistargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.minions[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)genghisCard.minions[GenghistargetIndex].rarity;
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
 
-                  for (int i = 0; i < genghisCard.spells.Count; i++)
-                  {
-                      if (genghisCard.spells[i].name == GenghistargetCardName)
-                      {
-                          GenghistargetIndex = i;
-                          CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.spells[GenghistargetIndex].name;
-                          CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.spells[GenghistargetIndex].name + " POWWERRRRR!!!";
-                          CardCurrent.GetComponent<CardInformation>().CardHealth = "";
-                          CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
-                          CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.spells[GenghistargetIndex].mana;
-                          CardCurrent.GetComponent<CardInformation>().SetInformation();
-                          break;
-                      }
-                  }
+                for (int i = 0; i < genghisCard.spells.Count; i++)
+                {
+                    if (genghisCard.spells[i].name == GenghistargetCardName)
+                    {
+                        GenghistargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.spells[GenghistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.spells[GenghistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.spells[GenghistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                CreateStandartCards(CardCurrent, GenghistargetCardName);
+                break;
+            case "Odin":
+                OdinCard odinCard = new OdinCard();
+
+                int OdinCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
+                string OdintargetCardName = OwnDeck[OdinCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
+                int OdintargetIndex = -1;
+
+                for (int i = 0; i < odinCard.minions.Count; i++)
+                {
+                    if (odinCard.minions[i].name == OdintargetCardName)
+                    {
+                        OdintargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.minions[OdintargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[OdintargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[OdintargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[OdintargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[OdintargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)odinCard.minions[OdintargetIndex].rarity;
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < odinCard.spells.Count; i++)
+                {
+                    if (odinCard.spells[i].name == OdintargetCardName)
+                    {
+                        OdintargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = odinCard.spells[OdintargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[OdintargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.spells[OdintargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                //if (CardCurrent.GetComponent<CardInformation>().CardName == "Naglfar")
+                //{
+                //    if (DeadCardCount >= 6)
+                //    {
+                //        CardCurrent.GetComponent<CardInformation>().CardMana -= 3;
+                //        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                //    }
+                //}
+                CreateStandartCards(CardCurrent, OdintargetCardName);
+                break;
+            case "Anubis":
+                AnubisCard anubisCard = new AnubisCard();
+
+                int AnubisCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
+                string AnubistargetCardName = OwnDeck[AnubisCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
+                int AnubistargetIndex = -1;
+
+                for (int i = 0; i < anubisCard.minions.Count; i++)
+                {
+                    if (anubisCard.minions[i].name == AnubistargetCardName)
+                    {
+                        AnubistargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.minions[AnubistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.minions[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = anubisCard.minions[AnubistargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = anubisCard.minions[AnubistargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.minions[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)anubisCard.minions[AnubistargetIndex].rarity;
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < anubisCard.spells.Count; i++)
+                {
+                    if (anubisCard.spells[i].name == AnubistargetCardName)
+                    {
+                        AnubistargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.spells[AnubistargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.spells[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.spells[AnubistargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                CreateStandartCards(CardCurrent, AnubistargetCardName);
+                break;
+            case "Leonardo Da Vinci":
+                LeonardoCard leonardoCard = new LeonardoCard();
+
+                int LeonardoCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
+                string LeonardoTargetCardName = OwnDeck[LeonardoCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
+                int LeonardotargetIndex = -1;
+
+                for (int i = 0; i < leonardoCard.minions.Count; i++)
+                {
+                    if (leonardoCard.minions[i].name == LeonardoTargetCardName)
+                    {
+                        LeonardotargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = leonardoCard.minions[LeonardotargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.minions[LeonardotargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = leonardoCard.minions[LeonardotargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = leonardoCard.minions[LeonardotargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.minions[LeonardotargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)leonardoCard.minions[LeonardotargetIndex].rarity;
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < leonardoCard.spells.Count; i++)
+                {
+                    if (leonardoCard.spells[i].name == LeonardoTargetCardName)
+                    {
+                        LeonardotargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = leonardoCard.spells[LeonardotargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.spells[LeonardotargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.spells[LeonardotargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                CreateStandartCards(CardCurrent, LeonardoTargetCardName);
+                break;
+            case "Dustin":
+                DustinCard dustinCard = new DustinCard();
+
+                int DustinCardIndex = UnityEngine.Random.Range(1, OwnDeck.Length); // 1 DEN BAŞLIYOR ÇÜNKĞ İNDEX 0 HEROMUZ
+                string DustinTargetCardName = OwnDeck[DustinCardIndex]; // Deste içinden gelen kart isminin miniyon mu buyu mu olduğunu belirle daha sonra özelliklerini getir.
+                int DustinTargetIndex = -1;
+
+                for (int i = 0; i < dustinCard.minions.Count; i++)
+                {
+                    if (dustinCard.minions[i].name == DustinTargetCardName)
+                    {
+                        DustinTargetIndex = i;
+
+                        CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.minions[DustinTargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.minions[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = dustinCard.minions[DustinTargetIndex].health.ToString();
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = dustinCard.minions[DustinTargetIndex].attack;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.minions[DustinTargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)dustinCard.minions[DustinTargetIndex].rarity;
+                        CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
+                        CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < dustinCard.spells.Count; i++)
+                {
+                    if (dustinCard.spells[i].name == DustinTargetCardName)
+                    {
+                        DustinTargetIndex = i;
+                        CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.spells[DustinTargetIndex].name;
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.spells[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardHealth = "";
+                        CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
+                        CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.spells[DustinTargetIndex].mana;
+                        CardCurrent.GetComponent<CardInformation>().SetInformation();
+                        break;
+                    }
+                }
+                CreateStandartCards(CardCurrent, DustinTargetCardName);
                 break;
         }
     }
+    void CreateStandartCards(GameObject CardCurrent, string name)
+    {
+        StandartCards standartCard = new StandartCards();
 
+        int StandartCardTargetIndex = -1;
+
+        for (int i = 0; i < standartCard.standartcards.Count; i++)
+        {
+            if (standartCard.standartcards[i].name == name)
+            {
+                StandartCardTargetIndex = i;
+
+                CardCurrent.GetComponent<CardInformation>().CardName = standartCard.standartcards[StandartCardTargetIndex].name;
+                CardCurrent.GetComponent<CardInformation>().CardDes = standartCard.standartcards[StandartCardTargetIndex].name + " POWWERRRRR!!!";
+                CardCurrent.GetComponent<CardInformation>().CardHealth = standartCard.standartcards[StandartCardTargetIndex].health.ToString();
+                CardCurrent.GetComponent<CardInformation>().CardDamage = standartCard.standartcards[StandartCardTargetIndex].attack;
+                CardCurrent.GetComponent<CardInformation>().CardMana = standartCard.standartcards[StandartCardTargetIndex].mana;
+                CardCurrent.GetComponent<CardInformation>().rarity = (CardInformation.Rarity)standartCard.standartcards[StandartCardTargetIndex].rarity;
+                CardCurrent.GetComponent<CardInformation>().AssignMaterialByRarity();
+                CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+                CardCurrent.GetComponent<CardInformation>().SetInformation();
+                break;
+            }
+        }
+    }
     void SetUIData()
     {
         OwnName = AuthManager.userName;
@@ -4620,6 +5138,23 @@ public class TutorialPlayerController : MonoBehaviour
                 GenghisCard genghisCard = new GenghisCard();
                 return (int) genghisCard.hpValue;
 
+            case "LeonardoCard":
+                LeonardoCard leonardoCard = new LeonardoCard();
+                return (int)leonardoCard.hpValue;
+
+            case "OdinCard":
+                OdinCard odinCard = new OdinCard();
+                return (int)odinCard.hpValue;
+
+            case "DustinCard":
+                DustinCard dustinCard = new DustinCard();
+                return (int)dustinCard.hpValue;
+
+            case "AnubisCard":
+                AnubisCard anubisCard = new AnubisCard();
+                return (int)anubisCard.hpValue;
+
+            
 
         }
 
@@ -4638,13 +5173,27 @@ public class TutorialPlayerController : MonoBehaviour
             case "Genghis":
                 GenghisCard genghisCard = new GenghisCard();
                 return (int)genghisCard.attackValue;
+            case "LeonardoCard":
+                LeonardoCard leonardoCard = new LeonardoCard();
+                return (int)leonardoCard.attackValue;
 
+            case "OdinCard":
+                OdinCard odinCard = new OdinCard();
+                return (int)odinCard.attackValue;
+
+            case "DustinCard":
+                DustinCard dustinCard = new DustinCard();
+                return (int)dustinCard.attackValue;
+
+            case "AnubisCard":
+                AnubisCard anubisCard = new AnubisCard();
+                return (int)anubisCard.attackValue;
 
         }
 
         return 60;
 
     }
-
+   
 
 }
