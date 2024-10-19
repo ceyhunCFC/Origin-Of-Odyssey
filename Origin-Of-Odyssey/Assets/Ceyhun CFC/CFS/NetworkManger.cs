@@ -23,6 +23,8 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     [SerializeField] GameObject CompetitorCard;
     [SerializeField] GameObject CompetitorSlot;
 
+    private bool isRanked=false;
+
     string PlayerDeckTotal = "";
 
     private ExitGames.Client.Photon.Hashtable _myCustomPlayer = new ExitGames.Client.Photon.Hashtable();
@@ -139,6 +141,16 @@ public class NetworkManger : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel("BattleMap");
     }
 
+    public void StartRankedGame()
+    {
+        PhotonNetwork.LoadLevel("RankedBattleMap");
+    }
+
+    public void RankedButton()
+    {
+        isRanked = true;
+    }
+
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
@@ -205,7 +217,14 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     IEnumerator StartMatch()
     {
         yield return new WaitForSeconds(8);
-        StartGame();
+        if(isRanked)
+        {
+            StartRankedGame();
+        }
+        else
+        {
+            StartGame();
+        }
     }
 
 }

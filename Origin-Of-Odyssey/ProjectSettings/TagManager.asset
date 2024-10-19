@@ -15,6 +15,7 @@ TagManager:
   - CompetitorAreaBox
   - CompetitorDeckCard
   - SelectCard
+  - Inventory
   layers:
   - Default
   - TransparentFX

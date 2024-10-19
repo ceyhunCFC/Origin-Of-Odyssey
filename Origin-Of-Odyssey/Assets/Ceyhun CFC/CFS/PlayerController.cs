@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 using UnityEngine.VFX;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -107,6 +108,9 @@ public class PlayerController : MonoBehaviour
 
     public Material CompetitorCardMaterial;
 
+    public int addedValue;
+    public GameObject InventorySystem;
+
     void Start()
     {
         //_CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
@@ -122,10 +126,12 @@ public class PlayerController : MonoBehaviour
         }
         Mana = 1;
 
-
+        InventorySystem = GameObject.FindGameObjectWithTag("Inventory");
 
 
         GetDataForUI();
+        addedValue = isRankedMap() ? GetHasBeenBoughtValue() : 0;
+
     }
 
     private void Update()
@@ -1230,41 +1236,24 @@ public class PlayerController : MonoBehaviour
                 StackDeck();
                                 
                 if (PV.IsMine)
-                {
+                { 
+
+                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + addedValue).ToString();
+                    selectedCard.GetComponent<CardInformation>().CardDamage += addedValue;
+                    selectedCard.GetComponent<CardInformation>().SetInformation();
+
+
                     Debug.LogError(Boxindex);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("DeleteCompatitorDeckCard", RpcTarget.All);
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RefreshPlayersInformation", RpcTarget.All);
 
-                    if (selectedCard.GetComponent<CardInformation>().CardName == "Heracles")
-                    {
-                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
-                      selectedCard.GetComponent<CardInformation>().CardName,
-                      selectedCard.GetComponent<CardInformation>().CardDes,
-                     (int.Parse( selectedCard.GetComponent<CardInformation>().CardHealth) + (2 * DeadMonsterCound)).ToString(),
-                      selectedCard.GetComponent<CardInformation>().CardDamage + (2 * DeadMonsterCound),
-                      selectedCard.GetComponent<CardInformation>().CardMana,
-                      selectedCard.GetComponent<CardInformation>().rarity);
-                    }
-                    else if(selectedCard.GetComponent<CardInformation>().CardName == "Tomb Protector")
-                    {
-                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
-                     selectedCard.GetComponent<CardInformation>().CardName,
-                     selectedCard.GetComponent<CardInformation>().CardDes,
-                    (int.Parse(selectedCard.GetComponent<CardInformation>().CardHealth) + CheckUndeadCards()).ToString(),
-                     selectedCard.GetComponent<CardInformation>().CardDamage,
-                     selectedCard.GetComponent<CardInformation>().CardMana,
-                     selectedCard.GetComponent<CardInformation>().rarity);
-                    }
-                    else
-                    {
-                        CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
+                    CompetitorPV.GetComponent<PlayerController>().PV.RPC("CreateUsedCard", RpcTarget.All, Boxindex,
                       selectedCard.GetComponent<CardInformation>().CardName,
                       selectedCard.GetComponent<CardInformation>().CardDes,
                       selectedCard.GetComponent<CardInformation>().CardHealth,
                       selectedCard.GetComponent<CardInformation>().CardDamage,
                       selectedCard.GetComponent<CardInformation>().CardMana,
                       selectedCard.GetComponent<CardInformation>().rarity);
-                    }
 
 
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshCompetitorMana", RpcTarget.Others,Mana);
@@ -1291,6 +1280,64 @@ public class PlayerController : MonoBehaviour
         GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
         TalkCloud.transform.GetChild(0).GetComponent<Text>().text = text;
     }
+
+    bool isRankedMap()
+    {
+        return SceneManager.GetActiveScene().name == "RankedBattleMap"; 
+    }
+
+    public int GetHasBeenBoughtValue()
+    {
+        if (PV.IsMine)
+        {
+            Dictionary<string, int> cardIDMapping = new Dictionary<string, int>
+            {
+                { "Genghis", 0 },   
+                { "Zeus", 1 },      
+                { "Anubis", 10 },   
+                { "Dustin", 9 },    
+                { "Leonardo Da Vinci", 11 }, 
+                { "Odin", 8 }       
+            };
+
+            if (cardIDMapping.ContainsKey(OwnMainCard))
+            {
+                int cardID = cardIDMapping[OwnMainCard];
+                for(int i = 0; i < InventorySystem.GetComponent<InventorySystem>().playerCards.Count; i++) 
+                {
+                    if (InventorySystem.GetComponent<InventorySystem>().playerCards[i].id == cardID)
+                    {
+                        int hasBeenBought = InventorySystem.GetComponent<InventorySystem>().playerCards[i].hasBeenBought;
+
+                        if (hasBeenBought < 100)
+                        {
+                            return 1; 
+                        }
+                        else if (hasBeenBought >= 100 && hasBeenBought < 250)
+                        {
+                            return 2; 
+                        }
+                        else if (hasBeenBought >= 250 && hasBeenBought < 450)
+                        {
+                            return 3; 
+                        }
+                        else if (hasBeenBought >= 450 && hasBeenBought < 700)
+                        {
+                            return 4; 
+                        }
+                        else if (hasBeenBought >= 700)
+                        {
+                            return 5; 
+                        }
+                    }
+                }
+            }
+
+            return 0; 
+        }
+        return 0;    
+    }
+
 
     public int CheckUndeadCards()
     {
@@ -2259,7 +2306,7 @@ public class PlayerController : MonoBehaviour
                     selectedCards.Add(randomCard);
                 }
             }
-
+                                                                                                                                                                                         
             foreach (GameObject card in selectedCards)
             {
                 card.GetComponent<CardInformation>().DivineSelected = true;
@@ -4461,18 +4508,17 @@ public class PlayerController : MonoBehaviour
                 CardCurrent.tag = "CompetitorCard";
             }
 
-
             CardCurrent.transform.localPosition = Vector3.zero;
             CardCurrent.GetComponent<CardInformation>().CardName = name;
-            CardCurrent.GetComponent<CardInformation>().CardHealth = health;
-            CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
+            CardCurrent.GetComponent<CardInformation>().CardHealth = (int.Parse(CardCurrent.GetComponent<CardInformation>().CardHealth) + int.Parse(health) + addedValue).ToString(); ;
+            CardCurrent.GetComponent<CardInformation>().CardDamage = damage + addedValue;
             CardCurrent.GetComponent<CardInformation>().CardMana = mana;
             CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
             CardCurrent.GetComponent<CardInformation>().SetInformation();
 
             StartCoroutine(MoveAndRotateCard(CardCurrent, CardCurrent.transform.position, 0.3f));
 
-            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateSpecialCard", RpcTarget.All, name,  health, damage, mana, index,front);
+            CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_CreateSpecialCard", RpcTarget.All, name, CardCurrent.GetComponent<CardInformation>().CardHealth, CardCurrent.GetComponent<CardInformation>().CardDamage, mana, index,front);
             return CardCurrent;
         }
         return null;

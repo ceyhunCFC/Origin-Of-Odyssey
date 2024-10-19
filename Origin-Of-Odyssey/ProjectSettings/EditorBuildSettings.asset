@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Ceyhun CFC/Tutorial/TutorialBattleMap.unity
     guid: 72ea754a72dd4e7429b906a30cf7e328
+  - enabled: 1
+    path: Assets/Ramazan Dizman/RankedBattleMap.unity
+    guid: f74dc4755a440054dbe7aa1fbb6f6810
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

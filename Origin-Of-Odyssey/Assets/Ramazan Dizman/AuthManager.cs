@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -19,7 +20,7 @@ public class AuthManager : MonoBehaviour
 
 
     private readonly string apiKey = "AIzaSyCBurDB1K_PUu_KaD5HqVZqu3gRY1WytPE";    //firabase api
-    private readonly string RegisterURL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=";
+    //private readonly string RegisterURL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=";
     private readonly string LoginURL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=";
     private readonly string databaseURL = "https://origin-of-odyssey-eee04-default-rtdb.firebaseio.com/Users";
 
@@ -36,9 +37,7 @@ public class AuthManager : MonoBehaviour
         {
             AccountLogin();
         }
-
-       LoginAccount("test1@test.com", "test1@test.com");
-
+        //LoginAccount("ramazan2@gmail.com", "test123");
     }
 
     public void Update()
@@ -68,6 +67,65 @@ public class AuthManager : MonoBehaviour
         if (inputFields.Length > 0)
         {
             inputFields[0].Select();
+        }
+    }
+
+    public void SendRegistrationData(string email, string password, string username)
+    {
+        StartCoroutine(PostRequest("https://api.infinitex.space/auth/register", email, password, username));
+    }
+
+    IEnumerator PostRequest(string url, string email, string password, string username)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("email", email);
+        form.AddField("password", password);
+        form.AddField("username", username); 
+
+        UnityWebRequest www = UnityWebRequest.Post(url, form);
+
+        //www.SetRequestHeader("Content-Type", "multipart/form-data");
+
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("İstek başarısız: " + www.error);
+            Debug.LogError("Sunucu hatası: " + www.downloadHandler.text); 
+        }
+        else
+        {
+            Debug.Log("Kayıt başarılı: " + www.downloadHandler.text);
+            userName = username;
+        }
+    }
+
+    IEnumerator LoginAccountInfinitex(string uName, string pWord)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("email", uName);
+        form.AddField("password", pWord);
+        using (UnityWebRequest www = UnityWebRequest.Post("https://api.infinitex.space/auth/login", form))
+        {
+            www.downloadHandler = new DownloadHandlerBuffer();
+            yield return www.SendWebRequest();
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                print(www.error);
+            }
+            else
+            {
+                string responseText = www.downloadHandler.text; //this is token received
+                JSonToken asd = JsonUtility.FromJson<JSonToken>(responseText);
+                Debug.Log(asd.access_token);
+                Debug.Log((DecodePayload(asd.access_token)));
+                string decodedToken = DecodePayload(asd.access_token);
+                UserData userData = JsonUtility.FromJson<UserData>(decodedToken);
+                string userId = userData.id;
+                TokenBridge.tokenTransfer = asd;
+                TokenBridge.id = userId;
+                StartCoroutine(LoadMainMenu());
+            }
         }
     }
     public void AccountLogin()
@@ -103,6 +161,7 @@ public class AuthManager : MonoBehaviour
                 //Get IdInfo
                 localId = response.localId;
                 idToken = response.idToken;
+                print(localId + " " + idToken);
 
                 //Get UserInfo
                 RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
@@ -123,8 +182,17 @@ public class AuthManager : MonoBehaviour
                 }).Catch(error =>
                 {
                     Debug.LogError("Error retrieving playerdeck: " + error.Message);
+                    PostToDatabase(idToken);
+                    RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
+                    {
+                        playerDeckArray = ParseJsonArray(PlayerDeck.Text);
+                    }).Catch(error =>
+                    {
+                        Debug.LogError("Error retrieving playerdeck: " + error.Message);
+
+                    });
                 });
-                StartCoroutine(LoadMainMenu());
+                StartCoroutine(LoginAccountInfinitex(email, password));
 
                 /* string emailVerification = "{\"idToken\":\"" + response.idToken + "\"}";
                  RestClient.Post(
@@ -215,38 +283,41 @@ public class AuthManager : MonoBehaviour
         string username= RegisterUserName.text;
         string firstName = RegisterFirstName.text;
         string lastName = RegisterLastName.text;
-        RegisterAccount(email, password,username,firstName,lastName);
+        SendRegistrationData(email, password, username);
+        //RegisterAccount(email, password,username,firstName,lastName);
     }
 
-    private void RegisterAccount(string email, string password,string username,string firstname,string lastname)
-    {
-        string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
-        RestClient.Post<SignResponse>(RegisterURL + apiKey, userData).Then(
-            response =>
-            {
-                registerInfo.text = "Register Succsesful!";
-                localId = response.localId;
-                userName = username;
-                firstName = firstname;
-                lastName = lastname;
-                idToken=response.idToken;
-                string emailVerification = "{\"requestType\":\"VERIFY_EMAIL\",\"idToken\":\"" + response.idToken + "\"}";
-                RestClient.Post(
-                    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/getOobConfirmationCode?key=" + apiKey,
-                    emailVerification);
-                PostToDatabase( response.idToken);
+    //private void RegisterAccount(string email, string password,string username,string firstname,string lastname)
+    //{
+    //    string userData = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+    //    RestClient.Post<SignResponse>(RegisterURL + apiKey, userData).Then(
+    //        response =>
+    //        {
+    //            registerInfo.text = "Register Succsesful!";
+    //            localId = response.localId;
+    //            userName = username;
+    //            firstName = firstname;
+    //            lastName = lastname;
+    //            idToken=response.idToken;
+    //            string emailVerification = "{\"requestType\":\"VERIFY_EMAIL\",\"idToken\":\"" + response.idToken + "\"}";
+    //            RestClient.Post(
+    //                "https://www.googleapis.com/identitytoolkit/v3/relyingparty/getOobConfirmationCode?key=" + apiKey,
+    //                emailVerification);
+    //            PostToDatabase( response.idToken);
 
-            }).Catch(error =>
-            {
-                Debug.LogError("An error occurred while registering: " + error.Message);
-                registerInfo.text = "An error occurred while registering: " + error.Message;
-            });
-    }
+    //        }).Catch(error =>
+    //        {
+    //            Debug.LogError("An error occurred while registering: " + error.Message);
+    //            registerInfo.text = "An error occurred while registering: " + error.Message;
+    //        });
+    //}
 
     private void PostToDatabase( string idTokenTemp = "")
     {
         PlayerData user = new PlayerData();
-        RestClient.Put(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + idTokenTemp, user)
+        if(user.userName != "")
+        {
+            RestClient.Put(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + idTokenTemp, user)
             .Then(userinfo =>
             {
 
@@ -254,6 +325,8 @@ public class AuthManager : MonoBehaviour
             {
                 Debug.LogError("An error saved to userinfo");
             });
+        }
+        
 
         List<string> cardNames = new List<string>();
         ZeusCard zeusCard = new ZeusCard();
@@ -336,15 +409,47 @@ public class AuthManager : MonoBehaviour
         return parts;
     }
 
+    public static string DecodePayload(string token)
+    {
+        string[] parts = token.Split('.');
+        if (parts.Length != 3)
+        {
+            throw new ArgumentException("JWT token should consist of three parts separated by dots.");
+        }
+
+        string payloadBase64 = parts[1];
+        string payloadJson = Base64UrlDecode(payloadBase64);
+        return payloadJson;
+    }
+
+    private static string Base64UrlDecode(string input)
+    {
+        string padded = input.Length % 4 == 0 ? input : input + "====".Substring(input.Length % 4);
+        string base64 = padded.Replace("_", "/").Replace("-", "+");
+        byte[] bytes = Convert.FromBase64String(base64);
+        return System.Text.Encoding.UTF8.GetString(bytes);
+    }
+
     [Serializable]
     private class EmailConfirmationInfo
     {
         public UserInfo[] users;
     }
 
-    [Serializable]
+[Serializable]
     public class UserInfo
     {
         public bool emailVerified;
     }
+}
+
+[Serializable]
+public class JSonToken
+{
+    public string access_token, refresh_token;
+}
+[Serializable]
+public class UserData
+{
+    public string id;
 }
