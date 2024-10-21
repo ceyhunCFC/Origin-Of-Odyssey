@@ -17,7 +17,7 @@ public class Amount : MonoBehaviour
     void UpdateUserNameOnUI()
     {
         
-        string userName = playerData.userName;
+        string userName = playerData.UserName;
         userNameText.text =userName;
         
     }

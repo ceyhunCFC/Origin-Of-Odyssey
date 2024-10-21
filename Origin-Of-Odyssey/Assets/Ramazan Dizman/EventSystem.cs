@@ -8,6 +8,7 @@ public class EventSystem : MonoBehaviour
     private int nowMoney;
     public InventorySystem inventorySystem;
     public NftSystem nftSystem;
+    public GameObject InformationCanvas,YouHaveMoreMoneyText;
 
     public Text Dustin, Odin, Genghis, Zeus, Leonardo, Anubis;
 
@@ -45,6 +46,7 @@ public class EventSystem : MonoBehaviour
         else
         {
             Debug.Log("You have more money?");
+            YouHaveMoreMoneyText.SetActive(true);
         }
 
     }
@@ -64,6 +66,11 @@ public class EventSystem : MonoBehaviour
             Debug.LogError("TextToIntConverter: Metin '" + text.text + "' tamsay?ya d?n??t?r?lemedi.");
             return 0;
         }
+    }
+
+    public void CloseInformationCanvas()
+    {
+        InformationCanvas.SetActive(false);
     }
 
     public void DustinAdd()

@@ -7,7 +7,7 @@ public class SecurityCheck : MonoBehaviour
     public Transform[] images;
     public float[] angles = { 0f, 90f, 180f, 270f };
     public Toggle robotToggle;
-    public GameObject darkPanel,loginPage;
+    public GameObject darkPanel,loginPage,signUpPage;
     public Text alignmentText;
 
     private int[] currentImageIndices;

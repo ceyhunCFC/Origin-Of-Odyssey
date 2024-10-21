@@ -166,7 +166,7 @@ public class AuthManager : MonoBehaviour
                 //Get UserInfo
                 RestClient.Get<PlayerData>(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + response.idToken).Then(userResponse =>
                 {
-                    userName = userResponse.userName;
+                    userName = userResponse.UserName;
                     firstName = userResponse.firstName;
                     lastName = userResponse.lastName;
                 }).Catch(error =>
@@ -183,14 +183,7 @@ public class AuthManager : MonoBehaviour
                 {
                     Debug.LogError("Error retrieving playerdeck: " + error.Message);
                     PostToDatabase(idToken);
-                    RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + response.idToken).Then(PlayerDeck =>
-                    {
-                        playerDeckArray = ParseJsonArray(PlayerDeck.Text);
-                    }).Catch(error =>
-                    {
-                        Debug.LogError("Error retrieving playerdeck: " + error.Message);
-
-                    });
+                    StartCoroutine(RetryAfterDelay(databaseURL, localId, idToken));
                 });
                 StartCoroutine(LoginAccountInfinitex(email, password));
 
@@ -263,6 +256,19 @@ public class AuthManager : MonoBehaviour
         SceneManager.LoadScene("MainMenuScene");
     }
 
+    IEnumerator RetryAfterDelay(string databaseURL, string localId, string idToken)
+    {
+        yield return new WaitForSeconds(2f);
+
+        RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken).Then(PlayerDeck =>
+        {
+            playerDeckArray = ParseJsonArray(PlayerDeck.Text);
+        }).Catch(error =>
+        {
+            Debug.LogError("Error retrieving playerdeck after retry: " + error.Message);
+        });
+    }
+
     public void AccountRegister()
     {
         if (!robotToggle1.isOn)
@@ -314,18 +320,18 @@ public class AuthManager : MonoBehaviour
 
     private void PostToDatabase( string idTokenTemp = "")
     {
-        PlayerData user = new PlayerData();
-        if(user.userName != "")
-        {
-            RestClient.Put(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + idTokenTemp, user)
-            .Then(userinfo =>
-            {
+        //PlayerData user = new PlayerData();
+        //if(user.userName != "")
+        //{
+        //    RestClient.Put(databaseURL + "/" + localId + "/UserInfo" + ".json?auth=" + idTokenTemp, user)
+        //    .Then(userinfo =>
+        //    {
 
-            }).Catch(error =>
-            {
-                Debug.LogError("An error saved to userinfo");
-            });
-        }
+        //    }).Catch(error =>
+        //    {
+        //        Debug.LogError("An error saved to userinfo");
+        //    });
+        //}
         
 
         List<string> cardNames = new List<string>();

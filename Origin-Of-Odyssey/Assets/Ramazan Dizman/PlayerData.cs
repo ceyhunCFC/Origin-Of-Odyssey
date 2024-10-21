@@ -3,7 +3,7 @@ using System;
 [Serializable]
 public class PlayerData 
 {
-    public string userName;
+    public string UserName;
     public string firstName;
     public string lastName;
 
@@ -11,7 +11,7 @@ public class PlayerData
 
     public PlayerData()
     {
-        userName = AuthManager.userName;
+        UserName = AuthManager.userName;
         firstName = AuthManager.firstName;
         lastName = AuthManager.lastName;
         playerDeck = AuthManager.playerDeckArray;

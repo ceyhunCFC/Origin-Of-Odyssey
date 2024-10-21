@@ -50,7 +50,7 @@ public class CanvasCtrl : MonoBehaviour
         {
             darkPanel.SetActive(true);
             isFirstToggleClick = false;
-            loginPage.SetActive(false);
+            //loginPage.SetActive(false);
             if (!toggle.isOn)
                 toggle.interactable = false;
         }
@@ -62,7 +62,7 @@ public class CanvasCtrl : MonoBehaviour
         {
             darkPanel.SetActive(true);
             isFirstToggleClick = false;
-            loginPage.SetActive(false);
+            //loginPage.SetActive(false);
             if (!toggle1.isOn)
                 toggle1.interactable = false;
         }
