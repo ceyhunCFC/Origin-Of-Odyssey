@@ -16,6 +16,7 @@ TagManager:
   - CompetitorDeckCard
   - SelectCard
   - Inventory
+  - lava
   layers:
   - Default
   - TransparentFX

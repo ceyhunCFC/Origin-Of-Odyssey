@@ -111,6 +111,8 @@ public class PlayerController : MonoBehaviour
     public int addedValue;
     public GameObject InventorySystem;
 
+    GameObject[] Lavas;
+
     void Start()
     {
         //_CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
@@ -127,10 +129,20 @@ public class PlayerController : MonoBehaviour
         Mana = 1;
 
         InventorySystem = GameObject.FindGameObjectWithTag("Inventory");
-
+        Lavas = GameObject.FindGameObjectsWithTag("Lava");
 
         GetDataForUI();
         addedValue = isRankedMap() ? GetHasBeenBoughtValue() : 0;
+
+    }
+
+    void LavaAnimations(bool activity)
+    {
+
+        foreach (var item in Lavas)
+        {
+            item.GetComponent<Animator>().SetBool("Active", activity);
+        }
 
     }
 
@@ -143,7 +155,7 @@ public class PlayerController : MonoBehaviour
         {
             elapsedTime -= Time.deltaTime;
             int seconds = Mathf.FloorToInt(elapsedTime % 60f);
-
+            LavaAnimations(true);
             Timer.text = string.Format("{0:00}:{1:00}", 00, seconds);
 
             if (elapsedTime <= 0f)
@@ -2071,6 +2083,7 @@ public class PlayerController : MonoBehaviour
 
     public void FinishButton()
     {
+        LavaAnimations(false);
         // Find all GameObjects with the specified name
         GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
         GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
