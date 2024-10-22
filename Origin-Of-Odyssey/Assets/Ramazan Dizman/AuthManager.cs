@@ -37,7 +37,7 @@ public class AuthManager : MonoBehaviour
         {
             AccountLogin();
         }
-        //LoginAccount("ramazan2@gmail.com", "test123");
+        //LoginAccount("ramazan7@gmail.com", "test123");
     }
 
     public void Update()
@@ -97,6 +97,7 @@ public class AuthManager : MonoBehaviour
         {
             Debug.Log("Kayıt başarılı: " + www.downloadHandler.text);
             userName = username;
+            LoginAccount(email, password);
         }
     }
 
