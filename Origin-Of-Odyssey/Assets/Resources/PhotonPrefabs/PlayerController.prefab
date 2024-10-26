@@ -686,7 +686,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 330714883, guid: 14300d8c341b6744cb32b8675f36203d, type: 3}
+  m_Sprite: {fileID: -724275257, guid: 1b7787eefe5033348b06c814f8f3b232, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -762,7 +762,7 @@ Animator:
   m_GameObject: {fileID: 1395905936938221766}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ee6cca60a90479f4b9be37fcfd1e19ef, type: 2}
+  m_Controller: {fileID: 9100000, guid: bdf6b3ae4654b6c419588857ce6e4d6d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1349,6 +1349,7 @@ GameObject:
   - component: {fileID: 5454268403422346424}
   - component: {fileID: 3486280749461501178}
   - component: {fileID: 1891427576715151711}
+  - component: {fileID: 8380465097231773642}
   m_Layer: 5
   m_Name: Spell
   m_TagString: Untagged
@@ -1458,6 +1459,28 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &8380465097231773642
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2714455772224959717}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa78c98c832f11c459103bd610eb0fcb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3166762607185449828
 GameObject:
   m_ObjectHideFlags: 0
@@ -4609,7 +4632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -391, y: -7.2244987}
+  m_AnchoredPosition: {x: -586, y: -15}
   m_SizeDelta: {x: -38.9991, y: -14.449}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2327948662292432264

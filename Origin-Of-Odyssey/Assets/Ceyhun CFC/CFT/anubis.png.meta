@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6f9687dbe6d8f9b408a6c8845986f279
+guid: 80eca180d55b18e4196d9e0fd23da850
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -81,19 +81,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -120,7 +107,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: iPhone
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -136,169 +123,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Changis_0
+      name: anubis_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 1007
-        width: 774
-        height: 1007
+        y: 1275
+        width: 1100
+        height: 1275
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e17bfc4861cecc84ebf4e3ef7464a983
-      internalID: 902718033
+      spriteID: ce51c8b75b0a0ee41a4760efd96181ce
+      internalID: -1429612007
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Changis_1
+      name: anubis_1
       rect:
         serializedVersion: 2
-        x: 774
-        y: 1007
-        width: 824
-        height: 1007
+        x: 1100
+        y: 1275
+        width: 1100
+        height: 1275
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e198f0922b5e41148818437e1cedc31f
-      internalID: 439503357
+      spriteID: e77d894c196be3047b4db338ea79fc63
+      internalID: -796345054
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Changis_2
+      name: anubis_2
       rect:
         serializedVersion: 2
-        x: 1598
-        y: 1007
-        width: 671
-        height: 1007
+        x: 2200
+        y: 1275
+        width: 1100
+        height: 1275
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 153aaa6f02335de4d80b17368d9ff9a9
-      internalID: 1025317980
+      spriteID: e3819eb881595bc48971384be8f331b2
+      internalID: 677974824
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Changis_3
-      rect:
-        serializedVersion: 2
-        x: 2439
-        y: 1007
-        width: 724
-        height: 1007
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6f95abc5cea59634c96f4ab8e4c6fd8d
-      internalID: -1441802960
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Changis_4
+      name: anubis_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 914
-        height: 1007
+        width: 1100
+        height: 1275
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d7c49f43a7576f047b06121c4ed02e20
-      internalID: 1089277012
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Changis_5
-      rect:
-        serializedVersion: 2
-        x: 914
-        y: 0
-        width: 914
-        height: 1007
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8392f2f0b7cfeea4b93969cdb290e063
-      internalID: -161399929
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Changis_6
-      rect:
-        serializedVersion: 2
-        x: 1828
-        y: 0
-        width: 914
-        height: 1007
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8715826f24422d34aae8d1bb92cc5155
-      internalID: 906174193
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Changis_7
-      rect:
-        serializedVersion: 2
-        x: 2742
-        y: 0
-        width: 914
-        height: 1007
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b9abbbbbbf9d67945bc126b3892c7fe4
-      internalID: 456100725
+      spriteID: 56d4fc67ef6237b48a40947c05bf8f16
+      internalID: -130273169
       vertices: []
       indices: 
       edges: []
@@ -306,7 +209,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 00d65dce35e6e1642acc8e79e18dbf30
+    spriteID: 75108f57b9c6fad4f8d46292e4d1e8c4
     internalID: 0
     vertices: []
     indices: 
@@ -314,14 +217,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Changis_0: 902718033
-      Changis_1: 439503357
-      Changis_2: 1025317980
-      Changis_3: -1441802960
-      Changis_4: 1089277012
-      Changis_5: -161399929
-      Changis_6: 906174193
-      Changis_7: 456100725
+      anubis_0: -1429612007
+      anubis_1: -796345054
+      anubis_2: 677974824
+      anubis_3: -130273169
+      anubis_4: -602976653
+      anubis_5: 295148546
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

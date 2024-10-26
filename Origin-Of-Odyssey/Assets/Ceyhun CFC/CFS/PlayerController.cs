@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviour
     public GameObject InventorySystem;
 
     GameObject[] Lavas;
+    public Animator HeroAnimator;
 
     void Start()
     {
@@ -129,22 +130,42 @@ public class PlayerController : MonoBehaviour
         Mana = 1;
 
         InventorySystem = GameObject.FindGameObjectWithTag("Inventory");
-        Lavas = GameObject.FindGameObjectsWithTag("Lava");
+        Lavas = GameObject.FindGameObjectsWithTag("lava");
 
         GetDataForUI();
         addedValue = isRankedMap() ? GetHasBeenBoughtValue() : 0;
+        AssignAnimatorController();
 
     }
 
-    void LavaAnimations(bool activity)
+    void LavaAnimations()
     {
+        float totalDuration = 60f;  
+        float startScale = 0.12f;
+        float endScale = 8f;
+
+        float scaleValue = Mathf.Lerp(startScale, endScale, 1 - (elapsedTime / totalDuration));
 
         foreach (var item in Lavas)
         {
-            item.GetComponent<Animator>().SetBool("Active", activity);
+            Vector3 newScale = item.transform.localScale;
+            newScale.y = scaleValue;
+            item.transform.localScale = newScale;
         }
-
     }
+
+    void ResetLavaScale()
+    {
+        float resetScale = 0.12f;
+
+        foreach (var item in Lavas)
+        {
+            Vector3 newScale = item.transform.localScale;
+            newScale.y = resetScale;
+            item.transform.localScale = newScale;
+        }
+    }
+
 
     private void Update()
     {
@@ -155,15 +176,15 @@ public class PlayerController : MonoBehaviour
         {
             elapsedTime -= Time.deltaTime;
             int seconds = Mathf.FloorToInt(elapsedTime % 60f);
-            LavaAnimations(true);
+            LavaAnimations();
             Timer.text = string.Format("{0:00}:{1:00}", 00, seconds);
 
             if (elapsedTime <= 0f)
             {
-                elapsedTime = 60;
-                Timer.text = "00:60";
                 Debug.Log("Countdown finished!");
                 FinishButton();
+                elapsedTime = 60;
+                Timer.text = "00:60";
             }
         }
 
@@ -2083,7 +2104,7 @@ public class PlayerController : MonoBehaviour
 
     public void FinishButton()
     {
-        LavaAnimations(false);
+        ResetLavaScale();
         // Find all GameObjects with the specified name
         GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
         GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
@@ -3487,7 +3508,28 @@ public class PlayerController : MonoBehaviour
         DeckCardCount++;
     }
 
-    public Animator HeroAnimator;
+
+
+    private void AssignAnimatorController()
+{
+    // Define the path relative to Resources folder (without "Assets/" and ".controller")
+    string path = $"Controller/{OwnMainCard}";
+
+    // Attempt to load the RuntimeAnimatorController from Resources
+    RuntimeAnimatorController animatorController = Resources.Load<RuntimeAnimatorController>(path);
+
+    // Check if controller was found
+    if (animatorController != null)
+    {
+        HeroAnimator.runtimeAnimatorController = animatorController;
+        Debug.Log($"{OwnMainCard} controller loaded and assigned successfully.");
+    }
+    else
+    {
+        Debug.LogWarning($"Animator controller for {OwnMainCard} not found at path: Resources/{path}");
+    }
+}
+
     public void MainCardSpecial()
     {
       
@@ -3710,6 +3752,20 @@ public class PlayerController : MonoBehaviour
                         _CardProgress.SetMainAttackerCard(existingObject);
                         _CardProgress.SecoundTargetCard = true;
                         _CardProgress.ForMyCard = true;
+                    }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
+                    break;
+                case "Dustin":
+                    if (Mana >= 2 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardName = "Dustin";
+                        existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
+                        print("Fix gelecek");
                     }
                     else
                     {
