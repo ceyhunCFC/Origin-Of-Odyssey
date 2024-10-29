@@ -130,7 +130,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                     }
 
                     StandartDamage(AttackerCard, TargetCard); // BİZİM KARTIMIZ VE SEÇİLEN RAKİP KART GÖNDERİLİR
-
+                    
 
                 }
                 else if (hit.collider.gameObject.CompareTag("CompetitorHeroCard"))
@@ -286,46 +286,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                         AttackerCard.GetComponent<CardInformation>().isItFirstRaound = false;
                         AttackerCard.GetComponent<CardInformation>().isAttacked = true;
                     }
-                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Tome of Confusion")
-                    {
-                        AttackerInfo = AttackerCard.GetComponent<CardInformation>();
-                        TargetInfo = TargetCard.GetComponent<CardInformation>();
-                        if (UnityEngine.Random.value <= 0.5f)
-                        {
-                            int randomChoice = UnityEngine.Random.Range(0, 2);
-
-                            if (randomChoice == 0)
-                            {
-                                GameObject[] AllCompetitorCard = GameObject.FindGameObjectsWithTag("CompetitorCard");
-                                if (AllCompetitorCard.Length > 0)
-                                {
-                                    int randomIndex = UnityEngine.Random.Range(0, AllCompetitorCard.Length);
-                                    GameObject selectedCard = AllCompetitorCard[randomIndex];
-
-                                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, selectedCard.transform.parent.gameObject);
-
-                                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(AttackerInfo.CardHealth) - TargetInfo.CardDamage).ToString();
-                                    GetComponent<PlayerController>().RefreshUsedCard(index, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-                                    GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, false, AttackerCard.GetComponent<CardInformation>().CardName);
-                                }
-                            }
-                            else
-                            {
-                                GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
-                                if (AllMyCard.Length > 0)
-                                {
-                                    int randomIndex = UnityEngine.Random.Range(0, AllMyCard.Length);
-                                    GameObject selectedCard = AllMyCard[randomIndex];
-
-                                    int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedCard.transform.parent.gameObject);
-
-                                    selectedCard.GetComponent<CardInformation>().CardHealth = (int.Parse(AttackerInfo.CardHealth) - TargetInfo.CardDamage).ToString();
-                                    GetComponent<PlayerController>().RefreshUsedCard(index, selectedCard.GetComponent<CardInformation>().CardHealth, selectedCard.GetComponent<CardInformation>().CardDamage); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
-                                    GetComponent<PlayerController>().CreateTextAtTargetIndex(index, TargetInfo.CardDamage, true, AttackerCard.GetComponent<CardInformation>().CardName);
-                                }
-                            }
-                        }
-                    }
+                   
                     else if (AttackerCard.GetComponent<CardInformation>().CardName == "Plague Carrier")
                     {
                         TargetInfo = TargetCard.GetComponent<CardInformation>();
@@ -511,7 +472,179 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                         Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Eternal Steppe’s Whisper";
                         CloseMyCardSign();
                     }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Sleipnir’s Gallop")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        TargetInfo.CardDamage += 3;
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 3).ToString();
+                        TargetInfo.Gallop = true;
+                        RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Sun Disk Radiance")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        TargetInfo.CardDamage += 3;
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 3).ToString();
+                        TargetInfo.SunDiskRadiance = true;
+                        RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Sun Disk Radiance";
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Pyramid's Might")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        TargetInfo.CardDamage += 4;
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 4).ToString();
+                        PyramidsMight();
+                        RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Pyramid's Might";
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Canopic Preserver")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+                        AttackerInfo.CardDamage += TargetInfo.CardDamage;
+                        AttackerInfo.CardHealth = (int.Parse(AttackerInfo.CardHealth) + int.Parse(TargetInfo.CardHealth)).ToString();
+                        GetComponent<PlayerController>().DeleteMyCard(TargetCardIndex);
+                        RefreshMyCardDatas(AttackerInfo.HaveShield, AttackerInfo.CardDamage, AttackerInfo.DivineSelected, AttackerInfo.FirstTakeDamage, AttackerInfo.FirstDamageTaken, AttackerInfo.EternalShield);
+                        GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Properties Retrieved";
+                        CloseMyCardSign();
+                        ForMyCard = false;
+                        SecoundTargetCard = false;
+                        AttackerCard = null;
+                        TargetCard = null;
+                        TargetCardIndex = -1;
+                        return;
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Artistic Inspiration")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        TargetInfo.ArtisticInspiration = true;
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Artistic Inspiration";
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Leonardo Da Vinci")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Leonardo Da Vinci";
 
+
+                        LeonardoCard leonardoCard = new LeonardoCard();
+
+                        for (int i = 0; i < leonardoCard.minions.Count; i++)
+                        {
+                            string cardName = TargetInfo.CardName;
+                            if (leonardoCard.minions[i].name == cardName &&
+                                cardName != "Codex Guardian" &&
+                                cardName != "Anatomist of the Unknown" &&
+                                cardName != "Piscean Diver" &&
+                                cardName != "Da Vinci's Helix Engineer")
+                            {
+                                if (GetComponent<PlayerController>().AugmentCount >= 4)
+                                {
+                                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 4).ToString();
+                                    TargetInfo.CardDamage += 4;
+                                    if (TargetInfo.CardName == "Eques Automaton")
+                                    {
+                                        TargetInfo.MaxHealth += 4;
+                                    }
+                                }
+                                else
+                                {
+                                    TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 2).ToString();
+                                    TargetInfo.CardDamage += 2;
+                                    if (TargetInfo.CardName == "Eques Automaton")
+                                    {
+                                        TargetInfo.MaxHealth += 2;
+                                    }
+                                }
+                                GetComponent<PlayerController>().AugmentCount++;
+                            }
+                        }
+
+                        if (GetComponent<PlayerController>().PV.IsMine)
+                        {
+                            GetComponent<PlayerController>().SetMana(AttackerCard);
+                        }
+                        RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                        GameObject[] AllCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                        foreach (var card in AllCard)
+                        {
+                            if (card.GetComponent<CardInformation>().CardName == "Organ Gun")
+                            {
+                                GameObject[] cards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                                if (cards.Length > 0)
+                                {
+                                    int randomIndex = UnityEngine.Random.Range(0, cards.Length);
+                                    GameObject randomCard = cards[randomIndex];
+                                    int TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, randomCard.transform.parent.gameObject);
+                                    randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) - 3 * GetComponent<PlayerController>().DoubleDamage).ToString();
+                                    GetComponent<PlayerController>().RefreshUsedCard(TargetCardIndex, randomCard.GetComponent<CardInformation>().CardHealth, randomCard.GetComponent<CardInformation>().CardDamage);
+                                    GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 3 * GetComponent<PlayerController>().DoubleDamage, false, AttackerCard.GetComponent<CardInformation>().CardName);
+                                    if (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
+                                    {
+
+                                        GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                                        GetComponent<PlayerController>().RefreshLog(-3 * GetComponent<PlayerController>().DoubleDamage, true, "Organ Gun", randomCard.GetComponent<CardInformation>().CardName, Color.red);
+                                    }
+                                    else
+                                        GetComponent<PlayerController>().RefreshLog(-3 * GetComponent<PlayerController>().DoubleDamage, false, "Organ Gun", randomCard.GetComponent<CardInformation>().CardName, Color.red);
+                                }
+                            }
+                        }
+                        CloseMyCardSign();
+                        AttackerCard = null;
+                        TargetCard = null;
+                        SecoundTargetCard = false;
+                        TargetCardIndex = -1;
+                        GetComponent<PlayerController>().DoubleDamage = 1;
+                        return;
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Scrap Shield")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        TargetInfo.MaxHealth = (int.Parse(TargetInfo.MaxHealth) + 3).ToString();
+                        TargetInfo.CardHealth = TargetInfo.MaxHealth;
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Scrap Shield";
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Mutated Blood Sample")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - 1).ToString();
+
+                        GetComponent<PlayerController>().CreateTextAtTargetIndex(TargetCardIndex, 1, true, AttackerCard.GetComponent<CardInformation>().CardName);
+                        if (int.Parse(TargetInfo.CardHealth) <= 0)
+                        {
+
+                            GetComponent<PlayerController>().DeleteAreaCard(TargetCardIndex);
+                            GetComponent<PlayerController>().RefreshLog(-1, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                        }
+                        else
+                        {
+                            GetComponent<PlayerController>().RefreshLog(-1, false, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
+                            TargetInfo.CardDamage += 2;
+                            TargetInfo.MutatedBlood = true;
+                            RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                            Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Scrap Shield";
+                        }
+                    }
+                    else if (AttackerCard.GetComponent<CardInformation>().CardName == "Mechanical Reinforcement")
+                    {
+                        TargetInfo = TargetCard.GetComponent<CardInformation>();
+                        AttackerInfo = AttackerCard.GetComponent<CardInformation>();
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + int.Parse(AttackerInfo.CardHealth)).ToString();
+                        TargetInfo.CardDamage += AttackerInfo.CardDamage;
+                        TargetInfo.SetInformation();
+                        RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Mechanical Reinforcement";
+                    }
+                    Destroy(AttackerCard);
+                    CloseMyCardSign();
+                    ForMyCard = false;
+                    SecoundTargetCard = false;
+                    AttackerCard = null;
+                    TargetCard = null;
+                    TargetCardIndex = -1;
                 }
                 /* else if (hit.collider.gameObject.CompareTag("CompetitorHeroCard"))
                  {
@@ -536,7 +669,44 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
     }
 
+    public void PyramidsMight()
+    {
+        GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
 
+        foreach (GameObject target in mycards)
+        {
+            if (target != TargetCard)
+            {
+                float distance = Vector3.Distance(TargetCard.transform.position, target.transform.position);
+                if (distance <= 1f)
+                {
+                    Vector3 directionToTarget = (target.transform.position - TargetCard.transform.position).normalized;
+
+                    float dotProductForward = Vector3.Dot(TargetCard.transform.up, directionToTarget);
+                    float dotProductRight = Vector3.Dot(TargetCard.transform.right, directionToTarget);
+                    float dotProductLeft = Vector3.Dot(-TargetCard.transform.right, directionToTarget);
+                    float dotProductBackward = Vector3.Dot(-TargetCard.transform.up, directionToTarget);
+
+                    if (dotProductForward > 0.5f || dotProductRight > 0.5f || dotProductLeft > 0.5f || dotProductBackward > 0.5f)
+                    {
+                        TargetInfo = target.GetComponent<CardInformation>();
+
+                        TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) + 1).ToString();
+                        TargetInfo.CardDamage += 1;
+                        TargetInfo.SetInformation();
+                        TargetCardIndex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, target.transform.parent.gameObject);
+                        RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
+                        GetComponent<PlayerController>().RefreshLog(0, true, AttackerInfo.CardName, TargetInfo.CardName, Color.black);
+                        SecoundTargetCard = false;
+                        ForMyCard = false;
+                        AttackerCard = null;
+
+                    }
+                }
+            }
+        }
+        CloseMyCardSign();
+    }
 
     public void StandartDamage(GameObject Attacker, GameObject Target) // HANGİ HASAR ŞEKLİ UYGULANACAĞI SEÇİLMELİDİR
     {

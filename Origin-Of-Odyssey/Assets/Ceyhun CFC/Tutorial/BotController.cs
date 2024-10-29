@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using static UnityEngine.Rendering.VolumeComponent;
 
 public class BotController : MonoBehaviour
 {
@@ -1236,8 +1237,8 @@ public class BotController : MonoBehaviour
             else if (cardInfo.CardName == "Eternal Steppe’s Whisper")
             {
                 GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
-
-                if (competitorCards.Length > 0)
+            _TutorialPlayerController.SteppeAmbush = true;
+            if (competitorCards.Length > 0)
                 {
                     // Rastgele bir rakip kartý seç
                     GameObject selectedCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
@@ -1261,12 +1262,352 @@ public class BotController : MonoBehaviour
             }
 
 
-            else if (cardInfo.CardName == "Eternal Steppe’s Whisper")
+        else if (cardInfo.CardName == "Da Vinci’s Blueprint")
+        {
+            _TutorialPlayerController.CreateAnCompetitorCard();
+
+            
+            if (UnityEngine.Random.Range(0, 5) == 0)
             {
-                _TutorialPlayerController.SteppeAmbush = true;
+                GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+
+                if (competitorCards.Length > 0)
+                {
+                   
+                    GameObject selectedCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
+                    CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+                    
+                    selectedCardInfo.CardHealth = (int.Parse(selectedCardInfo.CardHealth) + 2).ToString();
+                    selectedCardInfo.CardDamage += 3;
+                    selectedCardInfo.SetInformation();
+
+                    Debug.Log("Da Vinci’s Blueprint etkisi: " + selectedCardInfo.CardName + " kartýna +2 can ve +3 saldýrý ekledi.");
+                }
+                else
+                {
+                    Debug.LogWarning("Da Vinci’s Blueprint etkisini uygulamak için uygun kart bulunamadý.");
+                }
             }
-        //leonardo
+        }
+        else if (cardInfo.CardName == "Tabula Aeterna")
+        {
+            
+            GameObject[] usedCards = GameObject.FindGameObjectsWithTag("UsedCard");
+
+            if (usedCards.Length > 0)
+            {
+              
+                GameObject selectedCard = usedCards[UnityEngine.Random.Range(0, usedCards.Length)];
+                CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+                
+                Destroy(selectedCard);
+                Debug.Log("Tabula Aeterna, " + selectedCardInfo.CardName + " kartýný yok etti.");
+
+               
+               _TutorialPlayerController.CreateAnCard();
+                Debug.Log("Tabula Aeterna, yok edilen " + selectedCardInfo.CardName + " kartýný desteye tekrar ekledi.");
+            }
+            else
+            {
+                Debug.LogWarning("Tabula Aeterna etkinleþtirildi ancak tahtada uygun bir kart bulunamadý.");
+            }
+        }
+        else if (cardInfo.CardName == "Rune Magic")
+        {
+            int randomEffect = UnityEngine.Random.Range(0, 3); // 0, 1 veya 2 arasýnda rastgele seçim yap
+
+            if (randomEffect == 0)
+            {
+                // Rastgele bir UsedCard kartýna 2 hasar ver
+                GameObject[] usedCards = GameObject.FindGameObjectsWithTag("UsedCard");
+                if (usedCards.Length > 0)
+                {
+                    GameObject selectedCard = usedCards[UnityEngine.Random.Range(0, usedCards.Length)];
+                    CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+                    selectedCardInfo.CardHealth = (int.Parse(selectedCardInfo.CardHealth) - 2).ToString();
+                    selectedCardInfo.SetInformation();
+                    Debug.Log("Rune Magic, " + selectedCardInfo.CardName + " kartýna 2 hasar verdi.");
+
+                    if (int.Parse(selectedCardInfo.CardHealth) <= 0)
+                    {
+                        Destroy(selectedCard);
+                        Debug.Log("Rune Magic, " + selectedCardInfo.CardName + " kartýný yok etti.");
+                    }
+                }
+                else
+                {
+                    Debug.Log("Rune Magic etkisi: Tahtada UsedCard bulunamadý.");
+                }
+            }
+            else if (randomEffect == 1)
+            {
+                // Rastgele bir CompetitorCard kartýna 2 can ver
+                GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+                if (competitorCards.Length > 0)
+                {
+                    GameObject selectedCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
+                    CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+                    selectedCardInfo.CardHealth = (int.Parse(selectedCardInfo.CardHealth) + 2).ToString();
+                    selectedCardInfo.SetInformation();
+                    Debug.Log("Rune Magic, " + selectedCardInfo.CardName + " kartýna 2 can ekledi.");
+                }
+                else
+                {
+                    Debug.Log("Rune Magic etkisi: Tahtada CompetitorCard bulunamadý.");
+                }
+            }
+            else if (randomEffect == 2)
+            {
+                _TutorialPlayerController.CreateAnCompetitorCard();
+                Debug.Log("Rune Magic, desteye yeni bir kart ekledi.");
+            }
+        }
+        else if (cardInfo.CardName == "Winter's Chill")
+        {
+            GameObject[] usedCards = GameObject.FindGameObjectsWithTag("UsedCard");
+            if (usedCards.Length > 0)
+            {
+                // Rastgele bir UsedCard kartýný seç
+                GameObject selectedCard = usedCards[UnityEngine.Random.Range(0, usedCards.Length)];
+                CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+                // Seçilen karta 3 hasar ver
+                selectedCardInfo.CardHealth = (int.Parse(selectedCardInfo.CardHealth) - 3).ToString();
+                selectedCardInfo.SetInformation();
+                Debug.Log("Winter's Chill, " + selectedCardInfo.CardName + " kartýna 3 hasar verdi.");
+
+                if (int.Parse(selectedCardInfo.CardHealth) <= 0)
+                {
+                    Destroy(selectedCard);
+                    Debug.Log("Winter's Chill, " + selectedCardInfo.CardName + " kartýný yok etti.");
+                }
+
+                // Yanýndaki kartlara 1 hasar ver
+                for (int i = 0; i < usedCards.Length; i++)
+                {
+                    if (usedCards[i] == selectedCard)
+                    {
+                        if (i > 0) // Soldaki kart
+                        {
+                            GameObject leftNeighbor = usedCards[i - 1];
+                            CardInformation leftNeighborInfo = leftNeighbor.GetComponent<CardInformation>();
+                            leftNeighborInfo.CardHealth = (int.Parse(leftNeighborInfo.CardHealth) - 1).ToString();
+                            leftNeighborInfo.SetInformation();
+                            Debug.Log("Winter's Chill, " + leftNeighborInfo.CardName + " kartýna 1 hasar verdi.");
+
+                            if (int.Parse(leftNeighborInfo.CardHealth) <= 0)
+                            {
+                                Destroy(leftNeighbor);
+                                Debug.Log("Winter's Chill, " + leftNeighborInfo.CardName + " kartýný yok etti.");
+                            }
+                        }
+
+                        if (i < usedCards.Length - 1) // Saðdaki kart
+                        {
+                            GameObject rightNeighbor = usedCards[i + 1];
+                            CardInformation rightNeighborInfo = rightNeighbor.GetComponent<CardInformation>();
+                            rightNeighborInfo.CardHealth = (int.Parse(rightNeighborInfo.CardHealth) - 1).ToString();
+                            rightNeighborInfo.SetInformation();
+                            Debug.Log("Winter's Chill, " + rightNeighborInfo.CardName + " kartýna 1 hasar verdi.");
+
+                            if (int.Parse(rightNeighborInfo.CardHealth) <= 0)
+                            {
+                                Destroy(rightNeighbor);
+                                Debug.Log("Winter's Chill, " + rightNeighborInfo.CardName + " kartýný yok etti.");
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("Winter's Chill etkisi: Tahtada UsedCard bulunamadý.");
+            }
+        }
+        else if (cardInfo.CardName == "Sleipnir's Gallop")
+        {
+            GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+            cardInfo.GetComponent<CardInformation>().Gallop = true;
+            if (competitorCards.Length > 0)
+            {
+                // Rastgele bir CompetitorCard kartý seç
+                GameObject selectedCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
+                CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+                // Can puanýna 3 ekle
+                int currentHealth = int.Parse(selectedCardInfo.CardHealth);
+                currentHealth += 3;
+                selectedCardInfo.CardHealth = currentHealth.ToString();
+
+                // Saldýrý gücüne 3 ekle
+                selectedCardInfo.CardDamage += 3;
+
+                // Kart bilgilerini güncelle
+                selectedCardInfo.SetInformation();
+
+                Debug.Log("Sleipnir's Gallop, " + selectedCardInfo.CardName + " kartýna +3 can ve +3 saldýrý gücü verdi.");
+            }
+            else
+            {
+                Debug.Log("Sleipnir's Gallop etkisi: Tahtada CompetitorCard bulunamadý.");
+            }
+        }
+        else if (cardInfo.CardName == "Radioactive Fallout")
+        {
+            List<Transform> allCells = new List<Transform>();
+            List<Transform> cardTransforms = new List<Transform>();
+
+            for (int i = 0; i < 14; i++)
+            {
+                var backAreaCollision = GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].transform;
+                allCells.Add(backAreaCollision);
+
+                if (backAreaCollision.childCount != 0)
+                {
+                    cardTransforms.Add(backAreaCollision.GetChild(0));
+                }
+            }
+
+            List<Transform> shuffledCells = new List<Transform>(allCells);
+            for (int i = 0; i < shuffledCells.Count; i++)
+            {
+                Transform temp = shuffledCells[i];
+                int randomIndex = UnityEngine.Random.Range(i, shuffledCells.Count);
+                shuffledCells[i] = shuffledCells[randomIndex];
+                shuffledCells[randomIndex] = temp;
+            }
+
+            List<int> shuffledIndexes = new List<int>();
+            int cardIndex = 0;
+            for (int i = 0; i < shuffledCells.Count; i++)
+            {
+                shuffledIndexes.Add(allCells.IndexOf(shuffledCells[i]));
+
+                if (shuffledCells[i].childCount == 0 && cardIndex < cardTransforms.Count)
+                {
+                    cardTransforms[cardIndex].SetParent(shuffledCells[i]);
+                    cardTransforms[cardIndex].localPosition = Vector3.zero;
+                    cardIndex++;
+                }
+            }
+        }
+        else if (cardInfo.CardName == "Scrap Shield")
+        {
+            GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+            
+            if (competitorCards.Length > 0)
+            {
+                // Rastgele bir CompetitorCard kartý seç
+                GameObject selectedCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
+                CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+                // Can puanýna 3 ekle
+                int currentHealth = int.Parse(selectedCardInfo.CardHealth);
+                currentHealth += 3;
+                selectedCardInfo.CardHealth = currentHealth.ToString();
+
+            }
+            
+        }
        
+        else if (cardInfo.CardName == "Survival Instincts")
+        {
+           cardInfo.isAttacked = false;
+        }
+        else if (cardInfo.CardName == "Bir dost minyona +2/+2 ")
+        {
+            GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+            if (competitorCards.Length > 0)
+            {
+                // Rastgele bir CompetitorCard kartý seç
+                GameObject selectedCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
+                CardInformation selectedCardInfo = selectedCard.GetComponent<CardInformation>();
+
+              
+                int currentHealth = int.Parse(selectedCardInfo.CardHealth);
+                currentHealth += 2;
+                selectedCardInfo.CardHealth = currentHealth.ToString();
+
+                selectedCardInfo.CardDamage += 2;
+
+                selectedCardInfo.SetInformation();
+
+            }
+        }
+        else if (cardInfo.CardName == "Plague of Locusts")
+        {
+            GameObject[] allUsedCards = GameObject.FindGameObjectsWithTag("UsedCard");
+
+            foreach (var card in allUsedCards)
+            {
+                CardInformation targetCardInfo = card.GetComponent<CardInformation>();
+
+                if (!string.IsNullOrEmpty(targetCardInfo.CardHealth))
+                {
+                    // Kartýn can puanýný 1 azalt
+                    int currentHealth = int.Parse(targetCardInfo.CardHealth);
+                    currentHealth -= 1;
+                    targetCardInfo.CardHealth = currentHealth.ToString();
+
+                    // Kart bilgilerini güncelle
+                    targetCardInfo.SetInformation();
+
+                    if (currentHealth <= 0)
+                    {
+                        Destroy(card);
+                        Debug.Log("Plague of Locusts, " + targetCardInfo.CardName + " kartýný yok etti.");
+                       
+                    }
+                    else
+                    {
+                        Debug.Log("Plague of Locusts, " + targetCardInfo.CardName + " kartýna 1 hasar verdi.");
+                    }
+                }
+            }
+        }
+        else if (cardInfo.CardName == "Pyramid's Might")
+        {
+            GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
+
+            // Rastgele bir rakip kart seç
+            if (competitorCards.Length > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, competitorCards.Length);
+                CardInformation selectedCardInfo = competitorCards[randomIndex].GetComponent<CardInformation>();
+
+                selectedCardInfo.CardHealth = (int.Parse(selectedCardInfo.CardHealth) + 4).ToString();
+                selectedCardInfo.CardDamage += 4; // Saldýrý hasarýný artýr
+                selectedCardInfo.SetInformation();
+
+                Debug.Log("Pyramid's Might, " + selectedCardInfo.CardName + " kartýna 4 can ve 4 saldýrý eklendi.");
+
+                // Yanýndaki kartlara 1 can ve 1 saldýrý ekle
+                foreach (GameObject competitorCard in competitorCards)
+                {
+                    if (competitorCard != selectedCardInfo.gameObject) // Seçilen kart dýþýnda
+                    {
+                        CardInformation cardInfoNeighbor = competitorCard.GetComponent<CardInformation>();
+                        if (cardInfoNeighbor != null)
+                        {
+                            cardInfoNeighbor.CardHealth = (int.Parse(cardInfoNeighbor.CardHealth) + 1).ToString();
+                            cardInfoNeighbor.CardDamage += 1; // Yanýndaki karta 1 saldýrý artýr
+                            cardInfoNeighbor.SetInformation();
+                            Debug.Log("Yanýndaki karta 1 can ve 1 saldýrý eklendi: " + cardInfoNeighbor.CardName);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("Pyramid's Might etkinleþtirildi, ancak rakip kart bulunamadý.");
+            }
+        }
+
 
     }
     public int CheckUndeadCards()
@@ -1560,13 +1901,14 @@ public class BotController : MonoBehaviour
 
         }
         int brokkAndSindriTurnCounter = 0;
-    IEnumerator Waiter()
+        IEnumerator Waiter()
         {
             yield return new WaitForSeconds(1);
             Debug.Log("SIRA SENDE");
 
         GameObject[] competitorCards = GameObject.FindGameObjectsWithTag("CompetitorCard");
         GameObject[] usedCards = GameObject.FindGameObjectsWithTag("UsedCard");
+        bool anatomicalInsightActive = false;
         foreach (GameObject card in competitorCards)
         {
 
@@ -1663,8 +2005,33 @@ public class BotController : MonoBehaviour
 
                 }
             }
+            if (card.GetComponent<CardInformation>().CardName == "Anatomical Insight")
+            {
+                anatomicalInsightActive = true;
+                Debug.Log("Anatomical Insight kartý aktif, UsedCard kartlarý bu tur 2 kat hasar alacak.");
+            }
+            if (card.GetComponent<CardInformation>().Gallop == true)
+            {
+                card.GetComponent<CardInformation>().Gallop = false;
+              _TutorialPlayerController.DestroyAndCreateMyDeck(card);
+            }
+            if (card.GetComponent<CardInformation>().CardName == "Survival Instincts")
+            {
+                card.GetComponent<CardInformation>().isAttacked = true;
+            }
 
-
+            
+        }
+        if (anatomicalInsightActive)
+        {
+            foreach (GameObject usedCard in usedCards)
+            {
+                CardInformation usedCardInfo = usedCard.GetComponent<CardInformation>();
+                int originalHealth = int.Parse(usedCardInfo.CardHealth);
+                usedCardInfo.CardHealth = (originalHealth - 2 * 1).ToString(); // 2 kat hasar uygulanýyor
+                usedCardInfo.SetInformation();
+                Debug.Log(usedCard.name + " kartý Anatomical Insight nedeniyle 2 kat hasar aldý.");
+            }
         }
 
         if (UnityEngine.Random.Range(0, 10) < 6)

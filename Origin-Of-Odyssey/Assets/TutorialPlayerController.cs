@@ -4045,11 +4045,9 @@ public class TutorialPlayerController : MonoBehaviour
             StackOwnDeck();
             StackCompetitorDeck();
             DeckCardCount++;
-            GetComponent<PlayerController>().PV.RPC("RPC_CreateRandomCard", RpcTarget.All);
+            
         }
         Destroy(CardCurrent);
-        int index = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, CardCurrent.transform.parent.gameObject);
-        GetComponent<PlayerController>().PV.RPC("RPC_DeleteMyCard", RpcTarget.All, index);
 
     }
     public int CheckUndeadCards()

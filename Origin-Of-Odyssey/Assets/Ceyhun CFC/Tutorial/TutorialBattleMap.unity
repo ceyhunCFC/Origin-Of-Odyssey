@@ -4268,6 +4268,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2615106656914909740, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2871291665533177769, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
       propertyPath: m_Name
       value: TutorialPlayerController
@@ -4343,6 +4347,10 @@ PrefabInstance:
     - target: {fileID: 4163457684923450881, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 380
+      objectReference: {fileID: 0}
+    - target: {fileID: 5053478646940718961, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -389
       objectReference: {fileID: 0}
     - target: {fileID: 6417890422281632153, guid: 64eae3a37c5237949896eccd0627c223, type: 3}
       propertyPath: vfxMovePrefab
