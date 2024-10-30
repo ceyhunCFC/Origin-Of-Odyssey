@@ -1511,21 +1511,31 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
-        // Movie VFX varsa onu instantiate et
-        GameObject vfxMoveInstance = Instantiate(moveVFXToUse, card.transform.position, Quaternion.identity);
-        vfxMoveInstance.transform.SetParent(card.transform);
-        vfxMoveInstance.transform.localPosition = Vector3.zero;
-        VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
-        if (vfxMoveComponent != null)
+        if (Application.platform == RuntimePlatform.WindowsPlayer ||
+           Application.platform == RuntimePlatform.OSXPlayer ||
+           Application.platform == RuntimePlatform.LinuxPlayer ||
+           Application.platform == RuntimePlatform.WindowsEditor ||
+           Application.platform == RuntimePlatform.OSXEditor ||
+           Application.platform == RuntimePlatform.LinuxEditor)
         {
-            vfxMoveComponent.Play();
+            // Movie VFX varsa onu instantiate et
+            GameObject vfxMoveInstance = Instantiate(moveVFXToUse, card.transform.position, Quaternion.identity);
+            vfxMoveInstance.transform.SetParent(card.transform);
+            vfxMoveInstance.transform.localPosition = Vector3.zero;
+            VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
+
+            if (vfxMoveComponent != null)
+            {
+                vfxMoveComponent.Play();
+            }
+
+            // İlk hareketten sonra biraz bekle
+            yield return new WaitForSeconds(1.5f);
+
+            // Movie VFX'i yok et
+            Destroy(vfxMoveInstance);
         }
-
-        // İlk hareketten sonra biraz bekle
-        yield return new WaitForSeconds(1.5f);
-
-        // Movie VFX'i yok et
-        Destroy(vfxMoveInstance);
+      
 
         // Kartı hedef pozisyona indir
         time = 0f;
@@ -1537,23 +1547,34 @@ public class PlayerController : MonoBehaviour
         }
         card.transform.position = targetPosition;
 
-        // Last VFX prefab'ını yükle, eğer bulunamazsa default vfxLandingPrefab'ı kullan
-        GameObject loadedLandingPrefab = Resources.Load<GameObject>(lastVFXPath);
-        GameObject landingVFXToUse = loadedLandingPrefab != null ? loadedLandingPrefab : vfxLandingPrefab;
 
-        // Last VFX varsa onu instantiate et
-        GameObject vfxLandingInstance = Instantiate(landingVFXToUse, card.transform.position, Quaternion.identity);
-        vfxLandingInstance.transform.SetParent(card.transform);
-        vfxLandingInstance.transform.localPosition = Vector3.zero;
-        VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
-        if (vfxLandingComponent != null)
+        if (Application.platform == RuntimePlatform.WindowsPlayer ||
+           Application.platform == RuntimePlatform.OSXPlayer ||
+           Application.platform == RuntimePlatform.LinuxPlayer ||
+           Application.platform == RuntimePlatform.WindowsEditor ||
+           Application.platform == RuntimePlatform.OSXEditor ||
+           Application.platform == RuntimePlatform.LinuxEditor)
         {
-            vfxLandingComponent.Play();
+            // Last VFX prefab'ını yükle, eğer bulunamazsa default vfxLandingPrefab'ı kullan
+            GameObject loadedLandingPrefab = Resources.Load<GameObject>(lastVFXPath);
+            GameObject landingVFXToUse = loadedLandingPrefab != null ? loadedLandingPrefab : vfxLandingPrefab;
+
+            // Last VFX varsa onu instantiate et
+            GameObject vfxLandingInstance = Instantiate(landingVFXToUse, card.transform.position, Quaternion.identity);
+            vfxLandingInstance.transform.SetParent(card.transform);
+            vfxLandingInstance.transform.localPosition = Vector3.zero;
+            VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
+            if (vfxLandingComponent != null)
+            {
+                vfxLandingComponent.Play();
+            }
+
+            // Last VFX'i 5 saniye sonra yok et
+            yield return new WaitForSeconds(5f);
+            Destroy(vfxLandingInstance);
         }
 
-        // Last VFX'i 5 saniye sonra yok et
-        yield return new WaitForSeconds(5f);
-        Destroy(vfxLandingInstance);
+       
 
         selectedCard = null;
         StackDeck();
