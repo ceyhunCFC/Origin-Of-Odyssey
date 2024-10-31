@@ -778,7 +778,7 @@ public class TutorialPlayerController : MonoBehaviour
     }
 
 
-
+    public AudioClip SelectCardFX, DownCard;
 
     void ReleaseCard()
     {
@@ -789,6 +789,8 @@ public class TutorialPlayerController : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "AreaBox")
             {
+                GetComponent<AudioSource>().clip = DownCard;
+                GetComponent<AudioSource>().Play();
                 Transform objectBelow = hit.transform;
 
                 int Boxindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.transform.gameObject);
@@ -4077,6 +4079,7 @@ public class TutorialPlayerController : MonoBehaviour
 
     void SelectCardFromDeck()
     {
+      
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -4084,9 +4087,11 @@ public class TutorialPlayerController : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "Card")
             {
-
+              
                 if (hit.collider.gameObject.GetComponent<CardInformation>().CardMana <= Mana)
                 {
+                    GetComponent<AudioSource>().clip = SelectCardFX;
+                    GetComponent<AudioSource>().Play();
                     selectedCard = hit.collider.gameObject;
                     selectedCard.GetComponent<Renderer>().material.color = Color.green;
 

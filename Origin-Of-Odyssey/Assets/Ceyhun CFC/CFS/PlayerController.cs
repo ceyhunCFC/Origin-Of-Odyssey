@@ -338,6 +338,7 @@ public class PlayerController : MonoBehaviour
 
     void SelectCardFromDeck()
     {
+     
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -345,8 +346,11 @@ public class PlayerController : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "Card")
             {
+              
                 if (hit.collider.gameObject.GetComponent<CardInformation>().CardMana <= Mana)
                 {
+                    GetComponent<AudioSource>().clip = SelectCardFX;
+                    GetComponent<AudioSource>().Play();
                     selectedCard = hit.collider.gameObject;
                     selectedCard.GetComponent<Renderer>().material.color = Color.green;
 
@@ -410,6 +414,7 @@ public class PlayerController : MonoBehaviour
         float followSpeed = 5f; // Kartın takip hızı
         selectedCard.transform.position = Vector3.Lerp(selectedCard.transform.position, targetPosition, Time.deltaTime * followSpeed);
     }
+    public AudioClip DownCard,SelectCardFX;
 
     void ReleaseCard()
     {
@@ -420,6 +425,8 @@ public class PlayerController : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "AreaBox")
             {
+                GetComponent<AudioSource>().clip = DownCard;
+                GetComponent<AudioSource>().Play();
                 Transform objectBelow = hit.transform;
 
                 int Boxindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.transform.gameObject);
