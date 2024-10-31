@@ -11,6 +11,7 @@ public class MainMenuCanvas : MonoBehaviour
     public GameObject settingsCanvas;
     public GameObject profileCanvas;
     public GameObject eventCanvas;
+    public GameObject buyCardCanvas;
     public Text ProfileName;
 
     void Start()
@@ -56,6 +57,16 @@ public class MainMenuCanvas : MonoBehaviour
     public void CloseEventCavnas()
     {
         eventCanvas?.SetActive(false);
+    }
+
+    public void OpenBuyCardCanvas()
+    {
+        buyCardCanvas.SetActive(true);
+    }
+
+    public void CloseBuyCardCanvas()
+    {
+        buyCardCanvas?.SetActive(false);
     }
 
     public void OpenRoomPanel()

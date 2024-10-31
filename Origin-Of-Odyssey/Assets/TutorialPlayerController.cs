@@ -12,7 +12,7 @@ public class TutorialPlayerController : MonoBehaviour
     public string[] OwnDeck;
     string OwnMainCard = "";
     public float OwnHealth = 0;
-    float OwnHeroAttackDamage = 0;
+    int OwnHeroAttackDamage = 0;
 
 
     string CompetitorName = "";
@@ -115,6 +115,7 @@ public class TutorialPlayerController : MonoBehaviour
         }
 
         LogsContainerContent = GameObject.Find("Container");
+        AssignAnimatorController();
     }
 
     void Update()
@@ -4589,6 +4590,26 @@ public class TutorialPlayerController : MonoBehaviour
 
     }
 
+    private void AssignAnimatorController()
+    {
+        // Define the path relative to Resources folder (without "Assets/" and ".controller")
+        string path = $"Controller/{OwnMainCard}";
+
+        // Attempt to load the RuntimeAnimatorController from Resources
+        RuntimeAnimatorController animatorController = Resources.Load<RuntimeAnimatorController>(path);
+
+        // Check if controller was found
+        if (animatorController != null)
+        {
+            HeroAnimator.runtimeAnimatorController = animatorController;
+            Debug.Log($"{OwnMainCard} controller loaded and assigned successfully.");
+        }
+        else
+        {
+            Debug.LogWarning($"Animator controller for {OwnMainCard} not found at path: Resources/{path}");
+        }
+    }
+
     public Animator HeroAnimator;
 
      public void MainCardSpecial()
@@ -4609,75 +4630,242 @@ public class TutorialPlayerController : MonoBehaviour
                     existingObject = OwnMainCardGameObject;
                 }
 
-              
 
-                switch (OwnMainCard)
-                {
 
-                    case "Zeus":
-                        if (Mana >= 2)
+            switch (OwnMainCard)
+            {
+
+                case "Zeus":
+                    if (Mana >= 2 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardName = "Zeus";
+                        existingObject.GetComponent<CardInformation>().CardDamage = OwnHeroAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
+                        _TutorialCardProgress.SetMainAttackerCard(existingObject);
+                    }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
+                    break;
+                case "Genghis":
+                    if (Mana >= 2 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardName = "Genghis";
+                        existingObject.GetComponent<CardInformation>().CardDamage = OwnHeroAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
+                        if (NomadsLand >= 5)
                         {
-                            existingObject.GetComponent<CardInformation>().CardName = "Zeus";
-                            existingObject.GetComponent<CardInformation>().CardDamage =(int) OwnHeroAttackDamage;
-                            existingObject.GetComponent<CardInformation>().CardMana = 2;
-                            HeroAnimator.SetTrigger("Ulti");
-                            _TutorialCardProgress.SetMainAttackerCard(existingObject);
-                        }
-                        break;
-                    case "Genghis":
-                        if (Mana >= 2)
-                        {
-                            existingObject.GetComponent<CardInformation>().CardName = "Genghis";
-                            existingObject.GetComponent<CardInformation>().CardDamage = (int)OwnHeroAttackDamage;
-                            existingObject.GetComponent<CardInformation>().CardMana = 2;
-                            HeroAnimator.SetTrigger("Ulti");
-                            
-                            if(NomadsLand >= 5)
+                            if (OwnHeroAttackDamage <= 2)
                             {
-                                if(OwnHeroAttackDamage <= 2 )
+                                Debug.Log("Nomadiclands Aktif");
+                                OwnHeroAttackDamage++;
+                            }
+                        }
+
+                        CompetitorHealth--;
+
+                        SetMana(existingObject);
+                        GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
+                        foreach (GameObject card in mycards)
+                        {
+                            if (card.GetComponent<CardInformation>().CardName == "Horse Breeder")
+                            {
+                                List<int> emptyCells = new List<int>();
+
+                                for (int i = 0; i < 14; i++)
                                 {
-                                    Debug.Log("Nomadiclands Aktif");
-                                   OwnHeroAttackDamage++;
+                                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                    {
+                                        emptyCells.Add(i);
+                                    }
+                                }
+                                if (emptyCells.Count > 0)
+                                {
+                                    int randomIndex = emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)];
+
+                                    CreateSpecialCard("Steppe Horse", "2", 2, 0, randomIndex, false);
+                                }
+                                else
+                                {
+                                    Debug.LogWarning("No empty cells available to place the steppe ehorse card.");
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
+                    break;
+                case "Odin":
+                    if (AsgardQuestion >= 3 && Mana >= 1 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardMana = 1;
+                        existingObject.GetComponent<CardInformation>().CardName = "Odin";
+                        existingObject.GetComponent<CardInformation>().CardDamage = OwnHeroAttackDamage;
+                        SetMana(existingObject);
+                        HeroAnimator.SetTrigger("Ulti");
+                        GameObject spawnedObject = SpawnAndReturnGameObject();
+
+                        if (spawnedObject.GetComponent<CardInformation>().CardHealth == "")
+                        {
+                            Debug.LogError("Odin SPEEEELLL YARATTTI ");
+
+                            spawnedObject.GetComponent<CardInformation>().CardMana--;
+
+                        }
+                        else
+                        {
+                            Debug.LogError("Odin MİNNYOONNNN YARATTTI ");
+                        }
+                    }
+                    else if (AsgardQuestion < 3 && Mana >= 2 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        existingObject.GetComponent<CardInformation>().CardName = "Odin";
+                        existingObject.GetComponent<CardInformation>().CardDamage = OwnHeroAttackDamage;
+                        SetMana(existingObject);
+                        HeroAnimator.SetTrigger("Ulti");
+                        GameObject spawnedObject = SpawnAndReturnGameObject();
+
+                        if (spawnedObject.GetComponent<CardInformation>().CardHealth == "")
+                        {
+                            Debug.LogError("Odin SPEEEELLL YARATTTI ");
+
+                            spawnedObject.GetComponent<CardInformation>().CardMana--;
+
+                        }
+                        else
+                        {
+                            Debug.LogError("Odin MİNNYOONNNN YARATTTI ");
+                        }
+                    }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
+                    break;
+                case "Anubis":
+                    if (Mana >= 2 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardName = "Anubis";
+                        existingObject.GetComponent<CardInformation>().CardDamage = OwnHeroAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
+
+                        List<int> emptyFrontCells = new List<int>();
+                        List<int> emptyBackCells = new List<int>();
+
+                        for (int i = 7; i < 14; i++)
+                        {
+                            if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                            {
+                                emptyFrontCells.Add(i);
+                            }
+                        }
+
+                        if (emptyFrontCells.Count > 0)
+                        {
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
+                            if (DeadMyCardName.Count > 4)
+                            {
+                                string targetCardName = "Mummy";
+                                string cardHealth = "2";
+                                int cardDamage = 2;
+                                CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                            }
+                            else
+                            {
+                                string targetCardName = "Worker";
+                                string cardHealth = "1";
+                                int cardDamage = 1;
+                                CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                            }
+                            emptyFrontCells.RemoveAt(randomIndex);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < 7; i++)
+                            {
+                                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                {
+                                    emptyBackCells.Add(i);
                                 }
                             }
 
-                            //existingObject.GetComponent<CardController>().UsedCard(existingObject.GetComponent<CardInformation>().CardDamage, PV.Owner.IsMasterClient);
-
-                            SetMana(existingObject);
-                            GameObject[] mycards = GameObject.FindGameObjectsWithTag("UsedCard");
-                            foreach (GameObject card in mycards)
+                            if (emptyBackCells.Count > 0)
                             {
-                                if(card.GetComponent<CardInformation>().CardName== "Horse Breeder")
+                                int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                                int index = emptyBackCells[randomIndex];
+                                if (DeadMyCardName.Count > 4)
                                 {
-                                    List<int> emptyCells = new List<int>();
-
-                                    for (int i = 0; i < 14; i++)
-                                    {
-                                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
-                                        {
-                                            emptyCells.Add(i);
-                                        }
-                                    }
-                                    if (emptyCells.Count > 0)
-                                    {
-                                        int randomIndex = emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)];
-
-                                        CreateSpecialCard("Steppe Horse", "2", 2, 0, randomIndex, false);
-                                    }
-                                    else
-                                    {
-                                        Debug.LogWarning("No empty cells available to place the Eagle card.");
-                                    }
+                                    string targetCardName = "Mummy";
+                                    string cardHealth = "2";
+                                    int cardDamage = 2;
+                                    CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
                                 }
+                                else
+                                {
+                                    string targetCardName = "Worker";
+                                    string cardHealth = "1";
+                                    int cardDamage = 1;
+                                    CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                }
+                                emptyBackCells.RemoveAt(randomIndex);
                             }
-
+                            else
+                            {
+                                Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                            }
                         }
-                        break;
-                }
+                    }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
 
-             
+                    break;
+                case "Leonardo Da Vinci":
+                    if (Mana >= 2 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardName = "Leonardo Da Vinci";
+                        existingObject.GetComponent<CardInformation>().CardDamage = OwnHeroAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
+                        _TutorialCardProgress.SetMainAttackerCard(existingObject);
+                        _TutorialCardProgress.SecoundTargetCard = true;
+                        _TutorialCardProgress.ForMyCard = true;
+                    }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
+                    break;
+                case "Dustin":
+                    if (Mana >= 2 && CanAttackMainCard)
+                    {
+                        existingObject.GetComponent<CardInformation>().CardName = "Dustin";
+                        existingObject.GetComponent<CardInformation>().CardDamage = OwnHeroAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
+                        print("Fix gelecek");
+                    }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
+                    break;
 
             }
+
+
+
+        }
             else if (Input.GetMouseButtonDown(0))
             {
                 Debug.LogError("IT IS NOT YOUR TURN!");
@@ -4685,7 +4873,9 @@ public class TutorialPlayerController : MonoBehaviour
                 GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
                 TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
             }
-         
+        RefreshUI();
+
+
     }
     
 
@@ -5189,7 +5379,7 @@ public class TutorialPlayerController : MonoBehaviour
 
         }
 
-        return 60;
+        return 2;
 
     }
    

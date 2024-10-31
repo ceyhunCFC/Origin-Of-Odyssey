@@ -18,6 +18,7 @@ public class PlayerDeck : MonoBehaviour
 
     public GameObject NotEnoughCard;
     public GameObject CardPrefab,cardsPanel;
+    GameObject newButton;
 
     private void Awake()
     {
@@ -30,30 +31,32 @@ public class PlayerDeck : MonoBehaviour
         RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken).Then(PlayerDeck =>
         {
             playerDeck = ParseJsonArray(PlayerDeck.Text);
+            if (cardsPanel.transform.childCount == 0)
+            {
+                string cardName = playerDeck[0];
+                newButton = Instantiate(CardPrefab, cardsPanel.transform);
+
+                Text[] texts = newButton.GetComponentsInChildren<Text>();
+                texts[0].text = cardName;
+            }
             for (int i = 1; i < playerDeck.Length; i++)
             {
                 string cardName = playerDeck[i];
-                GameObject newButton = Instantiate(CardPrefab, cardsPanel.transform);
+                newButton = Instantiate(CardPrefab, cardsPanel.transform);
 
                 Text[] texts = newButton.GetComponentsInChildren<Text>();
-
                 texts[0].text = cardName;
-                if(i>0)
+                int mana = GetManaForCard(cardName);
+                SetCardImage(cardName);
+                if (mana != -1)
                 {
-                    int mana = GetManaForCard(cardName);
-                    if (mana != -1)
-                    {
-
-                        texts[1].text = mana.ToString();
-                    }
+                    texts[1].text = mana.ToString();
                 }
-                
             }
         }).Catch(error =>
         {
             Debug.LogError("Error retrieving playerdeck: " + error.Message);
         });
-        
     }
     public void SaveButton()
     {
@@ -88,6 +91,12 @@ public class PlayerDeck : MonoBehaviour
         else
         {
             NotEnoughCard.SetActive(true);
+            Text notEnoughCardText = NotEnoughCard.GetComponent<Text>();
+
+            if (notEnoughCardText != null)
+            {
+                notEnoughCardText.text = "You have selected " + cardNames.Count + " cards; you need to select 40 cards.";
+            }
             cardNames.Clear();
         }
     }
@@ -220,6 +229,38 @@ public class PlayerDeck : MonoBehaviour
         }
 
         return mana;
+    }
+
+    void SetCardImage(string name)
+    {
+        string cardName = name;
+        string imagePath = "CardImages/" + cardName;
+
+        Sprite sprite = Resources.Load<Sprite>(imagePath);
+        if (sprite != null)
+        {
+            Transform imageParent = newButton.transform.Find("Image"); 
+            if (imageParent != null)
+            {
+                Transform cardImageTransform = imageParent.Find("CardsImage");
+                if (cardImageTransform != null)
+                {
+                    Image cardsImage = cardImageTransform.GetComponent<Image>();
+                    if (cardsImage != null)
+                    {
+                        cardsImage.sprite = sprite;
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("CardsImage nesnesi bulunamadý!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("ImageParent nesnesi bulunamadý!");
+            }
+        }
     }
 
 

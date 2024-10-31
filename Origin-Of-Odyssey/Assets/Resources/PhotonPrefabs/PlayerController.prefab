@@ -2081,6 +2081,7 @@ MonoBehaviour:
   CompetitorPV: {fileID: 0}
   CardPrefabSolo: {fileID: 1798911962605047886, guid: 515ee43589829493b9d191026fda22ba, type: 3}
   CardPrefabInGame: {fileID: 1798911962605047886, guid: 95f91097fd2028549ad29acd2425208c, type: 3}
+  OwnMainCard: 
   CompetitorDeck: []
   CompetitorMainCard: 
   OwnNameText: {fileID: 7411510846269854161}
@@ -2133,6 +2134,7 @@ MonoBehaviour:
   PlagueCarrierBool: 0
   LessSpellCost: 0
   MerfolkScoutBool: 0
+  osirisCount: 0
   DeadMyCardName: []
   UsedSpellCard: []
   vfxMovePrefab: {fileID: 3434550663373508169, guid: 73488bfd9cd996043b5d83dc9c9cec16, type: 3}

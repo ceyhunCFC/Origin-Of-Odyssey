@@ -59,6 +59,27 @@ public class AddCard : MonoBehaviour
                         selectedCard.ManaText.text = cardDisplay.cardManaText.text;
                         selectedCard.cardType = cardDisplay.cardType;
                     }
+                    Transform imageParent = yeniButon.transform.Find("Image"); 
+                    if (imageParent != null)
+                    {
+                        Transform cardImageTransform = imageParent.Find("CardsImage");
+                        if (cardImageTransform != null)
+                        {
+                            Image cardsImage = cardImageTransform.GetComponent<Image>();
+                            if (cardsImage != null)
+                            {
+                                cardsImage.sprite = cardDisplay.cardImage.sprite; 
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning("CardsImage nesnesi bulunamadý!");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("ImageParent nesnesi bulunamadý!");
+                    }
                 }
                 
             }

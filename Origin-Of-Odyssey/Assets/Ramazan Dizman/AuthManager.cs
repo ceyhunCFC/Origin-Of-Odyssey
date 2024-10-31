@@ -131,7 +131,7 @@ public class AuthManager : MonoBehaviour
     }
     public void AccountLogin()
     {
-        /*if(PlayerPrefs.GetInt("IsLoggedIn") == 0)
+        if(PlayerPrefs.GetInt("IsLoggedIn") == 0)
         {
             if (!robotToggle.isOn)
             {
@@ -139,7 +139,7 @@ public class AuthManager : MonoBehaviour
                 loginInfo.color = Color.red;
                 return;
             }
-        }*/
+        }
          
         loginInfo.text = "";
         string email = LoginEmail.text;
@@ -186,6 +186,12 @@ public class AuthManager : MonoBehaviour
                     PostToDatabase(idToken);
                     StartCoroutine(RetryAfterDelay(databaseURL, localId, idToken));
                 });
+                if (RemindMe == true)
+                {
+                    PlayerPrefs.SetString("Username", email);
+                    PlayerPrefs.SetString("Password", password);
+                    PlayerPrefs.SetInt("IsLoggedIn", 1);
+                }
                 StartCoroutine(LoginAccountInfinitex(email, password));
 
                 /* string emailVerification = "{\"idToken\":\"" + response.idToken + "\"}";

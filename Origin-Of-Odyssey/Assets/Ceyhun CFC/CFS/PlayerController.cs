@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
    
     string OwnName = "";
     string[] OwnDeck;
-    string OwnMainCard = "";
+    [HideInInspector] public string OwnMainCard = "";
     float OwnHealth = 0;
     float OwnHeroAttackDamage = 0;
 
@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool PlagueCarrierBool = false;    //ikinci sefer çalışması için
     [HideInInspector] public int LessSpellCost = 0;             //büyülerin mana değerini 1 azaltıyor
     [HideInInspector] public bool MerfolkScoutBool = false;     //bir karta bakıyor daha sonra onu çekiyor
+    [HideInInspector] public int osirisCount = 0;               //osiris parçaları toplanmasını sayıyor
 
     [HideInInspector] public List<string> DeadMyCardName = null;
     [HideInInspector] public List<GameObject> UsedSpellCard = null;
@@ -720,12 +721,12 @@ public class PlayerController : MonoBehaviour
                     if (GameObject.Find("Deck").transform.childCount < 10)
                     {
                         Vector3[] positions = new Vector3[3];
-                        float yPosition = 2.7f;
-                        float zPosition = -2.7f;
+                        float yPosition = 1.4f;
+                        float zPosition = 0f;
 
-                        Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
-                        Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
-                        Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+                        Vector3 screenPos1 = new Vector3(1.8f, yPosition, zPosition);
+                        Vector3 screenPos2 = new Vector3(2.75f, yPosition, zPosition);
+                        Vector3 screenPos3 = new Vector3(3.7f, yPosition, zPosition);
 
                         positions[0] = screenPos1;
                         positions[1] = screenPos2;
@@ -733,7 +734,7 @@ public class PlayerController : MonoBehaviour
 
                         for (int i = 0; i < positions.Length; i++)
                         {
-                            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                            Quaternion rotation = Quaternion.Euler(60f, 0f, 180f);
                             GameObject Card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), positions[i], rotation);
                             Card.tag = "SelectCard";
                             Card.AddComponent<Button>();
@@ -830,12 +831,12 @@ public class PlayerController : MonoBehaviour
                     if (GameObject.Find("Deck").transform.childCount < 11)
                     {
                         Vector3[] positions = new Vector3[3];
-                        float yPosition = 2.7f;
-                        float zPosition = -2.7f;
+                        float yPosition = 1.4f;
+                        float zPosition = 0f;
 
-                        Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
-                        Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
-                        Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+                        Vector3 screenPos1 = new Vector3(1.8f, yPosition, zPosition);
+                        Vector3 screenPos2 = new Vector3(2.75f, yPosition, zPosition);
+                        Vector3 screenPos3 = new Vector3(3.7f, yPosition, zPosition);
 
                         positions[0] = screenPos1;
                         positions[1] = screenPos2;
@@ -845,7 +846,7 @@ public class PlayerController : MonoBehaviour
 
                         for (int i = 0; i < positions.Length; i++)
                         {
-                            Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                            Quaternion rotation = Quaternion.Euler(60f, 0f, 180f);
                             GameObject Card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), positions[i], rotation);
                             Card.tag = "SelectCard";
                             Card.AddComponent<Button>();
@@ -2486,12 +2487,12 @@ public class PlayerController : MonoBehaviour
         if (GameObject.Find("Deck").transform.childCount < 10)
         {
             Vector3[] positions = new Vector3[3];
-            float yPosition = 2.7f;
-            float zPosition = -2.7f;
+            float yPosition = 1.4f;
+            float zPosition = 0f;
 
-            Vector3 screenPos1 = new Vector3(1f, yPosition, zPosition);
-            Vector3 screenPos2 = new Vector3(0f, yPosition, zPosition);
-            Vector3 screenPos3 = new Vector3(-1f, yPosition, zPosition);
+            Vector3 screenPos1 = new Vector3(1.8f, yPosition, zPosition);
+            Vector3 screenPos2 = new Vector3(2.75f, yPosition, zPosition);
+            Vector3 screenPos3 = new Vector3(3.7f, yPosition, zPosition);
 
             positions[0] = screenPos1;
             positions[1] = screenPos2;
@@ -2499,7 +2500,7 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < positions.Length; i++)
             {
-                Quaternion rotation = Quaternion.Euler(80f, 0f, 180f);
+                Quaternion rotation = Quaternion.Euler(60f, 0f, 180f);
                 GameObject CardCurrent = Instantiate(CardPrefabSolo, positions[i], rotation); 
                 CardCurrent.tag = "SelectCard";
                 CardCurrent.AddComponent<Button>();
@@ -2511,6 +2512,94 @@ public class PlayerController : MonoBehaviour
         else
             Debug.Log("Desten Dolu");
     }
+
+    public void SphinxoftheSands()
+    {
+        Vector3[] positions = new Vector3[3];
+        float yPosition = 1.4f;
+        float zPosition = 0f;
+
+        Vector3 screenPos1 = new Vector3(1.8f, yPosition, zPosition);
+        Vector3 screenPos2 = new Vector3(2.75f, yPosition, zPosition);
+        Vector3 screenPos3 = new Vector3(3.7f, yPosition, zPosition);
+
+        positions[0] = screenPos1;
+        positions[1] = screenPos2;
+        positions[2] = screenPos3;
+
+        int correctCardIndex = UnityEngine.Random.Range(0, positions.Length);
+
+        for (int i = 0; i < positions.Length; i++)
+        {
+            Quaternion rotation = Quaternion.Euler(60f, 0f, 180f);
+            GameObject Card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), positions[i], rotation);
+            Card.tag = "SelectCard";
+            Card.AddComponent<Button>();
+            CreateCard(Card);
+
+            Card.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                foreach (GameObject card in GameObject.FindGameObjectsWithTag("SelectCard"))
+                {
+                    Destroy(card);
+                }
+
+                if (i == correctCardIndex)
+                {
+                    //hasar alınmaz olunacak
+                }
+            });
+        }
+    }
+
+    void OsirisFuncion()
+    {
+        float probability = UnityEngine.Random.Range(0f, 1f);
+
+        if (probability <= 0.4f) // 0.4, %40'lik ihtimale karşılık gelir
+        {
+            osirisCount++;
+            if (osirisCount == 5)
+            {
+                List<int> emptyFrontCells = new List<int>();
+                List<int> emptyBackCells = new List<int>();
+
+                for (int i = 7; i < 14; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyFrontCells.Add(i);
+                    }
+                }
+                for (int i = 0; i < 7; i++)
+                {
+                    if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                    {
+                        emptyBackCells.Add(i);
+                    }
+                }
+
+
+                if (emptyFrontCells.Count > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                    int index = emptyFrontCells[randomIndex];
+                    CreateSpecialCard("Osiris", "20", 20, 0, index, true);
+                }
+                else if (emptyBackCells.Count > 0)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                    int index = emptyBackCells[randomIndex];
+                    CreateSpecialCard("Osiris", "20", 20, 0, index, true);
+                }
+                else
+                {
+                    Debug.LogWarning("No empty cells available to place the Rat card.");
+                }
+            }
+        }
+    }
+
 
     public GameObject SpawnAndReturnGameObject()
     {
@@ -3532,24 +3621,24 @@ public class PlayerController : MonoBehaviour
 
 
     private void AssignAnimatorController()
-{
-    // Define the path relative to Resources folder (without "Assets/" and ".controller")
-    string path = $"Controller/{OwnMainCard}";
-
-    // Attempt to load the RuntimeAnimatorController from Resources
-    RuntimeAnimatorController animatorController = Resources.Load<RuntimeAnimatorController>(path);
-
-    // Check if controller was found
-    if (animatorController != null)
     {
-        HeroAnimator.runtimeAnimatorController = animatorController;
-        Debug.Log($"{OwnMainCard} controller loaded and assigned successfully.");
+        // Define the path relative to Resources folder (without "Assets/" and ".controller")
+        string path = $"Controller/{OwnMainCard}";
+    
+        // Attempt to load the RuntimeAnimatorController from Resources
+        RuntimeAnimatorController animatorController = Resources.Load<RuntimeAnimatorController>(path);
+    
+        // Check if controller was found
+        if (animatorController != null)
+        {
+            HeroAnimator.runtimeAnimatorController = animatorController;
+            Debug.Log($"{OwnMainCard} controller loaded and assigned successfully.");
+        }
+        else
+        {
+            Debug.LogWarning($"Animator controller for {OwnMainCard} not found at path: Resources/{path}");
+        }
     }
-    else
-    {
-        Debug.LogWarning($"Animator controller for {OwnMainCard} not found at path: Resources/{path}");
-    }
-}
 
     public void MainCardSpecial()
     {
@@ -3691,56 +3780,28 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
                 case "Anubis":
-                    existingObject.GetComponent<CardInformation>().CardName = "Anubis";
-                    existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
-                    existingObject.GetComponent<CardInformation>().CardMana = 2;
-                    HeroAnimator.SetTrigger("Ulti");
-
-                    List<int> emptyFrontCells = new List<int>();
-                    List<int> emptyBackCells = new List<int>();
-
-                    for (int i = 7; i < 14; i++)
+                    if (Mana >= 2 && CanAttackMainCard)
                     {
-                        if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
-                        {
-                            emptyFrontCells.Add(i);
-                        }
-                    }
+                        existingObject.GetComponent<CardInformation>().CardName = "Anubis";
+                        existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
+                        existingObject.GetComponent<CardInformation>().CardMana = 2;
+                        HeroAnimator.SetTrigger("Ulti");
 
-                    if (emptyFrontCells.Count > 0)
-                    {
-                        int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
-                        int index = emptyFrontCells[randomIndex];
-                        if (DeadMyCardName.Count > 4)
-                        {
-                            string targetCardName = "Mummy";
-                            string cardHealth = "2";
-                            int cardDamage = 2;
-                            CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
-                        }
-                        else
-                        {
-                            string targetCardName = "Worker";
-                            string cardHealth = "1";
-                            int cardDamage = 1;
-                            CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
-                        }
-                        emptyFrontCells.RemoveAt(randomIndex);
-                    }
-                    else
-                    {
-                        for (int i = 0; i < 7; i++)
+                        List<int> emptyFrontCells = new List<int>();
+                        List<int> emptyBackCells = new List<int>();
+
+                        for (int i = 7; i < 14; i++)
                         {
                             if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
                             {
-                                emptyBackCells.Add(i);
+                                emptyFrontCells.Add(i);
                             }
                         }
 
-                        if (emptyBackCells.Count > 0)
+                        if (emptyFrontCells.Count > 0)
                         {
-                            int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
-                            int index = emptyBackCells[randomIndex];
+                            int randomIndex = UnityEngine.Random.Range(0, emptyFrontCells.Count);
+                            int index = emptyFrontCells[randomIndex];
                             if (DeadMyCardName.Count > 4)
                             {
                                 string targetCardName = "Mummy";
@@ -3755,13 +3816,49 @@ public class PlayerController : MonoBehaviour
                                 int cardDamage = 1;
                                 CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
                             }
-                            emptyBackCells.RemoveAt(randomIndex);
+                            emptyFrontCells.RemoveAt(randomIndex);
                         }
                         else
                         {
-                            Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                            for (int i = 0; i < 7; i++)
+                            {
+                                if (GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[i].gameObject.transform.childCount == 0)
+                                {
+                                    emptyBackCells.Add(i);
+                                }
+                            }
+
+                            if (emptyBackCells.Count > 0)
+                            {
+                                int randomIndex = UnityEngine.Random.Range(0, emptyBackCells.Count);
+                                int index = emptyBackCells[randomIndex];
+                                if (DeadMyCardName.Count > 4)
+                                {
+                                    string targetCardName = "Mummy";
+                                    string cardHealth = "2";
+                                    int cardDamage = 2;
+                                    CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                }
+                                else
+                                {
+                                    string targetCardName = "Worker";
+                                    string cardHealth = "1";
+                                    int cardDamage = 1;
+                                    CreateSpecialCard(targetCardName, cardHealth, cardDamage, 0, index, true);
+                                }
+                                emptyBackCells.RemoveAt(randomIndex);
+                            }
+                            else
+                            {
+                                Debug.LogWarning("No empty cells available to place the Viking Spirit card.");
+                            }
                         }
                     }
+                    else
+                    {
+                        print("mana yetersiz");
+                    }
+
                     break;
                 case "Leonardo Da Vinci":
                     if (Mana >= 2 && CanAttackMainCard)
@@ -4144,6 +4241,11 @@ public class PlayerController : MonoBehaviour
 
                 }
 
+                if (OwnMainCard == "Anubis")
+                {
+                    OsirisFuncion();
+                }
+
                 if (OlympiaKillCount >= 4)
                 {
                     foreach (var Cards in AllEnemyCards)
@@ -4513,7 +4615,7 @@ public class PlayerController : MonoBehaviour
 
             CardCurrent.transform.localPosition = Vector3.zero;
             CardCurrent.GetComponent<CardInformation>().CardName = name;
-            CardCurrent.GetComponent<CardInformation>().CardHealth = (int.Parse(CardCurrent.GetComponent<CardInformation>().CardHealth) + int.Parse(health) + addedValue).ToString(); ;
+            CardCurrent.GetComponent<CardInformation>().CardHealth = (int.Parse(health) + addedValue).ToString(); ;
             CardCurrent.GetComponent<CardInformation>().CardDamage = damage + addedValue;
             CardCurrent.GetComponent<CardInformation>().CardMana = mana;
             CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
@@ -5154,21 +5256,13 @@ public class PlayerController : MonoBehaviour
 
                         MeshRenderer cardRenderer = card.GetComponent<MeshRenderer>();
 
-                        if (cardRenderer != null)
+                        if (cardRenderer != null && CompetitorCardMaterial != null)
                         {
-                            string currentMaterialName = cardRenderer.material != null ? cardRenderer.material.name : "None";
-                            bool shouldReplaceMaterial = !currentMaterialName.Contains("WhatsApp Image 2024 - 03 - 07 at 16.23.16 1(Instance)")
-                                                        && currentMaterialName.Contains("Lit (Instance)");
-
-                            if (cardRenderer.material == null || shouldReplaceMaterial)
-                            {
-                                if (CompetitorCardMaterial != null)
-                                {
-                                    cardRenderer.material = CompetitorCardMaterial;
-                                    Debug.Log("Materyal atandı: " + CompetitorCardMaterial.name);
-                                }
-                            }
+                            // Directly assign the CompetitorCardMaterial to the card's MeshRenderer
+                            cardRenderer.material = CompetitorCardMaterial;
+                            Debug.Log("Materyal atandı: " + CompetitorCardMaterial.name);
                         }
+
 
 
                     }

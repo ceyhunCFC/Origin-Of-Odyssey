@@ -8,8 +8,9 @@ public class CanvasCtrl : MonoBehaviour
     public GameObject loginPage;
     public GameObject signUpPage;
     public GameObject darkPanel;
-    public Toggle toggle,toggle1;
+    public Toggle toggle,toggle1,toggleConfirm;
     public GameObject PasswordPanel;
+    public GameObject confirmationPanel;
 
     private bool isFirstToggleClick = true;
 
@@ -78,5 +79,15 @@ public class CanvasCtrl : MonoBehaviour
     {
         PasswordPanel.SetActive(false);
         loginPage.SetActive(true);
+    }
+
+    public void ToggleConfirmChanged(bool newValue)
+    {
+        confirmationPanel.SetActive(true);
+    }
+
+    public void CloseConfirmationPanel()
+    {
+        confirmationPanel.SetActive(false);
     }
 }

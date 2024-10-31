@@ -1909,27 +1909,32 @@ MonoBehaviour:
   OwnManaBar: {fileID: 6161715482524867458}
   CompetitorHealthBar: {fileID: 3192805508775532793}
   CompetitorManaBar: {fileID: 8961372330256531413}
-  DeadMonsterCound: 0
-  DeckCardCount: 0
-  Mana: 3
   OwnHeroAttackDamageText: {fileID: 5754655919020057729}
   CompetitorHeroAttackDamageText: {fileID: 8343523917808377883}
+  CardPrefabSolo: {fileID: 1798911962605047886, guid: 25d942eb475ed94458423ce97a5b44a5, type: 3}
+  CardPrefabInGame: {fileID: 1798911962605047886, guid: 4fb36e082f37dd44e84f7dd5ff1bab3f, type: 3}
   OlympiaKillCount: 0
   SpellsExtraDamage: 0
   GodsBaneUsed: 0
   SteppeAmbush: 0
   NomadicTactics: 0
   NomadsLand: 0
-  DoubleDamage: 1
-  CardPrefabSolo: {fileID: 1798911962605047886, guid: 25d942eb475ed94458423ce97a5b44a5, type: 3}
-  CardPrefabInGame: {fileID: 1798911962605047886, guid: 4fb36e082f37dd44e84f7dd5ff1bab3f, type: 3}
   AsgardQuestion: 0
+  DeadCardCount: 0
+  DeckCardCount: 0
+  Mana: 3
+  DeadMonsterCound: 0
+  AugmentCount: 0
+  CanAttackMainCard: 1
+  DoubleDamage: 1
   NaiadProtector: 0
-  UsedSpellCard: []
   PlayedSpell: 0
+  PlagueCarrierBool: 0
   LessSpellCost: 0
   MerfolkScoutBool: 0
   DeadMyCardName: []
+  UsedSpellCard: []
+  CompetitorPV: {fileID: 0}
   healthTextObject: {fileID: 3713984765593187317}
   attackTextObject: {fileID: 7174471243643932404}
   drawCardTextObject: {fileID: 4478968713883096633}
@@ -1954,9 +1959,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c53332bef2a43344b0f01a0723d0452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vfxMovePrefab: {fileID: 0}
-  vfxLandingPrefab: {fileID: 0}
-  vfxAttackPrefab: {fileID: 0}
+  DeadMyCardName: []
+  AttackerCard: {fileID: 0}
+  TargetCard: {fileID: 0}
+  DamageText: {fileID: 2708687466921094310, guid: da4c45b7bfd2f93439b698c14d3ed7c0, type: 3}
+  vfxAttackPrefab: {fileID: 7823976076692707666, guid: 00f3bb5677d44394194d09b5b6539422, type: 3}
+  LogsPrefab: {fileID: 8933364326339670385, guid: d52218ebb7512404cab289c84c33d427, type: 3}
+  LogsContainerContent: {fileID: 0}
 --- !u!114 &8221367349896688480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4831,8 +4840,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 511.4, y: 0.0000019073486}
-  m_SizeDelta: {x: 74, y: -59.375114}
+  m_AnchoredPosition: {x: 515, y: 0.10000229}
+  m_SizeDelta: {x: 74, y: -18.199993}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4942054394816780843
 CanvasRenderer:

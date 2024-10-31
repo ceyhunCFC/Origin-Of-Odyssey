@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.Rendering.VolumeComponent;
+using Color = UnityEngine.Color;
 
 public class BotController : MonoBehaviour
 {
@@ -15,6 +17,11 @@ public class BotController : MonoBehaviour
     private bool specialAttackUsed = false;
     [HideInInspector] public List<string> DeadMyCardName = null;
     public GameObject AttackerCard, TargetCard;
+    public GameObject DamageText;
+    public GameObject vfxAttackPrefab;
+    public GameObject LogsPrefab;
+    public GameObject LogsContainerContent;
+
     void Start()
     {
         _TutorialPlayerController = GetComponent<TutorialPlayerController>();
@@ -23,7 +30,7 @@ public class BotController : MonoBehaviour
         {
             _TutorialPlayerController.CreateAnCompetitorCard();
         }
-
+        LogsContainerContent = GameObject.Find("Container");
         Instantiate(Resources.Load<GameObject>("TutorialCompetitorHeroCard 1"), GameObject.Find("CompetitorHeroPivot").transform);
 
     }
@@ -34,12 +41,13 @@ public class BotController : MonoBehaviour
 
         if (!specialAttackUsed && UnityEngine.Random.Range(0, 5) == 0) // 1/5 þansla özel saldýrý artýrýlabilir,
         {
+            print("specialattack");
             SpecialAttack();
             specialAttackUsed = true;
         }
         else
         {
-
+            print("normalattack");
             NormalAttack();
         }
 
@@ -90,6 +98,10 @@ public class BotController : MonoBehaviour
             Debug.Log("Bot Özel Saldýrýsýný Oyuncuya Yaptý.");
             _TutorialPlayerController.OwnHealth -= _TutorialPlayerController.CompetitorHeroAttackDamage;
             _TutorialPlayerController.RefreshUI();
+            if(_TutorialPlayerController.OwnHealth <= 0) 
+            {
+                print("we win");
+            }
         }
 
     }
@@ -104,7 +116,7 @@ public class BotController : MonoBehaviour
 
             GameObject selectedCompetitorCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
             CardInformation competitorCardInfo = selectedCompetitorCard.GetComponent<CardInformation>();
-            
+            print(competitorCardInfo.CardName);
 
             // 8-14 arasý kart kontrolü
             bool isCardInRange = CheckCardInRange(usedCards, 8, 14);
@@ -125,6 +137,8 @@ public class BotController : MonoBehaviour
             {
                 CardInformation usedCardInfo = selectedUsedCard.GetComponent<CardInformation>();
                
+                int Competitorindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().BackAreaCollisions, selectedCompetitorCard.transform.gameObject);
+                int Usedindex = Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, selectedUsedCard.transform.gameObject);
 
                 if (competitorCardInfo.CardName == "Heracles")
                 {
@@ -908,113 +922,129 @@ public class BotController : MonoBehaviour
                         competitorCardInfo.GetComponent<CardInformation>().SetInformation();
 
                     }
-                    else if (competitorCardInfo.CardName == "Rogue AI Drone")
-                    {
-                        competitorCardInfo.GetComponent<CardInformation>().Invulnerable = true;
-
-                    }
-                    else if (competitorCardInfo.CardName == "Claire")
-                    {
-                        _TutorialCardProgress.DamageToAlLOtherMinions(competitorCardInfo.GetComponent<CardInformation>().CardDamage, competitorCardInfo.GetComponent<CardInformation>().CardName);
-                        competitorCardInfo.GetComponent<CardInformation>().CardHealth = (int.Parse(competitorCardInfo.GetComponent<CardInformation>().CardHealth) - 2).ToString();
-                        
-
-                    }
-
-                    //AnubisCards
-                    else if (competitorCardInfo.CardName == "Sandstone Scribe")
-                    {
-                        _TutorialPlayerController.CreateAnCompetitorCard();
-
-                    }
-                    else if (competitorCardInfo.CardName == "Tomb Protector")
-                    {
-                        competitorCardInfo.GetComponent<CardInformation>().CardHealth = (int.Parse(competitorCardInfo.GetComponent<CardInformation>().CardHealth) + CheckUndeadCards()).ToString();
-                        competitorCardInfo.GetComponent<CardInformation>().SetInformation();
-
-                    }
-                    else if (competitorCardInfo.CardName == "Necropolis Acolyte")
-                    {
-
-                        GameObject randomCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
-
-                        randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) +2).ToString();
-                        randomCard.GetComponent<CardInformation>().SetInformation();
-                    }
-                    else if (competitorCardInfo.CardName == "Desert Bowman")
-                    {
-                        GameObject randomCard = usedCards[UnityEngine.Random.Range(0, usedCards.Length)];
-
-                        randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) -1).ToString();
-                        randomCard.GetComponent<CardInformation>().SetInformation();
-                    }
-                    else if (competitorCardInfo.CardName == "Sun Charioteer")
-                    {
-                        if (usedCards.Length > 0)
-                        {
-                            // 'Sun Charioteer' kartýnýn bulunduðu kartý bul
-                            GameObject SelectedUsedCard = usedCards.FirstOrDefault(card => card.GetComponent<CardInformation>().CardName == "Sun Charioteer");
-
-                            if (SelectedUsedCard != null)
-                            {
-                                // Vurulan kartýn indexini bul
-                                int selectedIndex = Array.IndexOf(usedCards, SelectedUsedCard);
-                                Debug.Log("Sun Charioteer " + competitorCardInfo.CardName + " kartýný seçti");
-                                int damage = competitorCardInfo.CardDamage;
-
-                                // Saðdaki karta hasar ver
-                                if (selectedIndex + 1 < usedCards.Length)
-                                {
-                                    GameObject rightCard = usedCards[selectedIndex + 1];
-                                    CardInformation rightCardInfo = rightCard.GetComponent<CardInformation>();
-
-                                    rightCardInfo.CardHealth = (int.Parse(rightCardInfo.CardHealth) - damage).ToString();
-                                    rightCardInfo.SetInformation();
-
-                                    if (int.Parse(rightCardInfo.CardHealth) <= 0)
-                                    {
-                                        Destroy(rightCard);
-                                    }
-
-                                    Debug.Log("Sun Charioteer " + rightCardInfo.CardName + " kartýna " + damage + " hasar verdi (saðdaki kart)");
-                                }
-
-                                // Soldaki karta hasar ver
-                                if (selectedIndex - 1 >= 0)
-                                {
-                                    GameObject leftCard = usedCards[selectedIndex - 1];
-                                    CardInformation leftCardInfo = leftCard.GetComponent<CardInformation>();
-
-                                    leftCardInfo.CardHealth = (int.Parse(leftCardInfo.CardHealth) - damage).ToString();
-                                    leftCardInfo.SetInformation();
-
-                                    if (int.Parse(leftCardInfo.CardHealth) <= 0)
-                                    {
-                                        Destroy(leftCard);
-                                    }
-
-                                    Debug.Log("Sun Charioteer " + leftCardInfo.CardName + " kartýna " + damage + " hasar verdi (soldaki kart)");
-                                }
-                            }
-                            else
-                            {
-                                Debug.Log("Sun Charioteer kartý bulunamadý.");
-                            }
-                        }
-                    }
-                    else if (competitorCardInfo.CardName == "Royal Mummy*")
-                    {
-                        GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
-                        foreach (var card in AllMyCard)
-                        {
-                            card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) - 3).ToString();
-                            card.GetComponent<CardInformation>().SetInformation();
-
-                        }
-                    }
+                    
 
                     
                 }
+                else if (competitorCardInfo.CardName == "Rogue AI Drone")
+                {
+                    competitorCardInfo.GetComponent<CardInformation>().Invulnerable = true;
+
+                }
+                else if (competitorCardInfo.CardName == "Claire")
+                {
+                    _TutorialCardProgress.DamageToAlLOtherMinions(competitorCardInfo.GetComponent<CardInformation>().CardDamage, competitorCardInfo.GetComponent<CardInformation>().CardName);
+                    competitorCardInfo.GetComponent<CardInformation>().CardHealth = (int.Parse(competitorCardInfo.GetComponent<CardInformation>().CardHealth) - 2).ToString();
+
+
+                }
+
+                //AnubisCards
+                else if (competitorCardInfo.CardName == "Sandstone Scribe")
+                {
+                    _TutorialPlayerController.CreateAnCompetitorCard();
+
+                }
+                else if (competitorCardInfo.CardName == "Tomb Protector")
+                {
+                    competitorCardInfo.GetComponent<CardInformation>().CardHealth = (int.Parse(competitorCardInfo.GetComponent<CardInformation>().CardHealth) + CheckUndeadCards()).ToString();
+                    competitorCardInfo.GetComponent<CardInformation>().SetInformation();
+
+                }
+                else if (competitorCardInfo.CardName == "Necropolis Acolyte")
+                {
+
+                    GameObject randomCard = competitorCards[UnityEngine.Random.Range(0, competitorCards.Length)];
+
+                    randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) + 2).ToString();
+                    randomCard.GetComponent<CardInformation>().SetInformation();
+                }
+                else if (competitorCardInfo.CardName == "Desert Bowman")
+                {
+                    GameObject randomCard = usedCards[UnityEngine.Random.Range(0, usedCards.Length)];
+
+                    randomCard.GetComponent<CardInformation>().CardHealth = (int.Parse(randomCard.GetComponent<CardInformation>().CardHealth) - 1).ToString();
+                    randomCard.GetComponent<CardInformation>().SetInformation();
+                }
+                else if (competitorCardInfo.CardName == "Sun Charioteer")
+                {
+                    if (usedCards.Length > 0)
+                    {
+                        // 'Sun Charioteer' kartýnýn bulunduðu kartý bul
+                        GameObject SelectedUsedCard = usedCards.FirstOrDefault(card => card.GetComponent<CardInformation>().CardName == "Sun Charioteer");
+
+                        if (SelectedUsedCard != null)
+                        {
+                            // Vurulan kartýn indexini bul
+                            int selectedIndex = Array.IndexOf(usedCards, SelectedUsedCard);
+                            Debug.Log("Sun Charioteer " + competitorCardInfo.CardName + " kartýný seçti");
+                            int damage = competitorCardInfo.CardDamage;
+
+                            // Saðdaki karta hasar ver
+                            if (selectedIndex + 1 < usedCards.Length)
+                            {
+                                GameObject rightCard = usedCards[selectedIndex + 1];
+                                CardInformation rightCardInfo = rightCard.GetComponent<CardInformation>();
+
+                                rightCardInfo.CardHealth = (int.Parse(rightCardInfo.CardHealth) - damage).ToString();
+                                rightCardInfo.SetInformation();
+
+                                if (int.Parse(rightCardInfo.CardHealth) <= 0)
+                                {
+                                    Destroy(rightCard);
+                                }
+
+                                Debug.Log("Sun Charioteer " + rightCardInfo.CardName + " kartýna " + damage + " hasar verdi (saðdaki kart)");
+                            }
+
+                            // Soldaki karta hasar ver
+                            if (selectedIndex - 1 >= 0)
+                            {
+                                GameObject leftCard = usedCards[selectedIndex - 1];
+                                CardInformation leftCardInfo = leftCard.GetComponent<CardInformation>();
+
+                                leftCardInfo.CardHealth = (int.Parse(leftCardInfo.CardHealth) - damage).ToString();
+                                leftCardInfo.SetInformation();
+
+                                if (int.Parse(leftCardInfo.CardHealth) <= 0)
+                                {
+                                    Destroy(leftCard);
+                                }
+
+                                Debug.Log("Sun Charioteer " + leftCardInfo.CardName + " kartýna " + damage + " hasar verdi (soldaki kart)");
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log("Sun Charioteer kartý bulunamadý.");
+                        }
+                    }
+                }
+                else if (competitorCardInfo.CardName == "Royal Mummy*")
+                {
+                    GameObject[] AllMyCard = GameObject.FindGameObjectsWithTag("UsedCard");
+                    foreach (var card in AllMyCard)
+                    {
+                        card.GetComponent<CardInformation>().CardHealth = (int.Parse(card.GetComponent<CardInformation>().CardHealth) - 3).ToString();
+                        card.GetComponent<CardInformation>().SetInformation();
+
+                    }
+                }
+                else
+                {
+                    print("deneme");
+                    if(competitorCardInfo.CardHealth != null)
+                    {
+                        usedCardInfo.CardHealth = (int.Parse(usedCardInfo.CardHealth) - competitorCardInfo.CardDamage).ToString();
+                        usedCardInfo.SetInformation();
+
+                        if (int.Parse(usedCardInfo.CardHealth) <= 0)
+                        {
+                            //Destroy(selectedUsedCard);
+                        }
+                    }
+                }
+                BotLogAndText(selectedUsedCard, selectedCompetitorCard);
                 competitorCardInfo.HasAttacked = true;
 
                 }
@@ -1024,6 +1054,231 @@ public class BotController : MonoBehaviour
             }
 
         }
+
+    public void BotLogAndText(GameObject usedCardInfo,GameObject competitorCardInfo)
+    {
+        print("runbbotlogandtext");
+        Color color = Color.white;
+        competitorCardInfo.GetComponent<CardInformation>().CardHealth = (int.Parse(competitorCardInfo.GetComponent<CardInformation>().CardHealth) - usedCardInfo.GetComponent<CardInformation>().CardDamage).ToString();
+        competitorCardInfo.GetComponent<CardInformation>().SetInformation();
+
+        if (int.Parse(competitorCardInfo.GetComponent<CardInformation>().CardHealth) <= 0)
+        {
+            
+            Destroy(competitorCardInfo,2f);
+            color = Color.red;
+        }
+
+        string cardName = usedCardInfo.GetComponent<CardInformation>().CardName.Replace(" ", "");
+
+        string attackVFXPath = $"Vfx/VFX_{cardName}_Attack";
+        GameObject loadedVFXPrefab = Resources.Load<GameObject>(attackVFXPath);
+
+        if (loadedVFXPrefab != null)
+        {
+            GameObject attackInstance = Instantiate(loadedVFXPrefab, competitorCardInfo.transform);
+            Destroy(attackInstance, 5f);
+        }
+        else
+        {
+            Debug.LogError("Attack VFX prefab'ý bulunamadý: " + attackVFXPath + ". Default VFX çalýþtýrýlýyor.");
+            GameObject attackInstance = Instantiate(vfxAttackPrefab, competitorCardInfo.transform); 
+            Destroy(attackInstance, 5f);
+        }                                                                                                                                         //bot kartýna uyguoanacak iþlemler
+
+        GameObject damageTextObject = Instantiate(DamageText);
+        damageTextObject.transform.parent = competitorCardInfo.transform;
+        damageTextObject.transform.localPosition = new Vector3(0, 0.5f, 0);
+        damageTextObject.transform.localRotation = Quaternion.Euler(50, 0, 0);
+        damageTextObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.01f);
+
+        Text textComponent = damageTextObject.GetComponentInChildren<Text>();
+        textComponent.text = "-" + usedCardInfo.GetComponent<CardInformation>().CardDamage.ToString();
+        print(usedCardInfo.GetComponent<CardInformation>().CardName + " " + usedCardInfo.GetComponent<CardInformation>().CardDamage);
+        Destroy(damageTextObject, 3f);
+
+
+
+
+        GameObject logsObject = Instantiate(LogsPrefab, LogsContainerContent.transform);
+
+        // Damage text objesini bul ve deðerini güncelle
+        Text logsDamageText = logsObject.transform.Find("DamageImage/Damage").GetComponent<Text>();
+        logsDamageText.text = usedCardInfo.GetComponent<CardInformation>().CardDamage.ToString();
+
+
+        // Dead objesini bul ve gerekli iþlemi yap
+        Transform deadObject = logsObject.transform.Find("TargetImage");
+        if (deadObject != null)
+        {
+            Image deadImage = deadObject.GetComponent<Image>();
+            deadImage.color = color;
+        }
+        else if (deadObject == null)
+        {
+            Debug.LogWarning("Dead object not found in LogsPrefab.");
+        }
+
+        // Attacker ve Target objelerini bul ve resimlerini yükle
+        Transform attackerObject = logsObject.transform.Find("AttackerImage/Attacker");
+        Transform targetObject = logsObject.transform.Find("TargetImage/Target");
+
+        if (attackerObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + usedCardInfo.GetComponent<CardInformation>().CardName);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + usedCardInfo.GetComponent<CardInformation>().CardName);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image attackerImage = attackerObject.GetComponent<Image>();
+            if (attackerImage != null)
+            {
+                attackerImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Attacker object not found in LogsPrefab.");
+        }
+
+        if (targetObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + competitorCardInfo.GetComponent<CardInformation>().CardName);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + competitorCardInfo.GetComponent<CardInformation>().CardName);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image targetImage = targetObject.GetComponent<Image>();
+            if (targetImage != null)
+            {
+                targetImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Target object not found in LogsPrefab.");
+        }
+
+
+
+
+
+
+
+
+
+        if (int.Parse(usedCardInfo.GetComponent<CardInformation>().CardHealth) <= 0)
+        {
+            Destroy(usedCardInfo,2f);
+            color = Color.red;
+        }
+        else
+        {
+            color = Color.white;
+        }
+
+        cardName = competitorCardInfo.GetComponent<CardInformation>().CardName.Replace(" ", "");
+
+        attackVFXPath = $"Vfx/VFX_{cardName}_Attack";
+        loadedVFXPrefab = Resources.Load<GameObject>(attackVFXPath);
+
+        if (loadedVFXPrefab != null)
+        {
+            GameObject attackInstance = Instantiate(loadedVFXPrefab, usedCardInfo.transform);
+            Destroy(attackInstance, 5f);
+        }
+        else
+        {
+            Debug.LogError("Attack VFX prefab'ý bulunamadý: " + attackVFXPath + ". Default VFX çalýþtýrýlýyor.");
+            GameObject attackInstance = Instantiate(vfxAttackPrefab, usedCardInfo.transform); 
+            Destroy(attackInstance, 5f);
+        }                                                                                                                                                            //bizim karta uygulanacak iþlemler
+
+        damageTextObject = Instantiate(DamageText);
+        damageTextObject.transform.parent = usedCardInfo.transform;
+        damageTextObject.transform.localPosition = new Vector3(0, 0.5f, 0);
+        damageTextObject.transform.localRotation = Quaternion.Euler(50, 0, 0);
+        damageTextObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.01f);
+
+        textComponent = damageTextObject.GetComponentInChildren<Text>();
+        textComponent.text = "-" + competitorCardInfo.GetComponent<CardInformation>().CardDamage.ToString();
+        print(competitorCardInfo.GetComponent<CardInformation>().CardName + " " + competitorCardInfo.GetComponent<CardInformation>().CardDamage);
+        Destroy(damageTextObject, 3f);
+
+
+
+
+        logsObject = Instantiate(LogsPrefab, LogsContainerContent.transform);
+
+        // Damage text objesini bul ve deðerini güncelle
+        logsDamageText = logsObject.transform.Find("DamageImage/Damage").GetComponent<Text>();
+        logsDamageText.text = competitorCardInfo.GetComponent<CardInformation>().CardDamage.ToString();
+
+
+        // Dead objesini bul ve gerekli iþlemi yap
+        deadObject = logsObject.transform.Find("TargetImage");
+        if (deadObject != null)
+        {
+            Image deadImage = deadObject.GetComponent<Image>();
+            deadImage.color = color;
+        }
+        else if (deadObject == null)
+        {
+            Debug.LogWarning("Dead object not found in LogsPrefab.");
+        }
+
+        // Attacker ve Target objelerini bul ve resimlerini yükle
+        attackerObject = logsObject.transform.Find("AttackerImage/Attacker");
+        targetObject = logsObject.transform.Find("TargetImage/Target");
+
+        if (attackerObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + competitorCardInfo.GetComponent<CardInformation>().CardName);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + competitorCardInfo.GetComponent<CardInformation>().CardName);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image attackerImage = attackerObject.GetComponent<Image>();
+            if (attackerImage != null)
+            {
+                attackerImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Attacker object not found in LogsPrefab.");
+        }
+
+        if (targetObject != null)
+        {
+            Sprite foundSprite = Resources.Load<Sprite>("CardImages/" + usedCardInfo.GetComponent<CardInformation>().CardName);
+
+            if (foundSprite == null)
+            {
+                Debug.LogWarning("Sprite not found: " + usedCardInfo.GetComponent<CardInformation>().CardName);
+                foundSprite = Resources.Load<Sprite>("CardImages/" + "Centaur Archer");
+            }
+
+            Image targetImage = targetObject.GetComponent<Image>();
+            if (targetImage != null)
+            {
+                targetImage.sprite = foundSprite;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Target object not found in LogsPrefab.");
+        }
+    }
         void ApplySpellEffect(CardInformation cardInfo)
         {
             if (cardInfo.CardName == "Lightning Storm")
