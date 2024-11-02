@@ -28,6 +28,7 @@ public class PlayerDeck : MonoBehaviour
 
     public void GetCardsData()
     {
+        print(localId + " " + idToken);
         RestClient.Get(databaseURL + "/" + localId + "/PlayerDeck" + ".json?auth=" + idToken).Then(PlayerDeck =>
         {
             playerDeck = ParseJsonArray(PlayerDeck.Text);

@@ -346,7 +346,6 @@ public class PlayerController : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "Card")
             {
-              
                 if (hit.collider.gameObject.GetComponent<CardInformation>().CardMana <= Mana)
                 {
                     GetComponent<AudioSource>().clip = SelectCardFX;
@@ -1300,7 +1299,8 @@ public class PlayerController : MonoBehaviour
                     CompetitorPV.GetComponent<PlayerController>().PV.RPC("RPC_RefreshCompetitorMana", RpcTarget.Others,Mana);
                     PV.RPC("RefreshPlayersInformation", RpcTarget.All);
                 }
-
+                DeactivateAllGreens();
+                ActiveAllGreens();
                 selectedCard = null;
                 lastHoveredCard = null;
                 return; 
@@ -2143,6 +2143,7 @@ public class PlayerController : MonoBehaviour
         elapsedTime = 60;
         finishButton.interactable = false;
         CanAttackMainCard = true;
+        DeactivateAllGreens();
         foreach (GameObject obj in objects)
         {
             if (obj.name == "PlayerController(Clone)")
@@ -4062,6 +4063,8 @@ public class PlayerController : MonoBehaviour
             CanAttackMainCard = false;
             ManaCountText.text = Mana.ToString() + "/10";
             OwnManaBar.fillAmount = Mana / 10f;
+            DeactivateAllGreens();
+            ActiveAllGreens();
         }
     }
 
@@ -4125,7 +4128,24 @@ public class PlayerController : MonoBehaviour
                 
                 StackDeck();
                 StackCompetitorDeck();
-                
+
+
+                Transform deckTransform = GameObject.Find("Deck").transform;
+                int childCount = deckTransform.childCount;
+
+                for (int i = 0; i < childCount; i++)
+                {
+                    Transform child = deckTransform.GetChild(i);
+                    CardInformation cardInfo = child.GetComponent<CardInformation>();
+                    if (cardInfo != null && cardInfo.CardMana <= _GameManager.ManaCount)
+                    {
+                        Transform green = child.Find("Green");
+                        if (green != null)
+                        {
+                            green.gameObject.SetActive(true);
+                        }
+                    }
+                }
                 foreach (var card in AllEnemyCards)
                 {
                     if (card.GetComponent<CardInformation>().DivineSelected == true)
@@ -5108,6 +5128,40 @@ public class PlayerController : MonoBehaviour
         GameObject.Find("CompetitorDeck").transform.position = new Vector3(3.3f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.26f, 1.54f);
 
     }
+
+    public void DeactivateAllGreens()
+    {
+        Transform deckTransform = GameObject.Find("Deck").transform;
+        int childCount = deckTransform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform green = deckTransform.GetChild(i).Find("Green");
+            if (green != null)
+                green.gameObject.SetActive(false);
+        }
+    }
+
+    public void ActiveAllGreens()
+    {
+        Transform deckTransform = GameObject.Find("Deck").transform;
+        int childCount = deckTransform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = deckTransform.GetChild(i);
+            CardInformation cardInfo = child.GetComponent<CardInformation>();
+            if (cardInfo != null && cardInfo.CardMana <=Mana)
+            {
+                Transform green = child.Find("Green");
+                if (green != null)
+                {
+                    green.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+
 
     void GetDataForUI()
     {
