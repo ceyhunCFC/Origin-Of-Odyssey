@@ -2,32 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using UnityEngine.UI;
 using Photon.Realtime;
-using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class NetworkManger : MonoBehaviourPunCallbacks
 {
     public static NetworkManger Instance;
 
-    /*[SerializeField] InputField roomNameInputField;
-    [SerializeField] Text ErrorText;
-    [SerializeField] Text RoomNameText;
-    [SerializeField] Transform roomListContent;
-    [SerializeField] Transform PlayerListContent;
-    [SerializeField] GameObject roomListItemPrefab;
-    [SerializeField] GameObject PlayerListItemPrefab;
-    [SerializeField] GameObject startGameButton;*/
-
     [SerializeField] GameObject CompetitorCard;
     [SerializeField] GameObject CompetitorSlot;
 
-    private bool isRanked=false;
-
-    string PlayerDeckTotal = "";
-
-    private ExitGames.Client.Photon.Hashtable _myCustomPlayer = new ExitGames.Client.Photon.Hashtable();
+    private string currentMode = "";
 
     private void Awake()
     {
@@ -50,61 +35,43 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     {
         MenuManager.Instance.OpenMenu("title");
         print("Joined Lobby");
-
-        for (int i = 0; i < AuthManager.playerDeckArray.Length; i++)
-        {
-            PlayerDeckTotal += AuthManager.playerDeckArray[i] + ",";
-        }
-
-
-        PhotonNetwork.NickName = AuthManager.userName;
-      
     }
 
-
-    public void CreateRoom()
+    public void AutoJoinOrCreate(string mode)
     {
-
-        /* if (string.IsNullOrEmpty(roomNameInputField.text))
-         {
-             return;
-         }
-
-         PhotonNetwork.CreateRoom(roomNameInputField.text);*/
-
-        PhotonNetwork.JoinRandomOrCreateRoom();
+        currentMode = mode;
         MenuManager.Instance.OpenMenu("loading");
+        PhotonNetwork.JoinRandomRoom(new ExitGames.Client.Photon.Hashtable { { "mode", mode } }, 2);
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        print("No room found, creating a new one...");
+        CreateRoom(currentMode);
+    }
+
+    private void CreateRoom(string mode)
+    {
+        string roomName = $"{mode}_{Random.Range(0, 10000)}";
+
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 2;
+        roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable { { "mode", mode } };
+        roomOptions.CustomRoomPropertiesForLobby = new string[] { "mode" };
+
+        PhotonNetwork.CreateRoom(roomName, roomOptions);
+        print($"Creating Room: {roomName} for Mode: {mode}");
     }
 
     public override void OnJoinedRoom()
     {
-       
         MenuManager.Instance.OpenMenu("room");
-      //  RoomNameText.text = PhotonNetwork.CurrentRoom.Name;
+        print($"Joined Room: {PhotonNetwork.CurrentRoom.Name}");
 
         Player[] players = PhotonNetwork.PlayerList;
 
-      /*  foreach (Transform child in PlayerListContent)
+        if (players.Length == 2)
         {
-            Destroy(child.gameObject);
-        }
-
-        for (int i = 0; i < players.Count(); i++)
-        {
-            Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
-
-           
-           
-        }*/
-
-
-       
-
-
-
-        if (players.Count() == 2)
-        {
-
             CompetitorSlot.GetComponent<Animator>().SetBool("Stop", true);
 
             if (PhotonNetwork.IsMasterClient)
@@ -116,39 +83,21 @@ public class NetworkManger : MonoBehaviourPunCallbacks
                 CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[0]);
             }
         }
-
-
-
-       // startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-   /* public override void OnMasterClientSwitched(Player newMasterClient)
+    public void StartRankedMode()
     {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-
-        
-    }*/
-
-
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-       // ErrorText.text = "Room Creation Failed: " + message;
-        MenuManager.Instance.OpenMenu("error");
+        AutoJoinOrCreate("Ranked");
     }
 
-    public void StartGame()
+    public void StartAdventureMode()
     {
-        PhotonNetwork.LoadLevel("BattleMap");
+        AutoJoinOrCreate("Adventure");
     }
 
-    public void StartRankedGame()
+    public void StartBrawlMode()
     {
-        PhotonNetwork.LoadLevel("RankedBattleMap");
-    }
-
-    public void RankedButton()
-    {
-        isRanked = true;
+        AutoJoinOrCreate("Brawl");
     }
 
     public void LeaveRoom()
@@ -157,47 +106,17 @@ public class NetworkManger : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("loading");
     }
 
-    public void JoinRoom(RoomInfo info)
+    public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        PhotonNetwork.JoinRoom(info.Name);
-        MenuManager.Instance.OpenMenu("loading");
-
+        print($"Room creation failed: {message}");
+        MenuManager.Instance.OpenMenu("error");
     }
-
-    public void BackMainMenu()
-    {
-        PhotonNetwork.Disconnect();
-        SceneManager.LoadScene("MainMenuScene");
-    }
-
-    
-    public override void OnLeftLobby()
-    {
-         SceneManager.LoadScene("MainMenuScene"); // Ana menü sahnesine geç
-     //   Destroy(GameObject.Find("RoomManager").gameObject);
-    }
-
-    /* public override void OnRoomListUpdate(List<RoomInfo> roomList)
-     {
-         foreach (Transform trans in roomListContent)
-         {
-             Destroy(trans.gameObject);
-         }
-
-         for (int i = 0; i < roomList.Count; i++)
-         {
-             if (roomList[i].RemovedFromList)
-                 continue;
-             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
-         }
-     }*/
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-       // Instantiate(PlayerListItemPrefab, PlayerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
         Player[] players = PhotonNetwork.PlayerList;
 
-        if (players.Count() == 2)
+        if (players.Length == 2)
         {
             StartCoroutine(StartMatch());
 
@@ -217,14 +136,26 @@ public class NetworkManger : MonoBehaviourPunCallbacks
     IEnumerator StartMatch()
     {
         yield return new WaitForSeconds(8);
-        if(isRanked)
+
+        if (currentMode == "Ranked")
         {
-            StartRankedGame();
+            PhotonNetwork.LoadLevel("RankedBattleMap");
         }
-        else
+        else if (currentMode == "Adventure")
         {
-            StartGame();
+            PhotonNetwork.LoadLevel("AdventureMap");
+        }
+        else if (currentMode == "Brawl")
+        {
+            PhotonNetwork.LoadLevel("BrawlMap");
         }
     }
 
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach (var room in roomList)
+        {
+            print($"Room: {room.Name}, Mode: {room.CustomProperties["mode"]}");
+        }
+    }
 }
