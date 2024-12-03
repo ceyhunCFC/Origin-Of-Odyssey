@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
     public GameObject vfxAttackPrefab;
 
     public Material CompetitorCardMaterial;
+    public Material CompetitorHeroCardMaterial;
 
     public int addedValue;
     public GameObject InventorySystem;
@@ -138,6 +139,24 @@ public class PlayerController : MonoBehaviour
         AssignAnimatorController();
 
     }
+
+    void HeroNftCard()
+    {
+        string competitorCardPath = $"NftCarddsİmage/{CompetitorMainCard}";
+
+        Sprite competitorCardSprite = Resources.Load<Sprite>(competitorCardPath);
+
+        if (CompetitorHeroCardMaterial != null && competitorCardSprite != null)
+        {
+            // Sprite'ın Texture'ını alıyoruz
+            CompetitorHeroCardMaterial.SetTexture("_BaseMap", competitorCardSprite.texture);
+        }
+        else
+        {
+            Debug.LogWarning($"Material veya Texture atanmadı! Path: {competitorCardPath}");
+        }
+    }
+
 
     void LavaAnimations()
     {
@@ -292,11 +311,11 @@ public class PlayerController : MonoBehaviour
                     if (lastHoveredCard != null)
                     {
                         StopCoroutine("ChangeScale");
-                        StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.04f), 0.2f));
+                        StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.01f), 0.2f));
                     }
 
                     lastHoveredCard = hit.collider.gameObject;
-                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.9f, 1.2f, 0.04f), 0.2f));
+                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.9f, 1.2f, 0.06f), 0.2f));
                 }
             }
             else 
@@ -304,7 +323,7 @@ public class PlayerController : MonoBehaviour
                 if (lastHoveredCard != null)
                 {
                     StopCoroutine("ChangeScale");
-                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.04f), 0.2f));
+                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.01f), 0.2f));
                     lastHoveredCard = null; 
                 }
             }
@@ -314,7 +333,7 @@ public class PlayerController : MonoBehaviour
             if (lastHoveredCard != null)
             {
                 StopCoroutine("ChangeScale");
-                StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.04f), 0.2f));
+                StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.01f), 0.2f));
                 lastHoveredCard = null; 
             }
         }
@@ -4357,7 +4376,7 @@ public class PlayerController : MonoBehaviour
                     StackCompetitorDeck();
                     DeckCardCount++;
                 }
-
+                HeroNftCard();
                 GameObject Herocard = Instantiate(Resources.Load<GameObject>("CompetitorHeoCard"), GameObject.Find("CompetitorHeroPivot").transform);
             }
             else // DIĞER TURLAR
@@ -4708,7 +4727,7 @@ public class PlayerController : MonoBehaviour
                         targetIndex = i;
 
                         CardCurrent.GetComponent<CardInformation>().CardName = zeusCard.minions[targetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.minions[targetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.minions[targetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = zeusCard.minions[targetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = zeusCard.minions[targetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.minions[targetIndex].mana;
@@ -4726,7 +4745,7 @@ public class PlayerController : MonoBehaviour
                     {
                         targetIndex = i;
                         CardCurrent.GetComponent<CardInformation>().CardName = zeusCard.spells[targetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.spells[targetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = zeusCard.spells[targetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = zeusCard.spells[targetIndex].mana;
@@ -4752,7 +4771,7 @@ public class PlayerController : MonoBehaviour
                           GenghistargetIndex = i;
 
                           CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.minions[GenghistargetIndex].name;
-                          CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.minions[GenghistargetIndex].name + " POWWERRRRR!!!";
+                          CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.minions[GenghistargetIndex].description;
                           CardCurrent.GetComponent<CardInformation>().CardHealth = genghisCard.minions[GenghistargetIndex].health.ToString();
                           CardCurrent.GetComponent<CardInformation>().CardDamage = genghisCard.minions[GenghistargetIndex].attack;
                           CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.minions[GenghistargetIndex].mana;
@@ -4770,7 +4789,7 @@ public class PlayerController : MonoBehaviour
                       {
                           GenghistargetIndex = i;
                           CardCurrent.GetComponent<CardInformation>().CardName = genghisCard.spells[GenghistargetIndex].name;
-                          CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.spells[GenghistargetIndex].name + " POWWERRRRR!!!";
+                          CardCurrent.GetComponent<CardInformation>().CardDes = genghisCard.spells[GenghistargetIndex].description;
                           CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                           CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                           CardCurrent.GetComponent<CardInformation>().CardMana = genghisCard.spells[GenghistargetIndex].mana;
@@ -4794,7 +4813,7 @@ public class PlayerController : MonoBehaviour
                         OdintargetIndex = i;
 
                         CardCurrent.GetComponent<CardInformation>().CardName = odinCard.minions[OdintargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[OdintargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.minions[OdintargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = odinCard.minions[OdintargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = odinCard.minions[OdintargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.minions[OdintargetIndex].mana;
@@ -4812,7 +4831,7 @@ public class PlayerController : MonoBehaviour
                     {
                         OdintargetIndex = i;
                         CardCurrent.GetComponent<CardInformation>().CardName = odinCard.spells[OdintargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[OdintargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = odinCard.spells[OdintargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = odinCard.spells[OdintargetIndex].mana;
@@ -4844,7 +4863,7 @@ public class PlayerController : MonoBehaviour
                         AnubistargetIndex = i;
 
                         CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.minions[AnubistargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.minions[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.minions[AnubistargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = anubisCard.minions[AnubistargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = anubisCard.minions[AnubistargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.minions[AnubistargetIndex].mana;
@@ -4862,7 +4881,7 @@ public class PlayerController : MonoBehaviour
                     {
                         AnubistargetIndex = i;
                         CardCurrent.GetComponent<CardInformation>().CardName = anubisCard.spells[AnubistargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.spells[AnubistargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = anubisCard.spells[AnubistargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = anubisCard.spells[AnubistargetIndex].mana;
@@ -4886,7 +4905,7 @@ public class PlayerController : MonoBehaviour
                         LeonardotargetIndex = i;
 
                         CardCurrent.GetComponent<CardInformation>().CardName = leonardoCard.minions[LeonardotargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.minions[LeonardotargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.minions[LeonardotargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = leonardoCard.minions[LeonardotargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = leonardoCard.minions[LeonardotargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.minions[LeonardotargetIndex].mana;
@@ -4904,7 +4923,7 @@ public class PlayerController : MonoBehaviour
                     {
                         LeonardotargetIndex = i;
                         CardCurrent.GetComponent<CardInformation>().CardName = leonardoCard.spells[LeonardotargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.spells[LeonardotargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = leonardoCard.spells[LeonardotargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = leonardoCard.spells[LeonardotargetIndex].mana;
@@ -4928,7 +4947,7 @@ public class PlayerController : MonoBehaviour
                         DustinTargetIndex = i;
 
                         CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.minions[DustinTargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.minions[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.minions[DustinTargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = dustinCard.minions[DustinTargetIndex].health.ToString();
                         CardCurrent.GetComponent<CardInformation>().CardDamage = dustinCard.minions[DustinTargetIndex].attack;
                         CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.minions[DustinTargetIndex].mana;
@@ -4946,7 +4965,7 @@ public class PlayerController : MonoBehaviour
                     {
                         DustinTargetIndex = i;
                         CardCurrent.GetComponent<CardInformation>().CardName = dustinCard.spells[DustinTargetIndex].name;
-                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.spells[DustinTargetIndex].name + " POWWERRRRR!!!";
+                        CardCurrent.GetComponent<CardInformation>().CardDes = dustinCard.spells[DustinTargetIndex].description;
                         CardCurrent.GetComponent<CardInformation>().CardHealth = "";
                         CardCurrent.GetComponent<CardInformation>().CardDamage = 0;
                         CardCurrent.GetComponent<CardInformation>().CardMana = dustinCard.spells[DustinTargetIndex].mana;
@@ -4972,7 +4991,7 @@ public class PlayerController : MonoBehaviour
                 StandartCardTargetIndex = i;
 
                 CardCurrent.GetComponent<CardInformation>().CardName = standartCard.standartcards[StandartCardTargetIndex].name;
-                CardCurrent.GetComponent<CardInformation>().CardDes = standartCard.standartcards[StandartCardTargetIndex].name + " POWWERRRRR!!!";
+                CardCurrent.GetComponent<CardInformation>().CardDes = standartCard.standartcards[StandartCardTargetIndex].description;
                 CardCurrent.GetComponent<CardInformation>().CardHealth = standartCard.standartcards[StandartCardTargetIndex].health.ToString();
                 CardCurrent.GetComponent<CardInformation>().CardDamage = standartCard.standartcards[StandartCardTargetIndex].attack;
                 CardCurrent.GetComponent<CardInformation>().CardMana = standartCard.standartcards[StandartCardTargetIndex].mana;
@@ -5065,52 +5084,61 @@ public class PlayerController : MonoBehaviour
     {
         DraugrWarrior();
         GjallarhornCall();
-        float yOffset = 0f; // Başlangıç z pozisyonu
+        
+        Transform deckTransform = GameObject.Find("Deck").transform;
+        int cardCount = deckTransform.childCount;
 
-        if (GameObject.Find("Deck").transform.childCount < 6)
+        if (cardCount == 0)
         {
-            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
-            {
-                float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
-
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-
-                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
-            }
-
-            GameObject.Find("Deck").transform.position = new Vector3(3.35f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.9f, -1.09f);
+            return;
         }
-        else if (GameObject.Find("Deck").transform.childCount < 10)
+
+        if (cardCount <= 1)
         {
-            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
-
-            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
-            {
-                float xPos = i * 0.4f - 0.4f; // Kartın X konumunu belirliyoruz
-
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8931351f, 351.836639f, 174.237427f);
-
-                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
-            }
-
-            GameObject.Find("Deck").transform.position = new Vector3(3.02f - GameObject.Find("Deck").transform.childCount * 0.1f, 0.9f, -1.09f);
+            return;
         }
-        else
+
+        float baseStartX = -0.5f; 
+        float baseEndX = 0.5f;   
+        float maxExpansion = 0.95f; 
+
+        // Dinamik X sınırlarını hesapla
+        float expansionFactor = Mathf.Clamp((float)cardCount / 10f, 0f, 1f);
+        float startX = baseStartX - maxExpansion * expansionFactor; 
+        float endX = baseEndX + maxExpansion * expansionFactor;    
+
+        float startYZ = -0.1f;   
+        float peakYZ = 0.20f;  
+
+        if (cardCount % 2 == 1)
         {
-            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
+            peakYZ *= 0.85f; 
+        }
 
-            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
-            {
-                float xPos = i * 0.3f - 0.3f; // Kartın X konumunu belirliyoruz
+        float startZRotation = 200f;
+        float endZRotation = 160f;  
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8471832f, 350.247925f, 173.120972f);
+        for (int i = 0; i < cardCount; i++)
+        {
+            float lerpFactor = (float)i / (cardCount - 1);
+            float xPosition = Mathf.Lerp(startX, endX, lerpFactor);
 
-                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
-            }
+            float yzPosition;
+            float normalizedIndex = Mathf.Abs((float)(i - (cardCount - 1) / 2f)) / ((cardCount - 1) / 2f);
+            yzPosition = Mathf.Lerp(peakYZ, startYZ, normalizedIndex);
 
-            GameObject.Find("Deck").transform.position = new Vector3(2.80f - GameObject.Find("Deck").transform.childCount * 0.05f, 0.9f, -1.09f);
+            float incrementalY = i * 0.01f;  
+            float incrementalZ = i * 0.01f;  
+
+            float yPosition = yzPosition + incrementalY;
+            float zPosition = yzPosition - incrementalZ;
+
+            float zRotation = Mathf.Lerp(startZRotation, endZRotation, lerpFactor);
+
+            Transform cardTransform = deckTransform.GetChild(i);
+            cardTransform.localPosition = new Vector3(xPosition, yPosition, zPosition); 
+            cardTransform.localRotation = Quaternion.Euler(45, 0, zRotation);
+            deckTransform.GetChild(i).tag = "Card";
         }
     }
 
@@ -5334,8 +5362,8 @@ public class PlayerController : MonoBehaviour
                     CompetitorHealth = _GameManager.MasterHealth; //new
                     CompetitorHealthText.text = CompetitorHealth.ToString(); //new
 
-                    
-                 
+
+                    HeroNftCard();
                     GameObject Herocard = Instantiate(Resources.Load<GameObject>("CompetitorHeoCard"), GameObject.Find("CompetitorHeroPivot").transform);
                 }
 

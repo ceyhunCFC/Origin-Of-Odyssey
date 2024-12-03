@@ -17,6 +17,7 @@ TagManager:
   - SelectCard
   - Inventory
   - lava
+  - QuestionMark
   layers:
   - Default
   - TransparentFX

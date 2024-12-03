@@ -53,13 +53,14 @@ public class CardProgress : MonoBehaviourPunCallbacks
                             if (target != TargetCard)
                             {
                                 float distance = Vector3.Distance(TargetCard.transform.position, target.transform.position);
-                                if (distance <= 0.80f)
+                                print(distance);
+                                if (distance <= 1.09f)
                                 {
                                     Vector3 directionToTarget = (target.transform.position - TargetCard.transform.position).normalized;
 
                                     float dotProductForward = Vector3.Dot(TargetCard.transform.up, directionToTarget);
-
-                                    if (dotProductForward > 0.5f)
+                                    print(dotProductForward);
+                                    if (dotProductForward == 0f)
                                     {
                                         if (!AttackerCard.GetComponent<CardInformation>().CanAttackBehind)
                                         {

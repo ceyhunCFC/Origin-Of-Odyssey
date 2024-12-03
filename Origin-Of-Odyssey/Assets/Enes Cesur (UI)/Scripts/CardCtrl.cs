@@ -115,6 +115,7 @@ public class CardCtrl : MonoBehaviour
                 cardDisplay.cardHealthText.text = minion.health.ToString();
                 cardDisplay.cardManaText.text = minion.mana.ToString();
                 cardDisplay.cardType = cardSetName;
+                cardDisplay.description.text = minion.description.ToString();
                 SetCardImage(cardDisplay);
                 SetCArdBorderImg(cardDisplay);
             }
@@ -132,6 +133,7 @@ public class CardCtrl : MonoBehaviour
                 cardDisplay.cardHealthText.text = "";
                 cardDisplay.cardManaText.text = spell.mana.ToString();
                 cardDisplay.cardType = cardSetName;
+                cardDisplay.description.text = spell.description.ToString();
                 SetCardImage(cardDisplay);
                 SetCArdBorderImg(cardDisplay);
 
@@ -160,6 +162,7 @@ public class CardCtrl : MonoBehaviour
             cardDisplay.cardHealthText.text = card.health.ToString();
             cardDisplay.cardManaText.text = card.mana.ToString();
             cardDisplay.cardType = "Standart";
+            cardDisplay.description.text = card.description.ToString();
             SetCardImage(cardDisplay);
             SetCArdBorderImg(cardDisplay);
         }

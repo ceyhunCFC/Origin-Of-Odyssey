@@ -12,4 +12,5 @@ public class CardDisplay : MonoBehaviour
     public string cardType;
     public Image cardImage;
     public Image cardBorderImage;
+    public Text description;
 }
