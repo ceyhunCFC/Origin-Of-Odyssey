@@ -5108,7 +5108,7 @@ public class PlayerController : MonoBehaviour
         float endX = baseEndX + maxExpansion * expansionFactor;    
 
         float startYZ = -0.1f;   
-        float peakYZ = 0.20f;  
+        float peakYZ = 0.10f;  
 
         if (cardCount % 2 == 1)
         {
