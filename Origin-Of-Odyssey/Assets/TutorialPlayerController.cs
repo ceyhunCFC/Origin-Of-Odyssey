@@ -61,6 +61,7 @@ public class TutorialPlayerController : MonoBehaviour
     float TurnCount = 1;
 
     TutorialCardProgress _TutorialCardProgress;
+    public Material CompetitorHeroCardMaterial;
 
     [HideInInspector] public int OlympiaKillCount = 0;
     [HideInInspector] public int SpellsExtraDamage = 0;
@@ -239,6 +240,23 @@ public class TutorialPlayerController : MonoBehaviour
         }
 
         target.localScale = targetScale;
+    }
+
+    void HeroNftCard()
+    {
+        string competitorCardPath = $"NftCarddsİmage/{CompetitorMainCard}";
+
+        Sprite competitorCardSprite = Resources.Load<Sprite>(competitorCardPath);
+
+        if (CompetitorHeroCardMaterial != null && competitorCardSprite != null)
+        {
+            // Sprite'ın Texture'ını alıyoruz
+            CompetitorHeroCardMaterial.SetTexture("_BaseMap", competitorCardSprite.texture);
+        }
+        else
+        {
+            Debug.LogWarning($"Material veya Texture atanmadı! Path: {competitorCardPath}");
+        }
     }
     public void CreateHoplitesCard(int CreateCardIndex)
     {
@@ -446,11 +464,9 @@ public class TutorialPlayerController : MonoBehaviour
 
     public void SetMana(GameObject attackercard)
     {
-        print("Last");
         if(attackercard.GetComponent<CardInformation>().CardName=="Zeus" || attackercard.GetComponent<CardInformation>().CardName == "Genghis")
         {
             Mana -= attackercard.GetComponent<CardInformation>().CardMana;
-
             ManaCountText.text = Mana.ToString() + "/10";
             OwnManaBar.fillAmount = Mana / 10f;
             CompetitorManaBar.fillAmount = TurnCount / 10;
@@ -5450,7 +5466,7 @@ public class TutorialPlayerController : MonoBehaviour
         CompetitorMainCardText.text = CompetitorMainCard;
         CompetitorHeroAttackDamageText.text = CompetitorHeroAttackDamage.ToString();
         CompetitorHealthText.text = CompetitorHealth.ToString() + "/" + FirstHealthCount ;
-        
+        HeroNftCard();
     }
 
     public void RefreshUI()

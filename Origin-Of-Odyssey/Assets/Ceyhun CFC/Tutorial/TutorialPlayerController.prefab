@@ -1914,6 +1914,7 @@ MonoBehaviour:
   CompetitorHeroAttackDamageText: {fileID: 8343523917808377883}
   CardPrefabSolo: {fileID: 1798911962605047886, guid: 25d942eb475ed94458423ce97a5b44a5, type: 3}
   CardPrefabInGame: {fileID: 1798911962605047886, guid: 4fb36e082f37dd44e84f7dd5ff1bab3f, type: 3}
+  CompetitorHeroCardMaterial: {fileID: 2100000, guid: 9cdcb831c7cf44a8e937213465c69937, type: 2}
   OlympiaKillCount: 0
   SpellsExtraDamage: 0
   GodsBaneUsed: 0

@@ -562,7 +562,10 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                             }
                         }
 
-                        GetComponent<PlayerController>().SetMana(AttackerCard);
+                        if (GetComponent<PlayerController>().PV.IsMine)
+                        {
+                            GetComponent<PlayerController>().SetMana(AttackerCard);
+                        }
                         RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
                         GameObject[] AllCard = GameObject.FindGameObjectsWithTag("UsedCard");
                         foreach (var card in AllCard)
@@ -708,7 +711,6 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
     public void StandartDamage(GameObject Attacker, GameObject Target) // HANGİ HASAR ŞEKLİ UYGULANACAĞI SEÇİLMELİDİR
     {
-        Debug.Log("eefwewf");
         AttackerInfo = Attacker.GetComponent<CardInformation>();
         TargetInfo = Target.GetComponent<CardInformation>();
 
@@ -771,7 +773,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
 
         }
-        print("here");
+
         if (TargetCard.name == "TutorialCompetitorHeroCard 1(Clone)")
         {
 
@@ -789,12 +791,21 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
             {
                 Transform childTransform = AttackerCard.transform;
                 Transform green = childTransform.Find("Green");
-                green.gameObject.SetActive(false);
+
+                if (green != null) 
+                {
+                    green.gameObject.SetActive(false);
+                }
+                else
+                {
+                    Debug.LogWarning("Green objesi bulunamadı!");
+                }
             }
+
             CloseEnemyAllCard();
 
             GetComponent<TutorialPlayerController>().RefreshUI();
-            // GetComponent<TutorialPlayerController>().RefreshLog(-AttackerInfo.CardDamage, false, AttackerInfo.CardName, GetComponent<TutorialPlayerController>().OwnDeck[0], Color.red);
+            GetComponent<TutorialPlayerController>().RefreshLog(-AttackerInfo.CardDamage, false, AttackerInfo.CardName, GetComponent<TutorialPlayerController>().OwnDeck[0], Color.red);
             // AttackerCard.g
             AttackerCard = null;
             TargetCard = null;
@@ -878,8 +889,15 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString(); // KARTIN DAMAGİNİ VURUR VURUYOR 
                     break;
                 case "Zeus":
+                    GetComponent<TutorialPlayerController>().SetMana(Attacker);
                     TargetInfo.CardHealth = (int.Parse(TargetInfo.CardHealth) - AttackerInfo.CardDamage).ToString();
-                    break;
+                    RefreshCardDatas();
+                    AttackerCard = null;
+                    TargetCard = null;
+                    SecoundTargetCard = false;
+                    TargetCardIndex = -1;
+                    CloseEnemyAllCard();
+                    return;
                 case "Mongol Messenger":                                                                                  //genghis cards
                     GetComponent<TutorialPlayerController>().NomadsLand += 1;
 
@@ -1660,10 +1678,8 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
     {
         GetComponent<TutorialPlayerController>().RefreshUsedCard(TargetCardIndex, TargetInfo.CardHealth, TargetInfo.CardDamage ); // DAMAGE YİYEN KARTIN BİLGİLERİNİ GÜNCELLE
         GetComponent<TutorialPlayerController>().CreateTextAtTargetIndex(TargetCardIndex, AttackerInfo.CardDamage, false, AttackerInfo.CardName);
-
         if (int.Parse(TargetInfo.CardHealth) <= 0) // KART ÖLDÜ MÜ KONTROL ET 
         {
-
             GetComponent<TutorialPlayerController>().DeleteAreaCard(TargetCardIndex);
             GetComponent<TutorialPlayerController>().RefreshLog(-AttackerInfo.CardDamage, true, AttackerInfo.CardName, TargetInfo.CardName, Color.red);
         }
