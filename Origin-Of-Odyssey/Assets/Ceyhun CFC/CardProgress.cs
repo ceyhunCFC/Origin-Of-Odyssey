@@ -28,7 +28,6 @@ public class CardProgress : MonoBehaviourPunCallbacks
 
         Debug.LogError("KART SECİMİ BEKLENİYORRR");
 
-        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "There's a card in front of it.";
 
 
         if (Input.GetMouseButtonDown(0) && SecoundTargetCard == false) // KENDİ SALDIRI KARTIMIZI SEÇTİKTEN SONRA AKTİF OLUR 
@@ -105,7 +104,8 @@ public class CardProgress : MonoBehaviourPunCallbacks
                         Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "There are other cards ahead";
                         Debug.Log("Arka alanda kart bulundu, işlem iptal edildi.");
                         AttackerCard = null;
-                        CloseEnemyAllCard();
+                        ResetAllSign();
+                        BattleableCard();
                     }
                 }
                 else if (hit.collider.gameObject.CompareTag("AreaBox"))
@@ -146,6 +146,9 @@ public class CardProgress : MonoBehaviourPunCallbacks
                                                     AttackerCard = null;
                                                     TargetCard = null;
                                                     TargetCardIndex = -1;
+
+                                                    ResetAllSign();
+                                                    BattleableCard();
                                                     return;
                                                 }
                                             }

@@ -14,9 +14,17 @@ public class QuestionMarkAnim : MonoBehaviour
 
     public void MoveCardToTargetPosition()
     {
-        initialPosition = transform.position; 
-        initialRotation = transform.rotation; 
-        transform.localRotation = Quaternion.Euler(45, 0, 180); 
+        if (!QuestionMarkManager.Instance.CanOpenCard())
+        {
+            Debug.LogWarning("Baþka bir kart açýk!");
+            return;
+        }
+
+        QuestionMarkManager.Instance.SetCardOpen(true);
+
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
+        transform.localRotation = Quaternion.Euler(45, 0, 180);
         QuestionMarkButton.interactable = false;
 
         gameObject.tag = "QuestionMark";
@@ -25,7 +33,7 @@ public class QuestionMarkAnim : MonoBehaviour
 
     private IEnumerator MoveCardToPosition()
     {
-        float duration = 0.5f; // Animasyon süresi
+        float duration = 0.5f;
         float timeElapsed = 0f;
 
         while (timeElapsed < duration)
@@ -33,12 +41,12 @@ public class QuestionMarkAnim : MonoBehaviour
             float step = moveSpeed * Time.deltaTime;
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPosition, step);
 
-            float rotationStep = 360f * Time.deltaTime / duration; 
-            transform.Rotate(Vector3.forward, rotationStep, Space.Self); 
+            float rotationStep = 360f * Time.deltaTime / duration;
+            transform.Rotate(Vector3.forward, rotationStep, Space.Self);
 
             timeElapsed += Time.deltaTime;
 
-            yield return null; 
+            yield return null;
         }
 
         transform.localPosition = targetPosition;
@@ -49,6 +57,10 @@ public class QuestionMarkAnim : MonoBehaviour
     public void CloseButtonPressed()
     {
         QuestionMarkButton.interactable = true;
+
+        // Kartýn durumunu kapalý olarak ayarla
+        QuestionMarkManager.Instance.SetCardOpen(false);
+
         StartCoroutine(MoveCardBackToInitialPosition());
     }
 
@@ -61,11 +73,11 @@ public class QuestionMarkAnim : MonoBehaviour
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, initialRotation, moveSpeed * Time.deltaTime * 100f);
 
-            yield return null; 
+            yield return null;
         }
         gameObject.tag = "Card";
         transform.position = initialPosition;
         transform.rotation = initialRotation;
-        CloseButton.SetActive(false); 
+        CloseButton.SetActive(false);
     }
 }

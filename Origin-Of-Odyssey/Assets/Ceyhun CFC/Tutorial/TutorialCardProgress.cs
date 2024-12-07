@@ -28,7 +28,6 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
         Debug.LogError("KART SECİMİ BEKLENİYORRR");
 
-        Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "There's a card in front of it.";
 
 
         if (Input.GetMouseButtonDown(0) && SecoundTargetCard == false) // KENDİ SALDIRI KARTIMIZI SEÇTİKTEN SONRA AKTİF OLUR 
@@ -54,13 +53,13 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                             {
                                 float distance = Vector3.Distance(TargetCard.transform.position, target.transform.position);
 
-                                if (distance <= 0.55f)
+                                if (distance <= 1.09f)
                                 {
                                     Vector3 directionToTarget = (target.transform.position - TargetCard.transform.position).normalized;
 
                                     float dotProductForward = Vector3.Dot(TargetCard.transform.up, directionToTarget);
 
-                                    if (dotProductForward > 0.5f)
+                                    if (dotProductForward == 0f)
                                     {
                                         if (!AttackerCard.GetComponent<CardInformation>().CanAttackBehind)
                                         {
@@ -71,6 +70,8 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                                             AttackerCard = null;
                                             TargetCard = null;
                                             TargetCardIndex = -1;
+                                            ResetAllSign();
+                                            BattleableCard();
                                             return;
                                         }
                                     }
@@ -561,10 +562,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
                             }
                         }
 
-                        if (GetComponent<PlayerController>().PV.IsMine)
-                        {
-                            GetComponent<PlayerController>().SetMana(AttackerCard);
-                        }
+                        GetComponent<PlayerController>().SetMana(AttackerCard);
                         RefreshMyCardDatas(TargetInfo.HaveShield, TargetInfo.CardDamage, TargetInfo.DivineSelected, TargetInfo.FirstTakeDamage, TargetInfo.FirstDamageTaken, TargetInfo.EternalShield);
                         GameObject[] AllCard = GameObject.FindGameObjectsWithTag("UsedCard");
                         foreach (var card in AllCard)
@@ -773,7 +771,7 @@ public class TutorialCardProgress : MonoBehaviourPunCallbacks
 
 
         }
-
+        print("here");
         if (TargetCard.name == "TutorialCompetitorHeroCard 1(Clone)")
         {
 

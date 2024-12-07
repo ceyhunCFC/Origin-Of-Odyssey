@@ -469,7 +469,7 @@ MonoBehaviour:
   - name: Active Controls
     collapsed: 1
   - name: Delay
-    collapsed: 0
+    collapsed: 1
   - name: Down Wave
     collapsed: 1
   - name: Down Particle

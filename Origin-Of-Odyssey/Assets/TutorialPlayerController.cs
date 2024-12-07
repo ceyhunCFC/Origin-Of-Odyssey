@@ -99,6 +99,8 @@ public class TutorialPlayerController : MonoBehaviour
     public GameObject vfxMovePrefab;
     public GameObject vfxLandingPrefab;
     public GameObject vfxAttackPrefab;
+
+    GameObject[] Lavas;
     void Awake()
     {
         _TutorialCardProgress = GetComponent<TutorialCardProgress>();
@@ -116,6 +118,7 @@ public class TutorialPlayerController : MonoBehaviour
 
         LogsContainerContent = GameObject.Find("Container");
         AssignAnimatorController();
+        Lavas = GameObject.FindGameObjectsWithTag("lava");
     }
 
     void Update()
@@ -124,7 +127,7 @@ public class TutorialPlayerController : MonoBehaviour
         {
             elapsedTime -= Time.deltaTime;
             int seconds = Mathf.FloorToInt(elapsedTime % 60f);
-
+            LavaAnimations();
             Timer.text = string.Format("{0:00}:{1:00}", 00, seconds);
 
             if (elapsedTime <= 0f)
@@ -166,25 +169,94 @@ public class TutorialPlayerController : MonoBehaviour
 
 
         }
+
+        if ( selectedCard == null)
+        {
+            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+            {
+                ScaleDeckCard();
+            }
+
+        }
     }
 
-     public void CreateHoplitesCard(int CreateCardIndex)
+
+    void ScaleDeckCard()
     {
-        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.gameObject.CompareTag("Card"))
+            {
+
+                if (lastHoveredCard != hit.collider.gameObject)
+                {
+
+                    if (lastHoveredCard != null)
+                    {
+                        StopCoroutine("ChangeScale");
+                        StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.01f), 0.2f));
+                    }
+
+                    lastHoveredCard = hit.collider.gameObject;
+                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.9f, 1.2f, 0.06f), 0.2f));
+                }
+            }
+            else
+            {
+                if (lastHoveredCard != null)
+                {
+                    StopCoroutine("ChangeScale");
+                    StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.01f), 0.2f));
+                    lastHoveredCard = null;
+                }
+            }
+        }
+        else
+        {
+            if (lastHoveredCard != null)
+            {
+                StopCoroutine("ChangeScale");
+                StartCoroutine(ChangeScale(lastHoveredCard.transform, new Vector3(0.7f, 1f, 0.01f), 0.2f));
+                lastHoveredCard = null;
+            }
+        }
+    }
+
+
+    IEnumerator ChangeScale(Transform target, Vector3 targetScale, float duration)
+    {
+        float time = 0f;
+        Vector3 startScale = target.localScale;
+
+        while (time < duration)
+        {
+            target.localScale = Vector3.Lerp(startScale, targetScale, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        target.localScale = targetScale;
+    }
+    public void CreateHoplitesCard(int CreateCardIndex)
+    {
+        CreateSpecialCard("Hoplite", "1", 1, 1, CreateCardIndex, true);
          
-            GameObject CardCurrent = Instantiate(Resources.Load<GameObject>("HoplitesCard_Prefab"), GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[CreateCardIndex].transform);
+            //GameObject CardCurrent = Instantiate(Resources.Load<GameObject>("HoplitesCard_Prefab"), GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions[CreateCardIndex].transform);
 
-            CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
-            CardCurrent.transform.eulerAngles = new Vector3(45, 0, 180);
-            CardCurrent.transform.localPosition = Vector3.zero;
+            //CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
+            //CardCurrent.transform.eulerAngles = new Vector3(45, 0, 180);
+            //CardCurrent.transform.localPosition = Vector3.zero;
 
-            CardCurrent.GetComponent<CardInformation>().CardName = "Hoplite";
-            CardCurrent.GetComponent<CardInformation>().CardDes = "Hoplitesssss";
-            CardCurrent.GetComponent<CardInformation>().CardHealth = 1.ToString();
-            CardCurrent.GetComponent<CardInformation>().CardDamage = 1;
-            CardCurrent.GetComponent<CardInformation>().CardMana = 1;
-            CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
-            CardCurrent.GetComponent<CardInformation>().SetInformation();
+            //CardCurrent.GetComponent<CardInformation>().CardName = "Hoplite";
+            //CardCurrent.GetComponent<CardInformation>().CardDes = "Hoplitesssss";
+            //CardCurrent.GetComponent<CardInformation>().CardHealth = 1.ToString();
+            //CardCurrent.GetComponent<CardInformation>().CardDamage = 1;
+            //CardCurrent.GetComponent<CardInformation>().CardMana = 1;
+            //CardCurrent.GetComponent<CardInformation>().SetMaxHealth();
+            //CardCurrent.GetComponent<CardInformation>().SetInformation();
 
 
            
@@ -291,6 +363,34 @@ public class TutorialPlayerController : MonoBehaviour
         
     }
 
+    void LavaAnimations()
+    {
+        float totalDuration = 60f;
+        float startScale = 0.12f;
+        float endScale = 8f;
+
+        float scaleValue = Mathf.Lerp(startScale, endScale, 1 - (elapsedTime / totalDuration));
+
+        foreach (var item in Lavas)
+        {
+            Vector3 newScale = item.transform.localScale;
+            newScale.y = scaleValue;
+            item.transform.localScale = newScale;
+        }
+    }
+
+    void ResetLavaScale()
+    {
+        float resetScale = 0.12f;
+
+        foreach (var item in Lavas)
+        {
+            Vector3 newScale = item.transform.localScale;
+            newScale.y = resetScale;
+            item.transform.localScale = newScale;
+        }
+    }
+
     public void DeleteMyCard(int TargetCardIndex)
     {
        
@@ -346,6 +446,7 @@ public class TutorialPlayerController : MonoBehaviour
 
     public void SetMana(GameObject attackercard)
     {
+        print("Last");
         if(attackercard.GetComponent<CardInformation>().CardName=="Zeus" || attackercard.GetComponent<CardInformation>().CardName == "Genghis")
         {
             Mana -= attackercard.GetComponent<CardInformation>().CardMana;
@@ -354,6 +455,8 @@ public class TutorialPlayerController : MonoBehaviour
             OwnManaBar.fillAmount = Mana / 10f;
             CompetitorManaBar.fillAmount = TurnCount / 10;
             CompetitorManaCountText.text = TurnCount + "/10".ToString();
+            DeactivateAllGreens();
+            ActiveAllGreens();
         }
     }
 
@@ -704,8 +807,8 @@ public class TutorialPlayerController : MonoBehaviour
 
 
             CardCurrent.transform.localPosition = Vector3.zero;
-            CardCurrent.transform.localEulerAngles = new Vector3(45, 0, 180);
-            CardCurrent.transform.localScale = new Vector3(1, 1, 0.04f);
+            CardCurrent.transform.localEulerAngles = new Vector3(0, 0, 0);
+            CardCurrent.transform.localScale = new Vector3(1, 1, 1f);
             CardCurrent.GetComponent<CardInformation>().CardName = name;
             CardCurrent.GetComponent<CardInformation>().CardHealth = health;
             CardCurrent.GetComponent<CardInformation>().CardDamage = damage;
@@ -825,6 +928,8 @@ public class TutorialPlayerController : MonoBehaviour
                // selectedCard.transform.localEulerAngles = new Vector3(45f, 0f, 180);
 
                 Mana -= selectedCard.GetComponent<CardInformation>().CardMana;
+                DeactivateAllGreens();
+                ActiveAllGreens();
                 
                 //////////////////////////////////// DESTEDEN BİR KART MASYA EKLENDİĞİ ZAMAN ///////////////////////////////
                 
@@ -4106,6 +4211,11 @@ public class TutorialPlayerController : MonoBehaviour
                 if (hit.collider.gameObject.GetComponent<CardInformation>().CardFreeze == false && hit.collider.gameObject.GetComponent<CardInformation>().isItFirstRaound == false && hit.collider.gameObject.GetComponent<CardInformation>().isAttacked == false)
                 {
                     _TutorialCardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject));
+                    _TutorialCardProgress.CloseBlueSign();
+                    Transform childTransform = hit.collider.gameObject.transform;
+                    Transform blue = childTransform.Find("Blue");
+                    blue.gameObject.SetActive(true);
+
                 }
                 else
                 {
@@ -4127,9 +4237,11 @@ public class TutorialPlayerController : MonoBehaviour
                             firstChild.GetComponent<CardInformation>().isItFirstRaound == false &&
                             firstChild.GetComponent<CardInformation>().isAttacked == false)
                         {
+                            _TutorialCardProgress.SetAttackerCard(Array.IndexOf(GameObject.Find("Area").GetComponent<CardsAreaCreator>().FrontAreaCollisions, hit.collider.gameObject.transform.parent.gameObject));
                             _TutorialCardProgress.CloseBlueSign();
-
-                           
+                            Transform childTransform = hit.collider.gameObject.transform;
+                            Transform blue = childTransform.Find("Blue");
+                            blue.gameObject.SetActive(true);
                         }
                         else
                         {
@@ -4270,11 +4382,13 @@ public class TutorialPlayerController : MonoBehaviour
         
         Mana = TurnCount;
         RefreshUI();
+        ActiveAllGreens();
 
     }
 
     public void FinishButton()
     {
+        ResetLavaScale();
         GameObject[] objects = GameObject.FindObjectsOfType<GameObject>();
         GameObject[] AllOwnCards = GameObject.FindGameObjectsWithTag("UsedCard");
         WhoseTurnText.text = "Enemy Turn";
@@ -4282,6 +4396,7 @@ public class TutorialPlayerController : MonoBehaviour
         elapsedTime = 60;
         finishButton.interactable = false;
         CanAttackMainCard = true;
+        DeactivateAllGreens();
         foreach (GameObject obj in objects)
         {
             if (obj.name == "PlayerController(Clone)")
@@ -4914,55 +5029,96 @@ public class TutorialPlayerController : MonoBehaviour
 
     }
 
+    public void DeactivateAllGreens()
+    {
+        Transform deckTransform = GameObject.Find("Deck").transform;
+        int childCount = deckTransform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform green = deckTransform.GetChild(i).Find("Greenn");
+            if (green != null)
+                green.gameObject.SetActive(false);
+        }
+    }
+
+    public void ActiveAllGreens()
+    {
+        Transform deckTransform = GameObject.Find("Deck").transform;
+        int childCount = deckTransform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = deckTransform.GetChild(i);
+            CardInformation cardInfo = child.GetComponent<CardInformation>();
+            if (cardInfo != null && cardInfo.CardMana <= Mana)
+            {
+                Transform green = child.Find("Greenn");
+                if (green != null)
+                {
+                    green.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+
     void StackOwnDeck()
     {
 
-        float yOffset = 0f; // Başlangıç z pozisyonu
+        Transform deckTransform = GameObject.Find("Deck").transform;
+        int cardCount = deckTransform.childCount;
 
-        if (GameObject.Find("Deck").transform.childCount < 6)
+        if (cardCount == 0)
         {
-            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
-            {
-                float xPos = i * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
-
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-
-                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
-            }
-
-            GameObject.Find("Deck").transform.position = new Vector3(3.35f - GameObject.Find("Deck").transform.childCount * 0.2f, 0.9f, -1.09f);
+            return;
         }
-        else if (GameObject.Find("Deck").transform.childCount < 10)
+
+        if (cardCount <= 1)
         {
-            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
-
-            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
-            {
-                float xPos = i * 0.4f - 0.4f; // Kartın X konumunu belirliyoruz
-
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8931351f, 351.836639f, 174.237427f);
-
-                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
-            }
-
-            GameObject.Find("Deck").transform.position = new Vector3(3.02f - GameObject.Find("Deck").transform.childCount * 0.1f, 0.9f, -1.09f);
+            return;
         }
-        else
+
+        float baseStartX = -0.5f;
+        float baseEndX = 0.5f;
+        float maxExpansion = 0.95f;
+
+        // Dinamik X sınırlarını hesapla
+        float expansionFactor = Mathf.Clamp((float)cardCount / 10f, 0f, 1f);
+        float startX = baseStartX - maxExpansion * expansionFactor;
+        float endX = baseEndX + maxExpansion * expansionFactor;
+
+        float startYZ = -0.1f;
+        float peakYZ = 0.20f;
+
+        if (cardCount % 2 == 1)
         {
-            yOffset = 0f; // Z pozisyonunu sıfırlıyoruz
+            peakYZ *= 0.85f;
+        }
 
-            for (int i = 0; i < GameObject.Find("Deck").transform.childCount; i++)
-            {
-                float xPos = i * 0.3f - 0.3f; // Kartın X konumunu belirliyoruz
+        float startZRotation = 200f;
+        float endZRotation = 160f;
 
-                GameObject.Find("Deck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, yOffset, 0); // Kartın pozisyonunu ayarlıyoruz
-                GameObject.Find("Deck").transform.GetChild(i).transform.eulerAngles = new Vector3(60.8471832f, 350.247925f, 173.120972f);
+        for (int i = 0; i < cardCount; i++)
+        {
+            float lerpFactor = (float)i / (cardCount - 1);
+            float xPosition = Mathf.Lerp(startX, endX, lerpFactor);
 
-                yOffset += 0.01f; // Z pozisyonunu her kart için 0.01 artırıyoruz
-            }
+            float yzPosition;
+            float normalizedIndex = Mathf.Abs((float)(i - (cardCount - 1) / 2f)) / ((cardCount - 1) / 2f);
+            yzPosition = Mathf.Lerp(peakYZ, startYZ, normalizedIndex);
 
-            GameObject.Find("Deck").transform.position = new Vector3(2.80f - GameObject.Find("Deck").transform.childCount * 0.05f, 0.9f, -1.09f);
+            float incrementalY = i * 0.01f;
+            float incrementalZ = i * 0.01f;
+
+            float yPosition = yzPosition + incrementalY;
+            float zPosition = yzPosition - incrementalZ;
+
+            float zRotation = Mathf.Lerp(startZRotation, endZRotation, lerpFactor);
+
+            Transform cardTransform = deckTransform.GetChild(i);
+            cardTransform.localPosition = new Vector3(xPosition, yPosition, zPosition);
+            cardTransform.localRotation = Quaternion.Euler(45, 0, zRotation);
+            deckTransform.GetChild(i).tag = "Card";
         }
     }
 
