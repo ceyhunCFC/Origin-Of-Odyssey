@@ -1,5 +1,6 @@
 using Proyecto26;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
@@ -11,6 +12,7 @@ public class PlayerDeck : MonoBehaviour
     
     private List<string> cardNames = new List<string>();
 
+    [SerializeField] 
     private string[] playerDeck;
 
     public string localId;
@@ -19,6 +21,12 @@ public class PlayerDeck : MonoBehaviour
     public GameObject NotEnoughCard;
     public GameObject CardPrefab,cardsPanel;
     GameObject newButton;
+
+    [SerializeField] private CardCtrl cardCtrl;
+    
+    [SerializeField] private TextMeshProUGUI deckCount;
+    [SerializeField] private List<RarityText> rarityTexts=new List<RarityText>();
+    
 
     private void Awake()
     {
@@ -39,6 +47,8 @@ public class PlayerDeck : MonoBehaviour
 
                 Text[] texts = newButton.GetComponentsInChildren<Text>();
                 texts[0].text = cardName;
+                UpdateRarityCount(Rarity.Legendary,1);
+                newButton.GetComponent<Button>().onClick.RemoveAllListeners();
             }
             for (int i = 1; i < playerDeck.Length; i++)
             {
@@ -47,13 +57,17 @@ public class PlayerDeck : MonoBehaviour
 
                 Text[] texts = newButton.GetComponentsInChildren<Text>();
                 texts[0].text = cardName;
-                int mana = GetManaForCard(cardName);
+                int mana = GetManaForCard(cardName,out var rarity);
+                UpdateRarityCount(rarity, 1);
                 SetCardImage(cardName);
+                OpenSelected(cardName);
                 if (mana != -1)
                 {
                     texts[1].text = mana.ToString();
                 }
             }
+            
+            UpdateDeckCount();
         }).Catch(error =>
         {
             Debug.LogError("Error retrieving playerdeck: " + error.Message);
@@ -102,7 +116,7 @@ public class PlayerDeck : MonoBehaviour
         }
     }
 
-    private int GetManaForCard(string cardName)
+    public int GetManaForCard(string cardName,out Rarity rarity)
     {
         int mana = -1;
 
@@ -112,7 +126,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == minion.name)
             {
                 mana = minion.mana;
-                break;
+                rarity = minion.rarity;
+                return mana;
             }
         }
         foreach (Spell spell in zeusCard.spells)
@@ -120,7 +135,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == spell.name)
             {
                 mana = spell.mana;
-                break;
+                rarity = spell.rarity;
+                return mana;;
             }
         }
 
@@ -130,7 +146,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == minion.name)
             {
                 mana = minion.mana;
-                break;
+                rarity = minion.rarity;
+                return mana;;
             }
         }
         foreach (Spell spell in odinCard.spells)
@@ -138,7 +155,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == spell.name)
             {
                 mana = spell.mana;
-                break;
+                rarity = spell.rarity;
+                return mana;;
             }
         }
 
@@ -148,7 +166,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == minion.name)
             {
                 mana = minion.mana;
-                break;
+                rarity = minion.rarity;
+                return mana;;
             }
         }
         foreach (Spell spell in anubisCard.spells)
@@ -156,7 +175,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == spell.name)
             {
                 mana = spell.mana;
-                break;
+                rarity = spell.rarity;
+                return mana;;
             }
         }
 
@@ -166,7 +186,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == minion.name)
             {
                 mana = minion.mana;
-                break;
+                rarity = minion.rarity;
+                return mana;;
             }
         }
         foreach (Spell spell in genghisCard.spells)
@@ -174,7 +195,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == spell.name)
             {
                 mana = spell.mana;
-                break;
+                rarity = spell.rarity;
+                return mana;;
             }
         }
 
@@ -184,7 +206,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == minion.name)
             {
                 mana = minion.mana;
-                break;
+                rarity = minion.rarity;
+                return mana;;
             }
         }
         foreach (Spell spell in leonardoCard.spells)
@@ -192,7 +215,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == spell.name)
             {
                 mana = spell.mana;
-                break;
+                rarity = spell.rarity;
+                return mana;;
             }
         }
 
@@ -202,7 +226,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == minion.name)
             {
                 mana = minion.mana;
-                break;
+                rarity = minion.rarity;
+                return mana;;
             }
         }
         foreach (Spell spell in dustinCard.spells)
@@ -210,7 +235,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == spell.name)
             {
                 mana = spell.mana;
-                break;
+                rarity = spell.rarity;
+                return mana;;
             }
         }
 
@@ -220,7 +246,8 @@ public class PlayerDeck : MonoBehaviour
             if (cardName == card.name)
             {
                 mana = card.mana;
-                break;
+                rarity = card.rarity;
+                return mana;;
             }
         }
 
@@ -229,6 +256,7 @@ public class PlayerDeck : MonoBehaviour
             Debug.LogError("Mana value not found for card: " + cardName);
         }
 
+        rarity = Rarity.Common;
         return mana;
     }
 
@@ -254,12 +282,12 @@ public class PlayerDeck : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("CardsImage nesnesi bulunamadý!");
+                    Debug.LogWarning("CardsImage nesnesi bulunamadï¿½!");
                 }
             }
             else
             {
-                Debug.LogWarning("ImageParent nesnesi bulunamadý!");
+                Debug.LogWarning("ImageParent nesnesi bulunamadï¿½!");
             }
         }
     }
@@ -279,5 +307,57 @@ public class PlayerDeck : MonoBehaviour
         }
 
         return parts;
+    }
+
+    public void UpdateDeckCount()
+    {
+        deckCount.text = "Cards "+cardsPanel.transform.childCount +"/40";
+    }
+
+    public void UpdateDeckCount(int count)
+    {
+        deckCount.text = "Cards "+ count + "/40";
+    }
+    
+    //TODO  filter fonksiyonu yapÄ±lacak
+    
+    
+    public void UpdateRarityCount(Rarity rarity, int i)
+    {
+        switch (rarity)
+        {
+            case Rarity.Common:
+                rarityTexts[0].AddCount(i);
+                break;
+            case Rarity.Rare:
+                rarityTexts[1].AddCount(i);
+                break;
+            case Rarity.Epic:
+                rarityTexts[2].AddCount(i);
+                break;
+            case Rarity.Legendary:
+                rarityTexts[3].AddCount(i);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void ResetRarityCount()
+    {
+        foreach (RarityText rarityText in rarityTexts)
+        {
+            rarityText.SetCount(0);
+        }
+    }
+
+    public void RemoveSelected(string cardName)
+    {
+        cardCtrl.RemoveSelected(cardName);
+    }
+    
+    private void OpenSelected(string cardName)
+    {
+        cardCtrl.OpenSelected(cardName);
     }
 }

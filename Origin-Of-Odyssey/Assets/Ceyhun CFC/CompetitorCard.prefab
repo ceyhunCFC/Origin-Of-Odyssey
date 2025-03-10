@@ -66,7 +66,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: ce6be60b7f3a5d748bf154deea9a5dd9, type: 3}
+    m_Font: {fileID: 12800000, guid: 276879e62098546888fa7490c4c9a4bc, type: 3}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
@@ -111,6 +111,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6918247437153918367}
   - {fileID: 734298802131491176}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ce25a04518b5b43efaea178280054b1e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f9cec3c642bc04ec48f92b475dbd35ad, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -182,3 +183,189 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1766936294531061}
+  playerNames:
+  - ShadowHunter
+  - DragonSlayer
+  - StormBreaker
+  - NightOwl
+  - PhoenixFire
+  - SteelTitan
+  - SilverFang
+  - MysticMage
+  - DarkKnight
+  - LoneWolf
+  - BlazeWarrior
+  - ThunderStrike
+  - FrostDragon
+  - StormCaller
+  - IronClad
+  - GhostRider
+  - WildCat
+  - VortexMaster
+  - EagleEye
+  - RedPhoenix
+  - FallenAngel
+  - ThunderBolt
+  - SlyFox
+  - LightningBolt
+  - WarriorKing
+  - RogueShadow
+  - DemonHunter
+  - StarGazer
+  - WraithLord
+  - VengefulSpirit
+  - CelestialKnight
+  - ShadowBlade
+  - RagingInferno
+  - MysticKnight
+  - FrostBite
+  - EbonDragon
+  - SpectralWarrior
+  - SunSeeker
+  - IronFist
+  - SkyWalker
+  - DragonHeart
+  - SilentStorm
+  - VoidCaster
+  - SteelPhoenix
+  - BloodRaven
+  - StormHunter
+  - ArcaneWarrior
+  - GrimReaper
+  - DuskKnight
+  - ViperStrike
+  - EclipseMage
+  - IronGiant
+  - SpectralKnight
+  - ShadowRanger
+  - StormWarden
+  - LunarEclipse
+  - InfernoBeast
+  - MysticSorcerer
+  - PhantomBlade
+  - WraithHunter
+  - DemonLord
+  - CelestialMage
+  - StarChaser
+  - FrostGuardian
+  - ShadowStalker
+  - InfernalKnight
+  - VoidKnight
+  - ThunderGuard
+  - SpectralRanger
+  - MoonlightWarrior
+  - DragonRider
+  - BloodKnight
+  - StormFury
+  - ShadowAssassin
+  - CelestialFury
+  - NightmareMage
+  - StormCaster
+  - RogueWarrior
+  - EclipseKnight
+  - DuskMage
+  - FallenWarrior
+  - MysticRanger
+  - SteelSorcerer
+  - ThunderMage
+  - IronWarden
+  - PhantomRanger
+  - InfernalSorcerer
+  - FrostWarden
+  - WraithSorcerer
+  - DragonGuard
+  - LunarMage
+  - ShadowLord
+  - StormRider
+  - CelestialSorcerer
+  - IronRanger
+  - EbonWarrior
+  - DemonMage
+  - BloodSorcerer
+  - SpectralSorcerer
+  - VoidWarrior
+  - SunGuard
+  - EclipseRanger
+  - MysticLord
+  - StormKnight
+  - LunarKnight
+  - PhantomWarrior
+  - CelestialKnight
+  - WraithWarden
+  - InfernoMage
+  - FrostRanger
+--- !u!1 &7474355716217886195
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6918247437153918367}
+  - component: {fileID: 696890086306298204}
+  - component: {fileID: 3304180403440439955}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6918247437153918367
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7474355716217886195}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 199925445383246507}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.000030517578, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &696890086306298204
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7474355716217886195}
+  m_CullTransparentMesh: 1
+--- !u!114 &3304180403440439955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7474355716217886195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: f372ccea3479042dd9b76ff4f046e180, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1

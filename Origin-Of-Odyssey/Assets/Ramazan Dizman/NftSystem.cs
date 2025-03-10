@@ -104,10 +104,11 @@ public class NftSystem : MonoBehaviour
             }
         }
         print(firstLogin);
-        if(firstLogin==false)
+        /*if(firstLogin==false)
         {
             mainMenuCanvas.OpenEventCanvas();
-        }
+        }*/
+        //Remember: If firstLogin is false, open the event canvas.
     }
 
     private void TransferCardsToInventorySystem()

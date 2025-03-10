@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,9 +51,13 @@ public class AddCard : MonoBehaviour
 
                     GameObject yeniButon = Instantiate(prefab, panel.transform);
                     yeniButon.transform.localPosition = new Vector3(0, 0, 0);
-
+                    PlayerDeck playerDeck = panel.transform.parent.parent.parent.GetComponent<PlayerDeck>();
+                    playerDeck.UpdateDeckCount();
+                    Rarity rarity;
+                    Enum.TryParse(cardDisplay.cardRarityText.text, out rarity);
+                    playerDeck.UpdateRarityCount(rarity, 1);
+                    cardDisplay.selectedCardImage.gameObject.SetActive(true);
                     SelectedCard selectedCard = yeniButon.GetComponent<SelectedCard>();
-
                     if (selectedCard != null)
                     {
                         selectedCard.NameText.text = cardDisplay.cardNameText.text;
@@ -73,12 +78,12 @@ public class AddCard : MonoBehaviour
                         }
                         else
                         {
-                            Debug.LogWarning("CardsImage nesnesi bulunamadý!");
+                            Debug.LogWarning("CardsImage nesnesi bulunamadï¿½!");
                         }
                     }
                     else
                     {
-                        Debug.LogWarning("ImageParent nesnesi bulunamadý!");
+                        Debug.LogWarning("ImageParent nesnesi bulunamadï¿½!");
                     }
                 }
                 

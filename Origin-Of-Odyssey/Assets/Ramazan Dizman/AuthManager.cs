@@ -131,7 +131,7 @@ public class AuthManager : MonoBehaviour
     }
     public void AccountLogin()
     {
-        if(PlayerPrefs.GetInt("IsLoggedIn") == 0)
+        /*if(PlayerPrefs.GetInt("IsLoggedIn") == 0)
         {
             if (!robotToggle.isOn)
             {
@@ -139,7 +139,8 @@ public class AuthManager : MonoBehaviour
                 loginInfo.color = Color.red;
                 return;
             }
-        }
+        }*/
+        //Remember: Robot Toggle
          
         loginInfo.text = "";
         string email = LoginEmail.text;
@@ -278,12 +279,13 @@ public class AuthManager : MonoBehaviour
 
     public void AccountRegister()
     {
-        if (!robotToggle1.isOn)
+        /*if (!robotToggle1.isOn)
         {
             registerInfo.text = "Please verify the CAPTCHA!";
             registerInfo.color = Color.red;
             return;
-        }
+        }*/
+        //Remember: Robot Toggle
         if (!userAgreementToggle.isOn)
         {
             registerInfo.text = "Please accept the user agreement!";

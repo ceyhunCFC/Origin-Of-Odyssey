@@ -158,4 +158,10 @@ public class NetworkManger : MonoBehaviourPunCallbacks
             print($"Room: {room.Name}, Mode: {room.CustomProperties["mode"]}");
         }
     }
+    
+    public void BackMainMenu()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("MainMenuScene");
+    }
 }
