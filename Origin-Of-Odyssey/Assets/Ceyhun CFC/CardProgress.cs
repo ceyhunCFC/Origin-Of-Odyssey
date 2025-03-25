@@ -990,8 +990,8 @@ public class CardProgress : MonoBehaviourPunCallbacks
             if(AttackerCard.GetComponent<CardInformation>().CardName == "Zeus")
             {
                 AttackerCard.GetComponent<CardController>().UsedCard(AttackerInfo.CardDamage, GetComponent<PlayerController>().PV.Owner.IsMasterClient);
-                Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Damage to the enemy!";
-
+                //Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform).transform.GetChild(0).GetComponent<Text>().text = "Damage to the enemy!";
+                //Reminder Talk cloud
 
                 if (GetComponent<PlayerController>().PV.IsMine)
                 {

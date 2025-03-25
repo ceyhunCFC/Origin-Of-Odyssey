@@ -27,6 +27,8 @@ public class MainMenuCanvas : MonoBehaviour
     }
     public void CloseCardsCanvas()
     {
+        CardCtrl cardCtrl = FindAnyObjectByType<CardCtrl>();
+        cardCtrl?.DeleteDeck();
         mainCardsCanvas.SetActive(false);
     }
 

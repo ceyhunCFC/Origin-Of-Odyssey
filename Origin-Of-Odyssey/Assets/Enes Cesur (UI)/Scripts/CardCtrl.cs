@@ -458,7 +458,7 @@ public class CardCtrl : MonoBehaviour
         }
     }
 
-    private void DeleteDeck()
+    public void DeleteDeck()
     {
         GameObject panel = GameObject.FindWithTag("CardContainerTag");
 

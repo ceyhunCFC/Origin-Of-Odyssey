@@ -6,6 +6,8 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.IO;
 using System;
+using DG.Tweening;
+using Ender.Scripts;
 using UnityEngine.VFX;
 using UnityEngine.SceneManagement;
 
@@ -60,7 +62,12 @@ public class PlayerController : MonoBehaviour
     public GameObject DamageText;
     public GameObject LogsPrefab;
     public Button finishButton;
+    public Button heroPowerButton;
     GameObject LogsContainerContent;
+
+    [SerializeField] private Image countDownImage, whoseTurnImage;
+    [SerializeField] private Sprite myTurnSprite, enemyTurnSprite;
+    
 
     public Image OwnHealthBar;
     public Image OwnManaBar;
@@ -88,7 +95,59 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public int AsgardQuestion = 0;
     [HideInInspector] public int DeadCardCount = 0;
     [HideInInspector] public int DeckCardCount = 0;
-    [HideInInspector] public float Mana = 1;
+
+    [SerializeField] private Image CompetitorHeroIcon;
+    [SerializeField] private List<Sprite> heroIcons=new List<Sprite>();
+
+    [HideInInspector]
+    public float Mana
+    {
+        get { return _mana;}
+        set
+        {
+            _mana = value;
+            OnManaChange(_mana);
+        }
+    }
+
+    private void OnManaChange(float mana)
+    {
+        if (mana>=ReturnHeroPowerManaValue() && WhoseTurnText.text == "Finish Turn" && CanAttackMainCard)
+        {
+            heroPowerButton.interactable = true;
+        }
+        else
+        {
+            heroPowerButton.interactable = false;
+        }
+    }
+
+    private float ReturnHeroPowerManaValue()
+    {
+        switch (OwnMainCard)
+        {
+            case "Odin":
+                if (AsgardQuestion >= 3)
+                {
+                    return 1;
+                }
+                return 2;
+            case "Zeus":
+                return 2;
+            case "Anubis":
+                return 2;
+            case "Genghis":
+                return 2;
+            case "Dustin":
+                return 2;
+            case "DaVinci":
+                return 2;
+        }
+
+        return 2;
+    }
+
+    private float _mana;
     [HideInInspector] public int DeadMonsterCound = 0;
     [HideInInspector] public int AugmentCount = 0;
     [HideInInspector] public bool CanAttackMainCard = true;
@@ -115,6 +174,9 @@ public class PlayerController : MonoBehaviour
 
     GameObject[] Lavas;
     public Animator HeroAnimator;
+    public HeroParticleController HeroParticleController;
+    public List<HeroParticleController> HeroParticleControllers = new List<HeroParticleController>();
+    private Tween timeTween;
 
     void Start()
     {
@@ -133,11 +195,64 @@ public class PlayerController : MonoBehaviour
 
         InventorySystem = GameObject.FindGameObjectWithTag("Inventory");
         Lavas = GameObject.FindGameObjectsWithTag("lava");
-
         GetDataForUI();
+        
         addedValue = isRankedMap() ? GetHasBeenBoughtValue() : 0;
         AssignAnimatorController();
+        
+        if (AssignHeroParticleController())
+        {
+            _GameManager.PlayerController = this;
+        }
+        StartCoroutine(StartFirstTurn());
+    }
 
+    private string SetHoverHeroAttackInfo()
+    {
+        switch (OwnMainCard)
+        {
+            case "Odin":
+                return "";
+            case "Zeus":
+                return "Deal 1 damage to any target";
+            case "Anubis":
+                return "";
+            case "Genghis":
+                return "Deal 2 damage to enemy hero";
+            case "Dustin":
+                return "";
+            case "DaVinci":
+                return "";
+        }
+        return "Special Attack";
+    }
+    
+    IEnumerator StartFirstTurn()
+    {
+        yield return new WaitForSeconds(3f);
+        
+        
+        yield return new WaitForSeconds(.5f);
+        
+        if (PV.IsMine)
+        {
+            _GameManager.Turn = true;
+            WhoseTurnText.text = "Finish Turn";
+            finishButton.interactable = true;
+            heroPowerButton.interactable = false;
+            whoseTurnImage.sprite = myTurnSprite;
+            timeTween = countDownImage.DOFillAmount(0, 60).SetEase(Ease.Linear);
+        }
+        else
+        {
+            _GameManager.Turn = false;
+            WhoseTurnText.text = "Opponent's Turn";
+            finishButton.interactable = false;
+            heroPowerButton.interactable = false;
+            whoseTurnImage.sprite = enemyTurnSprite;
+            timeTween = countDownImage.DOFillAmount(0, 60).SetEase(Ease.Linear);
+        }
+        
     }
 
     void HeroNftCard()
@@ -373,6 +488,8 @@ public class PlayerController : MonoBehaviour
                     selectedCard.GetComponent<Renderer>().material.color = Color.green;
 
                     initialCardPosition = selectedCard.transform.position;
+                    initialCardRotation = selectedCard.transform.rotation.eulerAngles;
+                    initialScale = selectedCard.transform.localScale;
                 }
             }
             else if (hit.collider.gameObject.tag == "UsedCard" && _CardProgress.ForMyCard == false)
@@ -423,6 +540,8 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    private Vector3 initialCardRotation;
+    private Vector3 initialScale;
 
     void DragCardAfterSelect()
     {
@@ -431,6 +550,24 @@ public class PlayerController : MonoBehaviour
         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         float followSpeed = 5f; // Kartın takip hızı
         selectedCard.transform.position = Vector3.Lerp(selectedCard.transform.position, targetPosition, Time.deltaTime * followSpeed);
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray);
+        foreach (var hit in hits)
+        {
+            if (hit.collider.gameObject.CompareTag("AreaBox"))
+            {
+                Transform transformBox = hit.collider.gameObject.transform;
+                selectedCard.transform.position=transformBox.position;
+                selectedCard.transform.localRotation = Quaternion.Euler(60, 0, 180);
+                selectedCard.transform.localScale=new Vector3(6.3f,9,0.01f);
+                
+            }
+            else
+            {
+                selectedCard.transform.localScale = new Vector3(0.7f, 1f, 0.01f);
+            }
+        }
     }
     public AudioClip DownCard,SelectCardFX;
 
@@ -459,7 +596,8 @@ public class PlayerController : MonoBehaviour
                         {
                             selectedCard.GetComponent<Renderer>().material.color = Color.white;
                             selectedCard.transform.position = initialCardPosition;
-                            selectedCard.transform.localScale = new Vector3(0.7f, 1f, 0.04f);
+                            selectedCard.transform.rotation = Quaternion.Euler(initialCardRotation);
+                            selectedCard.transform.localScale = initialScale;
                             print("hata");
                             selectedCard = null;
                             return;
@@ -1330,6 +1468,7 @@ public class PlayerController : MonoBehaviour
         {
             selectedCard.GetComponent<Renderer>().material.color = Color.white;
             selectedCard.transform.position = initialCardPosition;
+            selectedCard.transform.rotation = Quaternion.Euler(initialCardRotation);
             selectedCard.transform.localScale=new Vector3 (0.7f, 1f, 0.04f);
             selectedCard = null;
         }
@@ -2159,8 +2298,13 @@ public class PlayerController : MonoBehaviour
         CompetitorPV = null;
         WhoseTurnText.text = "Enemy Turn";
         Timer.text = "00:60";
+        timeTween.Kill(true);
+        countDownImage.fillAmount = 1;
+        whoseTurnImage.sprite = enemyTurnSprite;
+        timeTween=countDownImage.DOFillAmount(0, 60f);
         elapsedTime = 60;
         finishButton.interactable = false;
+        heroPowerButton.interactable = false;
         CanAttackMainCard = true;
         DeactivateAllGreens();
         foreach (GameObject obj in objects)
@@ -3667,6 +3811,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private bool AssignHeroParticleController()
+    {
+        Debug.Log(OwnMainCard + "_Aura");
+        if (OwnMainCard == "") return false;
+        HeroParticleController = GameObject.Find(OwnMainCard + "_Aura").transform.GetChild(0)
+            .GetComponent<HeroParticleController>();
+        HeroParticleController.gameObject.SetActive(true);
+        return true;
+
+    }
+
     public void MainCardSpecial()
     {
       
@@ -3694,7 +3849,8 @@ public class PlayerController : MonoBehaviour
                         existingObject.GetComponent<CardInformation>().CardName = "Zeus";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         existingObject.GetComponent<CardInformation>().CardMana = 2;
-                        HeroAnimator.SetTrigger("Ulti");
+                        //HeroAnimator.SetTrigger("Ulti");
+                        HeroParticleController.PlayHeroPower();
                         _CardProgress.SetMainAttackerCard(existingObject);
                     }
                     else
@@ -3708,7 +3864,8 @@ public class PlayerController : MonoBehaviour
                         existingObject.GetComponent<CardInformation>().CardName = "Genghis";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         existingObject.GetComponent<CardInformation>().CardMana = 2;
-                        HeroAnimator.SetTrigger("Ulti");
+                        //HeroAnimator.SetTrigger("Ulti");
+                        HeroParticleController.PlayHeroPower();
                         if (NomadsLand >= 5)
                         {
                             if (_GameManager.MasterAttackDamage <= 2)
@@ -3761,7 +3918,8 @@ public class PlayerController : MonoBehaviour
                         existingObject.GetComponent<CardInformation>().CardName = "Odin";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         SetMana(existingObject);
-                        HeroAnimator.SetTrigger("Ulti");
+                        //HeroAnimator.SetTrigger("Ulti");
+                        HeroParticleController.PlayHeroPower();
                         GameObject spawnedObject = SpawnAndReturnGameObject();
 
                         if (spawnedObject.GetComponent<CardInformation>().CardHealth == "")
@@ -3784,7 +3942,8 @@ public class PlayerController : MonoBehaviour
                         existingObject.GetComponent<CardInformation>().CardName = "Odin";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         SetMana(existingObject);
-                        HeroAnimator.SetTrigger("Ulti");
+                        //HeroAnimator.SetTrigger("Ulti");
+                        HeroParticleController.PlayHeroPower();
                         GameObject spawnedObject = SpawnAndReturnGameObject();
 
                         if (spawnedObject.GetComponent<CardInformation>().CardHealth == "")
@@ -3812,8 +3971,8 @@ public class PlayerController : MonoBehaviour
                         existingObject.GetComponent<CardInformation>().CardName = "Anubis";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         existingObject.GetComponent<CardInformation>().CardMana = 2;
-                        HeroAnimator.SetTrigger("Ulti");
-
+                        //HeroAnimator.SetTrigger("Ulti");
+                        HeroParticleController.PlayHeroPower();
                         List<int> emptyFrontCells = new List<int>();
                         List<int> emptyBackCells = new List<int>();
 
@@ -3893,7 +4052,8 @@ public class PlayerController : MonoBehaviour
                         existingObject.GetComponent<CardInformation>().CardName = "Leonardo Da Vinci";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         existingObject.GetComponent<CardInformation>().CardMana = 2;
-                        HeroAnimator.SetTrigger("Ulti");
+                        //HeroAnimator.SetTrigger("Ulti");
+                        HeroParticleController.PlayHeroPower();
                         _CardProgress.SetMainAttackerCard(existingObject);
                         _CardProgress.SecoundTargetCard = true;
                         _CardProgress.ForMyCard = true;
@@ -3909,7 +4069,8 @@ public class PlayerController : MonoBehaviour
                         existingObject.GetComponent<CardInformation>().CardName = "Dustin";
                         existingObject.GetComponent<CardInformation>().CardDamage = _GameManager.MasterAttackDamage;
                         existingObject.GetComponent<CardInformation>().CardMana = 2;
-                        HeroAnimator.SetTrigger("Ulti");
+                        //HeroAnimator.SetTrigger("Ulti");
+                        HeroParticleController.PlayHeroPower();
                         print("Fix gelecek");
                     }
                     else
@@ -4114,6 +4275,11 @@ public class PlayerController : MonoBehaviour
                 }
                 WhoseTurnText.text = "Finish Turn";
                 finishButton.interactable = true;
+                OnManaChange(Mana);
+                timeTween.Kill(true);
+                countDownImage.fillAmount = 1;
+                whoseTurnImage.sprite = myTurnSprite;
+                timeTween=countDownImage.DOFillAmount(0, 60f);
 
 
 
@@ -4356,7 +4522,12 @@ public class PlayerController : MonoBehaviour
                 }
                 _CardProgress.BattleableCard();
                 WhoseTurnText.text = "Finish Turn";
+                timeTween.Kill(true);
                 finishButton.interactable = true;
+                OnManaChange(Mana);
+                countDownImage.fillAmount = 1;
+                whoseTurnImage.sprite = myTurnSprite;
+                timeTween=countDownImage.DOFillAmount(0, 60f);
 
             }
 
@@ -5153,7 +5324,7 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("CompetitorDeck").transform.GetChild(i).transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
         }
 
-        GameObject.Find("CompetitorDeck").transform.position = new Vector3(3.3f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.26f, 1.54f);
+        GameObject.Find("CompetitorDeck").transform.position = new Vector3(3.3f - GameObject.Find("CompetitorDeck").transform.childCount * 0.2f, 1.6f, 1.54f);
 
     }
 
@@ -5232,8 +5403,20 @@ public class PlayerController : MonoBehaviour
                     CompetitorNameText.text = CompetitorName;
                     CompetitorMainCardText.text = CompetitorMainCard;
                     CompetitorHeroAttackDamageText.text = CompetitorHeroAttackDamage.ToString();
-
-                   
+                    if (CompetitorMainCard!=null)
+                    {
+                        CompetitorHeroIcon.sprite = CompetitorMainCard switch
+                        {
+                            "Zeus" => heroIcons[0],
+                            "Odin" => heroIcons[1],
+                            "Genghis" => heroIcons[2],
+                            "Anubis" => heroIcons[3],
+                            "Dustin" => heroIcons[4],
+                            "Leonardo Da Vinci" => heroIcons[5],
+                            _ => CompetitorHeroIcon.sprite
+                        };
+                    }
+                    
 
                     for (int i = 0; i < CompetitorDeck.Length; i++)
                     {
@@ -5292,6 +5475,11 @@ public class PlayerController : MonoBehaviour
 
                     WhoseTurnText.text = "Enemy Turn";
                     finishButton.interactable = false;
+                    OnManaChange(Mana);
+                    timeTween.Kill(true);
+                    countDownImage.fillAmount = 1;
+                    whoseTurnImage.sprite = enemyTurnSprite;
+                    timeTween=countDownImage.DOFillAmount(0, 60f);
                     Debug.LogError("Im OtherClient");
                 }
             }

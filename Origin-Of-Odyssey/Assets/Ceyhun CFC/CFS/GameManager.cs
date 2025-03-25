@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [HideInInspector] public string OtherrMainCard = "";
 
     [HideInInspector] public int TurnCount = 0;
+    public PlayerController PlayerController;
 
 
     public Text MasterPlayerNameText;
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         */
       //  DontDestroyOnLoad(gameObject);
         PV = GetComponent<PhotonView>();
+        
     }
 
     public void MasterDamanage(int Damage)
@@ -70,11 +73,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Panel.SetActive(true);
             WinningName.text = OtherPlayerName;
-
+            
             StartCoroutine(LoadMainMenu());
 
         }
 
+        PlayerController.HeroParticleController.PlayHit();
     }
 
     public void OtherDamanage(int Damage)

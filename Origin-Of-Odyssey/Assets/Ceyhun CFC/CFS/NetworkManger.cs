@@ -76,10 +76,12 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
+                players[1].NickName = "MIGHTY RIVAL";
                 CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[1]);
             }
             else
             {
+                players[0].NickName = "MIGHTY RIVAL";
                 CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[0]);
             }
         }
@@ -124,10 +126,12 @@ public class NetworkManger : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
+                players[1].NickName = "MIGHTY RIVAL";
                 CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[1]);
             }
             else
             {
+                players[0].NickName = "MIGHTY RIVAL";
                 CompetitorCard.GetComponent<PlayerListItem>().SetUp(players[0]);
             }
         }
