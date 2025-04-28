@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Ender.Scripts
@@ -17,9 +18,10 @@ namespace Ender.Scripts
             particleSystems[1].Play();
         }
     
-        public void PlayHit()
+        public Task PlayHit()
         {
             particleSystems[2].Play();
+            return Task.Delay(1000);
         }
     
         public void StopAura()

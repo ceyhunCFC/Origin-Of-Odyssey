@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Ender.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Text WhoTurnText;
     public Text WinningName;
 
-    public GameObject Panel;
+    public GameObject winPanel, losePanel;
     PhotonView PV;
 
    
@@ -63,22 +64,54 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_MasterDamanage(int Damage)
+    async void RPC_MasterDamanage(int Damage)
     {
-        if (MasterHealth - Damage > 0)
+        if (PlayerController.OwnNameText.text==MasterPlayerName)
+            await PlayerController.HeroParticleController.PlayHit();
+        if (MasterHealth  > 0)
         {
             MasterHealth -= Damage;
+            if (MasterHealth<0)
+            {
+                MasterHealth = 0;
+            }
+            PlayerController.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+        }
+
+        if (MasterHealth > 0)
+        {
+             return;
+        }
+        if (PlayerController.OwnNameText.text==MasterPlayerName)
+        {
+            losePanel.SetActive(true);
+            Sprite heroSprite = PlayerController.CompetitorMainCard switch
+            {
+                "Zeus" => PlayerController.heroIcons[0],
+                "Odin" => PlayerController.heroIcons[1],
+                "Genghis" => PlayerController.heroIcons[2],
+                "Anubis" => PlayerController.heroIcons[3],
+                "Dustin" => PlayerController.heroIcons[4],
+                "Leonardo Da Vinci" => PlayerController.heroIcons[5],
+                _ => PlayerController.CompetitorHeroIcon.sprite
+            };
+            losePanel.GetComponent<WinLosePanel>().Initialize(PlayerController.OwnNameText.text, PlayerController.OwnMainCard, heroSprite);
         }
         else
         {
-            Panel.SetActive(true);
-            WinningName.text = OtherPlayerName;
-            
-            StartCoroutine(LoadMainMenu());
-
+            winPanel.SetActive(true);
+            Sprite heroSprite = PlayerController.CompetitorMainCard switch
+            {
+                "Zeus" => PlayerController.heroIcons[0],
+                "Odin" => PlayerController.heroIcons[1],
+                "Genghis" => PlayerController.heroIcons[2],
+                "Anubis" => PlayerController.heroIcons[3],
+                "Dustin" => PlayerController.heroIcons[4],
+                "Leonardo Da Vinci" => PlayerController.heroIcons[5],
+                _ => PlayerController.CompetitorHeroIcon.sprite
+            };
+            winPanel.GetComponent<WinLosePanel>().Initialize(PlayerController.OwnNameText.text, PlayerController.OwnMainCard, heroSprite);
         }
-
-        PlayerController.HeroParticleController.PlayHit();
     }
 
     public void OtherDamanage(int Damage)
@@ -87,19 +120,56 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_OtherDamanage(int Damage)
+    async void RPC_OtherDamanage(int Damage)
     {
-        if (OtherHealth - Damage > 0)
+        if (PlayerController.OwnNameText.text==OtherPlayerName)
+            await PlayerController.HeroParticleController.PlayHit();
+        if (OtherHealth > 0)
         {
             OtherHealth -= Damage;
+            if (OtherHealth<0)
+            {
+                OtherHealth = 0;
+            }
+            PlayerController.PV.RPC("RefreshPlayersInformation", RpcTarget.All);
+        }
+
+        if (OtherHealth > 0)
+        {
+             return;
+        }
+            
+        if (PlayerController.OwnNameText.text==OtherPlayerName)
+        {
+            losePanel.SetActive(true);
+            Sprite heroSprite = PlayerController.CompetitorMainCard switch
+            {
+                "Zeus" => PlayerController.heroIcons[0],
+                "Odin" => PlayerController.heroIcons[1],
+                "Genghis" => PlayerController.heroIcons[2],
+                "Anubis" => PlayerController.heroIcons[3],
+                "Dustin" => PlayerController.heroIcons[4],
+                "Leonardo Da Vinci" => PlayerController.heroIcons[5],
+                _ => PlayerController.CompetitorHeroIcon.sprite
+            };
+            losePanel.GetComponent<WinLosePanel>().Initialize(PlayerController.OwnNameText.text, PlayerController.OwnMainCard, heroSprite);
         }
         else
         {
-            Panel.SetActive(true);
-            WinningName.text = MasterPlayerName + " WON!";
-            StartCoroutine(LoadMainMenu());
+            winPanel.SetActive(true);
+            Sprite heroSprite = PlayerController.CompetitorMainCard switch
+            {
+                "Zeus" => PlayerController.heroIcons[0],
+                "Odin" => PlayerController.heroIcons[1],
+                "Genghis" => PlayerController.heroIcons[2],
+                "Anubis" => PlayerController.heroIcons[3],
+                "Dustin" => PlayerController.heroIcons[4],
+                "Leonardo Da Vinci" => PlayerController.heroIcons[5],
+                _ => PlayerController.CompetitorHeroIcon.sprite
+            };
+            winPanel.GetComponent<WinLosePanel>().Initialize(PlayerController.OwnNameText.text, PlayerController.OwnMainCard, heroSprite);
         }
-     
+
     }
 
     public void OtherHeal(int Heal)
@@ -170,9 +240,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    IEnumerator LoadMainMenu()
+    private void LoadMainMenu()
     {
-        yield return new WaitForSeconds(3.0f);
         LeaveRoomAndReturnToMainMenu();
     }
 

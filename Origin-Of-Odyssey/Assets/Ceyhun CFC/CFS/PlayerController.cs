@@ -8,6 +8,7 @@ using System.IO;
 using System;
 using DG.Tweening;
 using Ender.Scripts;
+using TMPro;
 using UnityEngine.VFX;
 using UnityEngine.SceneManagement;
 
@@ -96,8 +97,11 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public int DeadCardCount = 0;
     [HideInInspector] public int DeckCardCount = 0;
 
-    [SerializeField] private Image CompetitorHeroIcon;
-    [SerializeField] private List<Sprite> heroIcons=new List<Sprite>();
+    [SerializeField] public Image CompetitorHeroIcon;
+    [SerializeField] public List<Sprite> heroIcons=new List<Sprite>();
+    [SerializeField] private TextMeshProUGUI damageTxt;
+    [SerializeField] private CanvasGroup playerControlCanvasGroup;
+    
 
     [HideInInspector]
     public float Mana
@@ -178,6 +182,7 @@ public class PlayerController : MonoBehaviour
     public List<HeroParticleController> HeroParticleControllers = new List<HeroParticleController>();
     private Tween timeTween;
 
+    private TalkManager _talkManager;
     void Start()
     {
         //_CardFunction = GameObject.Find("GameManager").GetComponent<CardsFunction>();
@@ -195,8 +200,22 @@ public class PlayerController : MonoBehaviour
 
         InventorySystem = GameObject.FindGameObjectWithTag("Inventory");
         Lavas = GameObject.FindGameObjectsWithTag("lava");
-        GetDataForUI();
         
+        /*if (PV.Owner.IsMasterClient)
+        {
+            OwnMainCard = _GameManager.MasterMainCard;
+            CompetitorMainCard = _GameManager.OtherrMainCard;
+        }
+        else
+        {
+            OwnMainCard = _GameManager.OtherrMainCard;
+            CompetitorMainCard = _GameManager.MasterMainCard;
+        }
+        print(OwnMainCard+"....");
+        print(CompetitorMainCard+"....");*/
+        GetDataForUI();
+       
+
         addedValue = isRankedMap() ? GetHasBeenBoughtValue() : 0;
         AssignAnimatorController();
         
@@ -204,6 +223,8 @@ public class PlayerController : MonoBehaviour
         {
             _GameManager.PlayerController = this;
         }
+        heroPowerButton.GetComponent<HoverInfo>().infoText = SetHoverHeroAttackInfo();
+        _talkManager = GameObject.Find("TalkCloud").GetComponent<TalkManager>();
         StartCoroutine(StartFirstTurn());
     }
 
@@ -230,9 +251,14 @@ public class PlayerController : MonoBehaviour
     IEnumerator StartFirstTurn()
     {
         yield return new WaitForSeconds(3f);
-        
-        
-        yield return new WaitForSeconds(.5f);
+       
+        yield return new WaitForSeconds(.2f);
+         playerControlCanvasGroup.alpha = 1f;
+       // GetDataForUI();
+       if (HeroParticleController!=null)
+       {
+           HeroParticleController.gameObject.SetActive(true);   
+       }
         
         if (PV.IsMine)
         {
@@ -337,8 +363,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
 
-            GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
+            TalkCloud("It is not my Turn!");
         }
 
         if (Input.GetMouseButton(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -361,8 +386,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButton(0))
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
-            GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
+            TalkCloud("It is not my Turn!");
         }
 
         if (Input.GetMouseButtonUp(0) && PV.Owner.IsMasterClient && _GameManager.Turn == false)
@@ -384,8 +408,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             Debug.LogError("IT IS NOT YOUR TURN!");
-              GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my Turn!";
+            TalkCloud( "It is not my Turn!");
         }
 
 
@@ -507,8 +530,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     Debug.Log("CardFreeze or firstraund or isattacked");
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "CardFreeze or firstraund or isattacked.";
+                    TalkCloud("CardFreeze or firstraund or isattacked.");
                 }
             }
             else if (hit.collider.gameObject.tag == "AreaBox" && _CardProgress.ForMyCard == false)
@@ -530,8 +552,7 @@ public class PlayerController : MonoBehaviour
                         }
                         else
                         {
-                            GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                            TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "CardFreeze or firstraund or isattacked.";
+                            TalkCloud("CardFreeze or firstraund or isattacked.");
                         }
                     }
                 }
@@ -568,6 +589,7 @@ public class PlayerController : MonoBehaviour
                 selectedCard.transform.localScale = new Vector3(0.7f, 1f, 0.01f);
             }
         }
+        HoverInfoManager.Instance.CloseInfo();
     }
     public AudioClip DownCard,SelectCardFX;
 
@@ -655,8 +677,7 @@ public class PlayerController : MonoBehaviour
                 {
 
                     ZeusCardFuns.LightningBoltFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
 
                     return;   
 
@@ -680,48 +701,42 @@ public class PlayerController : MonoBehaviour
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Lightning Storm")
                 {
                     ZeusCardFuns.LightningStormFun(selectedCard, this);
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Olympian Favor") 
                 {
 
                     ZeusCardFuns.OlympianFavorFun(selectedCard, this);
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Aegis Shield") 
                 {
 
                     ZeusCardFuns.AegisShieldFun(selectedCard, this);
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Golden Fleece") 
                 {
 
                     ZeusCardFuns.GoldenFleeceFun(selectedCard,this);
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Labyrinth Maze") 
                 {
 
                     ZeusCardFuns.LabyrinthMazeFun(selectedCard,this);
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Divine Ascention") 
                 {
 
                     ZeusCardFuns.DivineAscentionFun(selectedCard,this);
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Centaur Archer" 
@@ -779,64 +794,56 @@ public class PlayerController : MonoBehaviour
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Horseback Archery")
                 {
                     GenghisCardFun.HorsebackArcheryFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Ger Defense")
                 {
 
                     GenghisCardFun.GerDefenseFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Mongol Fury")
                 {
 
                     GenghisCardFun.MongolFuryFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Around the Great Wall")
                 {
 
                     GenghisCardFun.AroundtheGreatWallFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Eternal Steppe’s Whisper")
                 {
 
                     GenghisCardFun.EternalSteppesWhisperFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "God’s Bane")
                 {
 
                     GenghisCardFun.GodsBaneFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Steppe Ambush")
                 {
 
                     GenghisCardFun.SteppeAmbushFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Nomadic Tactics")
                 {
 
                     GenghisCardFun.NomadicTacticsFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Viking Raider")
@@ -924,46 +931,40 @@ public class PlayerController : MonoBehaviour
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Winter's Chill")
                 {
                     OdinCardFuns.WintersChillFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Viking Raid")
                 {
                     OdinCardFuns.VikingRaidFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud( "USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Sleipnir’s Gallop")
                 {
                     OdinCardFuns.SleipnirsGallopFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Gjallarhorn Call")
                 {
                     OdinCardFuns.GjallarhornCallFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Rune Magic")
                 {
                     OdinCardFuns.RuneMagicFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "The Allfather’s Decree")
                 {
                     OdinCardFuns.TheAllfathersDecreeFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
@@ -976,8 +977,7 @@ public class PlayerController : MonoBehaviour
                         GameObject CardCurrent = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
                         OdinCardFuns.MimirsWisdomFun(selectedCard,CardCurrent, this);
                     }
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
@@ -1067,59 +1067,51 @@ public class PlayerController : MonoBehaviour
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Scroll of Death")
                 {
                     AnubisCardFuns.ScrollofDeathFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Book of the Dead")
                 {
                     AnubisCardFuns.BookoftheDeadFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Sun Disk Radiance")
                 {
                     AnubisCardFuns.SunDiskRadianceFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Plague of Locusts")
                 {
                     AnubisCardFuns.PlagueofLocustsFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "River's Blessing")
                 {
                     AnubisCardFuns.RiversBlessingFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Pyramid's Might")
                 {
                     AnubisCardFuns.PyramidsMightFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Scales of Anubis")
                 {
                     AnubisCardFuns.ScalesofAnubisFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Gates of Duat")
                 {
                     AnubisCardFuns.GatesofDuatFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
@@ -1150,32 +1142,28 @@ public class PlayerController : MonoBehaviour
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Da Vinci’s Blueprint")
                 {
                     LeonardoCardFuns.DaVincisBlueprintFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Tabula Aeterna")
                 {
                     LeonardoCardFuns.TabulaAeternaFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                   TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Artistic Inspiration")
                 {
                     LeonardoCardFuns.ArtisticInspirationFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Anatomical Insight")
                 {
                     LeonardoCardFuns.AnatomicalInsightFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
@@ -1210,53 +1198,46 @@ public class PlayerController : MonoBehaviour
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Scrap Shield")
                 {
                     DustinCardFuns.ScrapShieldFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if (selectedCard.GetComponent<CardInformation>().CardName == "Shockwave/Impulse")
                 {
                     DustinCardFuns.ShockwaveImpulseFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Garage Raid")
                 {
                     DustinCardFuns.GarageRaidFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Radioactive Fallout")
                 {
                     DustinCardFuns.RadioactiveFalloutFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     Destroy(selectedCard);
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Mutated Blood Sample")
                 {
                     DustinCardFuns.MutatedBloodSampleFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Mechanical Reinforcement")
                 {
                     LeonardoCardFuns.MechanicalReinforcementFun(selectedCard, this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Tome of Confusion")
                 {
                     LeonardoCardFuns.TomeofConfusionFun(selectedCard,this);
-                    GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "USSEEDD A SPEEELLL!";
+                    TalkCloud("USSEEDD A SPEEELLL!");
                     return;
                 }
                 else if(selectedCard.GetComponent<CardInformation>().CardName == "Echo of Tomorrow")
@@ -1472,12 +1453,13 @@ public class PlayerController : MonoBehaviour
             selectedCard.transform.localScale=new Vector3 (0.7f, 1f, 0.04f);
             selectedCard = null;
         }
+        
+        HoverInfoManager.Instance.CloseInfo();
     }
 
     public void TalkCloud(string text)
     {
-        GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-        TalkCloud.transform.GetChild(0).GetComponent<Text>().text = text;
+       _talkManager.Talk(text);
     }
 
     bool isRankedMap()
@@ -1689,6 +1671,8 @@ public class PlayerController : MonoBehaviour
             vfxMoveInstance.transform.SetParent(card.transform);
             vfxMoveInstance.transform.localPosition = Vector3.zero;
             VisualEffect vfxMoveComponent = vfxMoveInstance.GetComponent<VisualEffect>();
+            vfxMoveInstance.transform.localScale=new Vector3(1.2f,1,1);
+            vfxMoveInstance.transform.localEulerAngles = new Vector3(0, 0, 0);
 
             if (vfxMoveComponent != null)
             {
@@ -1730,6 +1714,8 @@ public class PlayerController : MonoBehaviour
             vfxLandingInstance.transform.SetParent(card.transform);
             vfxLandingInstance.transform.localPosition = Vector3.zero;
             VisualEffect vfxLandingComponent = vfxLandingInstance.GetComponent<VisualEffect>();
+            vfxLandingInstance.transform.localScale=new Vector3(1.2f,1,1);;
+            vfxLandingInstance.transform.localEulerAngles = new Vector3(0, 0, 0);
             if (vfxLandingComponent != null)
             {
                 vfxLandingComponent.Play();
@@ -1986,10 +1972,17 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    IEnumerator HeroText(int damage)
+    {
+        damageTxt.text = "-" + damage.ToString();
+        yield return new WaitForSeconds(3f);
+        damageTxt.text = "";
+    }
+
 
     public void CreateTextHero(int damage)
     {
-        GameObject competitorHeroPivot = GameObject.Find("CompetitorHeroPivot");
+        /*GameObject competitorHeroPivot = GameObject.Find("CompetitorHeroPivot");
 
         // CompetitorHeroPivot'un ilk çocuğunu bul
         if (competitorHeroPivot != null && competitorHeroPivot.transform.childCount > 0)
@@ -2021,7 +2014,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.LogWarning("CompetitorHeroPivot not found or it has no children.");
-        }
+        }*/
+        StartCoroutine(HeroText(damage));
     }
 
 
@@ -2570,8 +2564,7 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.LogError("IT IS NOT YOUR TURN!");
 
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my turn!";
+                      TalkCloud( "It is not my turn!");
                 }
 
             }
@@ -2586,8 +2579,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     Debug.LogError("IT IS NOT YOUR TURN!");
-                      GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                    TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "It is not my turn!";
+                    TalkCloud("It is not my turn!");
                 }
 
             }
@@ -3008,8 +3000,7 @@ public class PlayerController : MonoBehaviour
                 DeadMonsterCound++;
                 Debug.LogError(DeadMonsterCound + " TANE MONSTER CARD ÖLDÜ");
 
-                GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "a total of " + DeadMonsterCound + "monsters are dead.";
+                TalkCloud("a total of " + DeadMonsterCound + "monsters are dead.");
             }
             else if(DeadCardName== "Keshik Cavalry")
             {
@@ -3018,8 +3009,7 @@ public class PlayerController : MonoBehaviour
 
                 CreateSpecialCard("Keshik on Foot", "2", 2, 0, TargetCardIndex,false);
 
-                GameObject TalkCloud = Instantiate(Resources.Load<GameObject>("TalkCloud"), GameObject.Find("Character").transform);
-                TalkCloud.transform.GetChild(0).GetComponent<Text>().text = "Keshik Cavalry Dead!";
+                TalkCloud("Keshik Cavalry Dead!");
             }
             else if(DeadCardName== "Flaming Camel")
             {
@@ -3817,7 +3807,7 @@ public class PlayerController : MonoBehaviour
         if (OwnMainCard == "") return false;
         HeroParticleController = GameObject.Find(OwnMainCard + "_Aura").transform.GetChild(0)
             .GetComponent<HeroParticleController>();
-        HeroParticleController.gameObject.SetActive(true);
+       
         return true;
 
     }
@@ -4262,6 +4252,7 @@ public class PlayerController : MonoBehaviour
            
             if (_GameManager.TurnCount < 2 ) // ilk turun fon.
             {
+                print("Beginner Function Turn Count if");
                 for (int i = 0; i < 3; i++)
                 {
                     GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
@@ -4542,7 +4533,7 @@ public class PlayerController : MonoBehaviour
                     card.tag = "CompetitorDeckCard";
                     float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                     card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
-                    CreateCard(card);
+                    //CreateCard(card);
                     StackDeck();
                     StackCompetitorDeck();
                     DeckCardCount++;
@@ -5366,10 +5357,13 @@ public class PlayerController : MonoBehaviour
     {
         if (OwnName == "" || OwnDeck == null || CompetitorName == "" || CompetitorDeck == null)
         {
+            print("Data is null");
             if (PV.IsMine)
             {
+                print("Im Mine.....");
                 if (PV.Owner.IsMasterClient)
                 {
+                    print("MasterClient.....");
                     OwnName = _GameManager.MasterPlayerName;
                     OwnDeck = _GameManager.MasterDeck;
                     OwnMainCard = _GameManager.MasterMainCard;
@@ -5430,6 +5424,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
+                    print("OtherClient.....");
                     OwnName = _GameManager.OtherPlayerName;
                     OwnDeck = _GameManager.OtherDeck;
                     OwnMainCard = _GameManager.OtherrMainCard;
@@ -5467,6 +5462,20 @@ public class PlayerController : MonoBehaviour
                     
                     CompetitorHealth = _GameManager.MasterHealth; //new
                     CompetitorHealthText.text = CompetitorHealth.ToString(); //new
+                    
+                    if (CompetitorMainCard!=null)
+                    {
+                        CompetitorHeroIcon.sprite = CompetitorMainCard switch
+                        {
+                            "Zeus" => heroIcons[0],
+                            "Odin" => heroIcons[1],
+                            "Genghis" => heroIcons[2],
+                            "Anubis" => heroIcons[3],
+                            "Dustin" => heroIcons[4],
+                            "Leonardo Da Vinci" => heroIcons[5],
+                            _ => CompetitorHeroIcon.sprite
+                        };
+                    }
 
                     for (int i = 0; i < CompetitorDeck.Length; i++)
                     {
@@ -5484,14 +5493,17 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            Invoke("GetDataForUI", 1);
+            Invoke("GetDataForUI", 3.5f);
         }
         else // GAME STARTER WİTH MASTER CLIENT
         {
+            print("Data is not null");
             if (PV.IsMine)
             {
+                print("Im Mine.....");
                 if (PV.Owner.IsMasterClient)
                 {
+                    print("MasterClient.....");
                   for (int i = 0; i < 3; i++)
                   {
                       GameObject card = Instantiate(CardPrefabSolo, GameObject.Find("Deck").transform);
@@ -5520,13 +5532,14 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
+                    print("OtherClient.....");
                     for (int i = 0; i < 3; i++)
                     {
                         GameObject card = Instantiate(Resources.Load<GameObject>("CompetitorCard"), GameObject.Find("CompetitorDeck").transform);
                         card.tag = "CompetitorDeckCard";
                         float xPos = DeckCardCount * 0.8f - 0.8f; // Kartın X konumunu belirliyoruz
                         card.transform.localPosition = new Vector3(xPos, 0, 0); // Kartın pozisyonunu ayarlıyoruz
-                        CreateCard(card);
+                        //CreateCard(card);
                         StackDeck();
                         StackCompetitorDeck();
                         DeckCardCount++;

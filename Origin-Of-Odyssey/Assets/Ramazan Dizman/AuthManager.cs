@@ -37,7 +37,7 @@ public class AuthManager : MonoBehaviour
         {
             AccountLogin();
         }
-        //LoginAccount("ramazan7@gmail.com", "test123");
+        LoginAccount("test_account@gmail.com", "123123123qq");
     }
 
     public void Update()

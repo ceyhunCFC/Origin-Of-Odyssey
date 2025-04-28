@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,17 +39,19 @@ public class CardInformation : MonoBehaviour
     public bool IsImmuneToAttacks { get; set; }
     public bool HasAttacked { get; set; } = false;
 
-    public Text CardNameText;
-    public Text CardDesText;
-    public Text CardHealthText;
-    public Text CardDamageText;
-    public Text CardManaText;
-    public Image CardVisualImage;
+    public TextMeshPro CardNameText;
+    public TextMeshPro CardDesText;
+    public TextMeshPro CardHealthText;
+    public TextMeshPro CardDamageText;
+    public TextMeshPro CardManaText;
+    public SpriteRenderer CardVisualImage;
 
     public Material Common;
     public Material Rare;
     public Material Legendary;
     public Material Epic;
+
+    public GameObject spellManaBg, spellTextBg, minionAttackBg, minionSpellBg;
 
 
     public enum Rarity
@@ -67,6 +70,19 @@ public class CardInformation : MonoBehaviour
         CardDamageText.text = CardDamage.ToString();
         CardManaText.text = CardMana.ToString();
         CardVisualImage.sprite = GetSpriteByName(CardName);
+
+        if (CardHealth=="")
+        {
+            OpenSpellBGs();
+        }
+    }
+
+    private void OpenSpellBGs()
+    {
+        spellManaBg.SetActive(true);
+        spellTextBg.SetActive(true);
+        minionAttackBg.SetActive(false);
+        minionSpellBg.SetActive(false);
     }
 
     public Sprite GetSpriteByName(string spriteName)

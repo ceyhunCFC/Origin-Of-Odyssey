@@ -154,6 +154,7 @@ public class CardCtrl : MonoBehaviour
                 cardDisplay.description.text = spell.description.ToString();
                 SetCardImage(cardDisplay);
                 SetCArdBorderImg(cardDisplay);
+                cardDisplay.OpenSpellBGs();
 
             }
             

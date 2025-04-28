@@ -14,4 +14,13 @@ public class CardDisplay : MonoBehaviour
     public Image cardBorderImage;
     public Image selectedCardImage;
     public Text description;
+
+    public GameObject spellManaBg, spellTxtBg, minionTxtBg;
+    
+    public void OpenSpellBGs()
+    {
+        spellManaBg.SetActive(true);
+        spellTxtBg.SetActive(true);
+        minionTxtBg.SetActive(false);
+    }
 }

@@ -41,7 +41,7 @@ namespace Ender.Scripts
             {
                 StopCoroutine(_openInfoCoroutine);
             }
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
             infoPanel.SetActive(true);
             switch (hoverInfoType)
             {
@@ -109,6 +109,10 @@ namespace Ender.Scripts
             {
                 cardDisplay.cardBorderImage.sprite = sprite1;
             }
+            if (minion.cardHealthText.text=="")
+            {
+                cardDisplay.OpenSpellBGs();
+            }
             var pos = Input.mousePosition;
             pos.z = 10;
             if (pos.x>Screen.width/2)
@@ -158,6 +162,11 @@ namespace Ender.Scripts
             if (sprite1 != null)
             {
                 cardDisplay.cardBorderImage.sprite = sprite1;
+            }
+print("card information"+cardInformation.CardHealth);
+            if (cardInformation.CardHealth=="")
+            {
+                cardDisplay.OpenSpellBGs();
             }
             var pos = Input.mousePosition;
             pos.z = 10;

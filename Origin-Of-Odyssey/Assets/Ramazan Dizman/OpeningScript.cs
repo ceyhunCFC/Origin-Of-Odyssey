@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class OpeningScript : MonoBehaviour
     public GameObject SettingCanvas;
     public Image leftimage, rightimage;
     public string OwnMainCard, CompetitorMainCard;
+    public TextMeshProUGUI OwnName, CompetitorName, OwnHero, CompetitorHero;
 
     void Start()
     {
@@ -24,7 +26,7 @@ public class OpeningScript : MonoBehaviour
         }
 
         Versus.SetActive(true);
-
+        print("vs open....");
         SetCardImages();
 
         yield return new WaitForSeconds(delay);
@@ -43,7 +45,7 @@ public class OpeningScript : MonoBehaviour
 
     void GetData()
     {
-        PlayerController[] playerControllers = FindObjectsOfType<PlayerController>();
+        /*PlayerController[] playerControllers = FindObjectsOfType<PlayerController>();
 
         foreach (PlayerController pc in playerControllers)
         {
@@ -53,16 +55,27 @@ public class OpeningScript : MonoBehaviour
                 CompetitorMainCard = pc.CompetitorMainCard;
                 break;
             }
-        }
+        }*/
+
+        GameManager[] gameManager = FindObjectsByType<GameManager>(FindObjectsSortMode.None);
+        OwnMainCard = gameManager[0].MasterMainCard;
+        CompetitorMainCard = gameManager[0].OtherrMainCard;
+        OwnName.text = gameManager[0].MasterPlayerName;
+        CompetitorName.text = gameManager[0].OtherPlayerName;
+        OwnHero.text = OwnMainCard;
+        CompetitorHero.text = CompetitorMainCard;
     }
 
     void SetCardImages()
     {
-        string ownCardPath = $"NftCarddsÝmage/{OwnMainCard}"; 
-        string competitorCardPath = $"NftCarddsÝmage/{CompetitorMainCard}";
+        
 
-        Sprite ownCardSprite = Resources.Load<Sprite>(ownCardPath);
-        Sprite competitorCardSprite = Resources.Load<Sprite>(competitorCardPath);
+        string competitorCardPath = $"NftCarddsÄ°mage/{CompetitorMainCard}";
+
+        Sprite competitorCardSprite = Resources.Load<Sprite>("CardImages/" + CompetitorMainCard);
+        string ownCardPath = $"NftCarddsÄ°mage/{OwnMainCard}";
+
+        Sprite ownCardSprite = Resources.Load<Sprite>("CardImages/" + OwnMainCard);
 
         if (ownCardSprite != null)
         {
